@@ -30,7 +30,7 @@ class Frequencybands(models.Model):
         db_table = u'frequencybands'
 
 class Datasets(models.Model):
-    dsid = models.IntegerField()
+    dsid = models.IntegerField(primary_key=True)
     rerun = models.IntegerField()
     dstype = models.SmallIntegerField()
     process_ts = models.DateTimeField()
@@ -40,6 +40,10 @@ class Datasets(models.Model):
     class Meta:
 	managed=False
         db_table = u'datasets'
+
+    def __str__(self):
+        return "%s,  %s" % (self.dsinname, self.description)
+        
 
 class Images(models.Model):
     imageid = models.IntegerField()
@@ -415,7 +419,7 @@ class Monitoringlist(models.Model):
         db_table = u'monitoringlist'
 
 class Transients(models.Model):
-    transientid = models.IntegerField()
+    transientid = models.IntegerField(primary_key=True)
     xtrsrc_id = models.IntegerField()
     siglevel = models.FloatField()
     v = models.FloatField()
