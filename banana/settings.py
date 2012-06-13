@@ -12,12 +12,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'djonet', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        #'ENGINE': 'django_monetdb',
-        'NAME': 'trap',                      # Or path to database file if using sqlite3.
-        'USER': 'trap',                      # Not used with sqlite3.
-        'PASSWORD': 'trap',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'evert',                      # Or path to database file if using sqlite3.
+        'USER': 'evert',                      # Not used with sqlite3.
+        'PASSWORD': 'evert',                  # Not used with sqlite3.
+        'HOST': 'heastrodb',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '52000',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -119,11 +118,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'tkp',
+    'tkpdb',
 )
 
 # A sample logging configuration. The only tangible logging
