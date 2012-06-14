@@ -45,6 +45,10 @@ class Datasets(models.Model):
     dsoutname = models.CharField(max_length=64)
     description = models.CharField(max_length=100)
 
+    def images_count(self):
+        return Images.objects.using('tkpdb').filter(ds=self.dsid).count()
+    images_count.shorts_description = 'Number of images'
+
     class Meta:
         managed=False
         db_table = u'datasets'
@@ -60,7 +64,7 @@ class Datasets(models.Model):
 
 class Images(models.Model):
     imageid = models.IntegerField(primary_key=True)
-    ds = models.ForeignKey(Datasets)
+    ds = models.ForeignKey(Datasets, related_name='images')
     tau = models.IntegerField()
     band = models.ForeignKey(Frequencybands, db_column='band')
     stokes = models.CharField(max_length=1)

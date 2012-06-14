@@ -56,9 +56,9 @@ class ImagesInline(TkpDbTabularInline):
 
 
 class DatasetsAdmin(TkpDbAdmin):
-    list_display = ('dsid', 'rerun', 'dstype', 'process_ts', 'dsinname',
-            'dsoutname', 'description')
-    inlines = [ ImagesInline, ]
+    list_display = ('dsid', 'description', 'dsinname', 'rerun', 'process_ts',
+            'images_count')
+    #inlines = [ ImagesInline, ]
 
 class ImagesAdmin(TkpDbAdmin):
     list_display = ('imageid', 'ds', 'tau', 'band', 'stokes', 'tau_time',
