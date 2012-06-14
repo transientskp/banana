@@ -29,9 +29,11 @@ class TkpDbAdmin(admin.ModelAdmin):
 
 class TransientsAdmin(TkpDbAdmin):
     pass
-admin.site.register(Transients, TransientsAdmin)
 
 class DatasetsAdmin(TkpDbAdmin):
-    pass
+    list_display = ('dsid', 'rerun', 'dstype', 'process_ts', 'dsinname',
+            'dsoutname', 'description')
+
+admin.site.register(Transients, TransientsAdmin)
 admin.site.register(Datasets, DatasetsAdmin)
 
