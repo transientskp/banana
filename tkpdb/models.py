@@ -25,9 +25,16 @@ class Frequencybands(models.Model):
     freq_central = models.FloatField()
     freq_low = models.FloatField()
     freq_high = models.FloatField()
+
     class Meta:
         managed=False
         db_table = u'frequencybands'
+
+    def __unicode__(self):
+        if self.freq_central:
+            return "%s MHz" % (int(self.freq_central/10**6),)
+        else:
+            return "0 MHz"
 
 class Datasets(models.Model):
     dsid = models.IntegerField(primary_key=True)
@@ -37,9 +44,19 @@ class Datasets(models.Model):
     dsinname = models.CharField(max_length=9)
     dsoutname = models.CharField(max_length=64)
     description = models.CharField(max_length=100)
+
     class Meta:
         managed=False
         db_table = u'datasets'
+
+    def __unicode__(self):
+        if self.description:
+            return self.description
+        elif self.dsinname:
+            return self.dsinname
+        else:
+            return u"unnamed dataset"
+
 
 class Images(models.Model):
     imageid = models.IntegerField(primary_key=True)
@@ -51,16 +68,16 @@ class Images(models.Model):
     freq_eff = models.FloatField()
     freq_bw = models.FloatField()
     taustart_ts = models.DateTimeField()
-    centr_ra = models.FloatField()
-    centr_decl = models.FloatField()
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
-    bsmaj = models.FloatField()
-    bsmin = models.FloatField()
-    bpa = models.FloatField()
-    fwhm_arcsec = models.FloatField()
-    fov_degrees = models.FloatField()
+    #centr_ra = models.FloatField()
+    #centr_decl = models.FloatField()
+    #x = models.FloatField()
+    #y = models.FloatField()
+    #z = models.FloatField()
+    #bsmaj = models.FloatField()
+    #bsmin = models.FloatField()
+    #bpa = models.FloatField()
+    #fwhm_arcsec = models.FloatField()
+    #fov_degrees = models.FloatField()
     url = models.CharField(max_length=1024)
     class Meta:
         managed=False
@@ -425,7 +442,7 @@ class Monitoringlist(models.Model):
         db_table = u'monitoringlist'
 
 class Transients(models.Model):
-    transientid = models.IntegerField()
+    transientid = models.IntegerField(primary_key=True)
     xtrsrc_id = models.IntegerField()
     siglevel = models.FloatField()
     v = models.FloatField()
