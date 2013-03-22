@@ -1,17 +1,22 @@
 from django.conf.urls import patterns, include, url
-
-# Uncomment the next two lines to enable the admin:
+from django.conf.urls.static import static
+from banana import settings
+from tkpdb import views
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'django_monetdb_testproject.views.home', name='home'),
-    # url(r'^django_monetdb_testproject/', include('django_monetdb_testproject.foo.urls')),
+    url(r'^$', views.databases, name='databases'),
+    url(r'^(?P<db_name>\w+)/$', views.datasets, name='datasets'),
+    url(r'^(?P<db_name>\w+)/dataset/(?P<dataset_id>\d+)/$',
+        views.dataset, name='dataset'),
+    url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$',
+        views.image, name='image'),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
+
+if settings.DEBUG:
+            urlpatterns += static(settings.STATIC_URL,
+                                  document_root=settings.STATIC_ROOT)

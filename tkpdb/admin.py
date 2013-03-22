@@ -46,26 +46,25 @@ class TkpDbAdmin(admin.ModelAdmin):
         return super(TkpDbAdmin, self).formfield_for_manytomany(db_field, request=request, using=self.using, **kwargs)
 
 class TransientsAdmin(TkpDbAdmin):
-    list_display = ( 'transientid', 'xtrsrc_id', 'siglevel', 'v', 'eta',
-        'detection_level', 'trigger_xtrsrc_id', 'status', 't_start')
+    list_display = ( 'id', 'runcat', 'siglevel', 'v_int', 'eta_int',
+        'detection_level', 'trigger_xtrsrc', 'status', 't_start')
 
 class ImagesInline(TkpDbTabularInline):
-    model = Images
-    list_display = ('imageid', 'ds', 'tau', 'band', 'stokes', 'tau_time',
+    model = Image
+    list_display = ('id', 'ds', 'tau', 'band', 'stokes', 'tau_time',
         'freq_eff', 'freq_bw', 'taustart_ts')
 
 
 class DatasetsAdmin(TkpDbAdmin):
-    list_display = ('dsid', 'description', 'dsinname', 'rerun', 'process_ts',
-            'images_count')
+    list_display = ('id', 'description', 'rerun', 'process_ts')
     #inlines = [ ImagesInline, ]
 
 class ImagesAdmin(TkpDbAdmin):
-    list_display = ('imageid', 'ds', 'tau', 'band', 'stokes', 'tau_time',
+    list_display = ('id', 'dataset', 'tau', 'band', 'stokes', 'tau_time',
         'freq_eff', 'freq_bw', 'taustart_ts', 'url')
 
-admin.site.register(Transients, TransientsAdmin)
-admin.site.register(Datasets, DatasetsAdmin)
-admin.site.register(Images, ImagesAdmin)
+admin.site.register(Transient, TransientsAdmin)
+admin.site.register(Dataset, DatasetsAdmin)
+admin.site.register(Image, ImagesAdmin)
 
 

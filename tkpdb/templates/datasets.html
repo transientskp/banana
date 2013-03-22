@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{% if datasets %}
+<h1>Datasets in {{ db_name }}</h1>
+<ul>
+    {% for dataset in datasets %}
+    <li><a href="/{{ db_name }}/dataset/{{ dataset.id }}/">{{ dataset.description }}</a> {{ dataset.image_count }} images</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No datasets are available.</p>
+{% endif %}
+
+
+{% endblock content %}

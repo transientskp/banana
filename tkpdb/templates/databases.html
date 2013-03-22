@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if databases %}
+<H1>Databases</H1>
+<ul>
+    {% for database in databases %}
+    <li><a href="/{{ database.name }}/">{{database.name }}</a> - {{ database.status }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No databases are available.</p>
+{% endif %}
+
+{% endblock content %}

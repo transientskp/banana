@@ -1,5 +1,10 @@
 # Django settings for banana project.
 
+import os
+from tkpdb.util import monetdb_list
+
+here = os.path.join(os.path.dirname(__file__), '..')
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -9,20 +14,29 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+MONETDB_HOST = 'localhost'
+MONETDB_PORT = 50000
+MONETDB_PASSPHRASE = 'testdb'
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'sqlite.db'
-},
-    'tkpdb': {
-        'ENGINE': 'djonet', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'trap',                      # Or path to database file if using sqlite3.
-        'USER': 'trap',                      # Not used with sqlite3.
-        'PASSWORD': 'trap',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': os.path.join(here, 'sqlite.db')
     }
 }
+
+for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
+    name = monetdb['name']
+    DATABASES[name] = {
+        'ENGINE': 'djonet',
+        'NAME': name,
+        'USER': name,
+        'PASSWORD': name,
+        'HOST': MONETDB_HOST,
+        'PORT': MONETDB_PORT,
+    }
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -63,7 +77,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(here, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -126,6 +140,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'tkpdb',
+	'django_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
