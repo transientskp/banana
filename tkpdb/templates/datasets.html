@@ -18,12 +18,12 @@
     <tbody>
     {% for dataset in datasets %}
     <tr>
-        <td><a href="/{{ db_name }}/dataset/{{ dataset.id }}/">{{ dataset.id }}</a></td>
+        <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
         <td>{{ dataset.description }}</td>
         <td>{{ dataset.rerun }}</td>
-        <td>{{ dataset.images.all|length }}</td>
+        <td>{{ dataset.num_images }}</td>
         <td>{{ dataset.process_ts }}</td>
-        <td>{{ dataset.transients.all|length }}</td>
+        <td>{{ dataset.num_transients }}</td>
     </tr>
     </a>
     {% endfor %}

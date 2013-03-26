@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="row">
+
+    <div class="span4">
+        <dl class="dl-horizontal">
+            <dt>Image ID</dt>
+            <dd>{{ image.id }}</dd>
+
+            <dt>Dataset</dt>
+            <dd>{{ image.dataset }}</dd>
+
+            <dt>Centre</dt>
+            <dd>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</dd>
+
+            <dt>start date (UT)</dt>
+            <dd>{{ image.taustart_ts }}</dd>
+
+            <dt>Integration time</dt>
+            <dd>{{ image.tau_time|floatformat:3 }}</dd>
+
+            <dt>Frequency <small>Hz</small></dt>
+            <dd>{{ image.freq_eff|floatformat:3  }}</dd>
+
+            <dt>Bandwidth <small>Hz</small></dt>
+            <dd>{{ image.freq_bw|floatformat:3  }}</dd>
+
+            <dt>Rejections</dt>
+            <dd>{{ image.rejections.all|yesno }} </dd>
+
+            <dt>Number of sources</dt>
+            <dd>{{ image.num_extractedsources }}</dd>
+
+            <dt>Filename</dt>
+            <dd>{{ image.filename }}</dd>
+
+            <dt>Stokes</dt>
+            <dd>{{ image.stokes }}</dd>
+
+            <dt>Tau</dt>
+            <dd>{{ image.tau }}</dd>
+
+            <dt>Band</dt>
+            <dd>{{ image.band }}</dd>
+
+            <dt>rb_smaj</dt>
+            <dd>{{ image.rb_smaj }}</dd>
+
+            <dt>rb_smin</dt>
+            <dd>{{ image.rb_smin }}</dd>
+
+            <dt>rb_pa</dt>
+            <dd>{{ image.rb_pa }}</dd>
+
+            <dt>Delta X</dt>
+            <dd>{{ image.deltax }}</dd>
+
+            <dt>Delta Y</dt>
+            <dd>{{ image.deltay }}</dd>
+
+            <dt>fwhm_arcsec</dt>
+            <dd>{{ image.fwhm_arcsec }}</dd>
+
+            <dt>fov_degrees</dt>
+            <dd>{{ image.fov_degrees }}</dd>
+
+            {% comment %}
+            <dt>URL</dt>
+            <dd>{{ image.url }}</dd>
+            {% endcomment %}
+
+            <dt>Node</dt>
+            <dd>{{ image.node }}</dd>
+
+            <dt>Nodes</dt>
+            <dd>{{ image.nodes }}</dd>
+        </dl>
+    </div>
+
+
+{% endblock content %}
+

@@ -196,6 +196,7 @@ class Image(models.Model):
     freq_eff = models.FloatField()
     freq_bw = models.FloatField()
     taustart_ts = models.DateTimeField()
+    taustart_ts = models.DateTimeField()
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='images')
     rb_smaj = models.FloatField()
@@ -211,6 +212,9 @@ class Image(models.Model):
 
     class Meta:
         db_table = 'image'
+
+    def filename(self):
+        return self.url.split('/')[-1]
 
 
 class Monitoringlist(models.Model):
@@ -251,6 +255,9 @@ class Rejection(models.Model):
     class Meta:
         db_table = 'rejection'
 
+    def __unicode__(self):
+        return "%s: %s" % (self.rejectreason, self.comment)
+
 
 class Rejectreason(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -258,6 +265,9 @@ class Rejectreason(models.Model):
 
     class Meta:
         db_table = 'rejectreason'
+
+    def __unicode__(self):
+        return "%s" % (self.description)
 
 
 class Runningcatalog(models.Model):
@@ -318,6 +328,9 @@ class Skyregion(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
+
+    def __unicode__(self):
+        return "%s, %s" % (self.centre_ra, self.centre_decl)
 
     class Meta:
         db_table = 'skyregion'

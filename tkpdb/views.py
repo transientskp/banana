@@ -13,7 +13,10 @@ def databases(request):
 
 
 def datasets(request, db_name):
-    datasets = Dataset.objects.using(db_name).all()
+    datasets = Dataset.objects.using(db_name).all().annotate(
+        num_transients=Count('runningcatalogs__transients'),
+        num_images=Count('images'))
+
     context = {
         'datasets': datasets,
         'db_name': db_name,
@@ -31,6 +34,7 @@ def dataset(request, db_name, dataset_id):
         num_extractedsources=Count('extractedsources'))
 
     context = {
+        'db_name': db_name,
         'dataset': dataset,
         'images': images,
     }
@@ -38,18 +42,44 @@ def dataset(request, db_name, dataset_id):
     return render(request, 'dataset.html', context)
 
 
-def images(request, db_name, dataset=None):
-    datasets = Image.objects.using(db_name).all()
+def images(request, db_name):
+    related = ['skyrgn', 'dataset', 'band', 'rejections']
+
+    dataset = request.GET.get("dataset", None)
+    images = Image.objects.prefetch_related(*related).using(db_name).annotate(
+        num_extractedsources=Count('extractedsources'))
+
+    if dataset:
+        images = images.filter(dataset=dataset)
+
     context = {
-        'datasets': datasets,
+        'images': images,
         'db_name': db_name,
+        'dataset': dataset,
         }
-    return render(request, 'datasets.html', context)
+    return render(request, 'images.html', context)
 
 
-def image(request, db_name, dataset_id):
+def image(request, db_name, image_id):
+    """
+    from django.http import HttpResponse
+    from PIL import Image
+
+    import random
+    INK = "red", "blue", "green", "yellow"
+    # ... create/load image here ...
+    image = Image.new("RGB", (800, 600), random.choice(INK))
+
+    # serialize to HTTP response
+    response = HttpResponse(mimetype="image/png")
+    image.save(response, "PNG")
+    return response
+    """
+
+
+    related = ['skyrgn', 'dataset', 'band', 'rejections']
     try:
-        image = Image.objects.using(db_name).get(pk=dataset_id)
+        image = Image.objects.prefetch_related(*related).using(db_name).annotate(num_extractedsources=Count('extractedsources')).get(pk=image_id)
     except Image.DoesNotExist:
         raise Http404
     return render(request, 'image.html', {'image': image})

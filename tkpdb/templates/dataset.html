@@ -23,7 +23,7 @@
             <dd>{{ dataset.transients.all|length }}</dd>
 
             <dt>available images</dt>
-            <dd>{{ dataset.images.all|length }}</dd>
+            <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all|length }}</a></dd>
 
             <dt>unique sources</dt>
             <dd>{{ dataset.runningcatalogs.all|length }}</dd>
