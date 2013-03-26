@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootstrap 101 Template</title>
+    <title>Banana</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+    <!-- <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
+    <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-rowlink.min.css" rel="stylesheet" media="screen">
+
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <!-- <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script> -->
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap-rowlink.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
 </head>
 <body>
+<h1><a href="{% url 'databases' %}">Banana</a></h1>
 {% block content %}
 Put something here
 {% endblock content %}
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="{{ STATIC_URL }}/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>

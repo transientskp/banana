@@ -2,17 +2,38 @@
 
 {% block content %}
 
-
+<h2>Datasets in {{ db_name }}</h2>
 {% if datasets %}
-<h1>Datasets in {{ db_name }}</h1>
-<ul>
+<table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+    <thead>
+    <tr>
+        <th>ID </th>
+        <th>Description</th>
+        <th>Rerun</th>
+        <th>Images</th>
+        <th>Finished</th>
+        <th>Transients</th>
+    </tr>
+    </thead>
+    <tbody>
     {% for dataset in datasets %}
-    <li><a href="/{{ db_name }}/dataset/{{ dataset.id }}/">{{ dataset.description }}</a> {{ dataset.image_count }} images</li>
+    <tr>
+        <td><a href="/{{ db_name }}/dataset/{{ dataset.id }}/">{{ dataset.id }}</a></td>
+        <td>{{ dataset.description }}</td>
+        <td>{{ dataset.rerun }}</td>
+        <td>{{ dataset.images.all|length }}</td>
+        <td>{{ dataset.process_ts }}</td>
+        <td>{{ dataset.transients.all|length }}</td>
+    </tr>
+    </a>
     {% endfor %}
-</ul>
+    </tbody>
+</table>
 {% else %}
 <p>No datasets are available.</p>
 {% endif %}
 
 
 {% endblock content %}
+
+

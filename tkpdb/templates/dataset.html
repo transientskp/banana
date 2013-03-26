@@ -3,7 +3,84 @@
 {% block content %}
 
 
-number of images: {{ image_num }}<br>
-number of runningcatalogs: {{ runningcatalog_num }}
+<div class="row">
+
+    <div class="span4">
+        <dl class="dl-horizontal">
+            <dt>Dataset ID</dt>
+            <dd>{{ dataset.id }}</dd>
+
+            <dt>Description</dt>
+            <dd>{{ dataset.description }}</dd>
+
+            <dt>Reprocessing step</dt>
+            <dd>{{ dataset.rerun }}</dd>
+
+            <dt>Processing finished</dt>
+            <dd>{{ dataset.process_ts }}</dd>
+
+            <dt>detected transients</dt>
+            <dd>{{ dataset.transients.all|length }}</dd>
+
+            <dt>available images</dt>
+            <dd>{{ dataset.images.all|length }}</dd>
+
+            <dt>unique sources</dt>
+            <dd>{{ dataset.runningcatalogs.all|length }}</dd>
+
+            <dt>detected sources</dt>
+            <dd>{{ dataset.extractedsources.all|length }}</dd>
+
+            <dt><a href="monitoringlist">monitoringlist</a></dt>
+        </dl>
+    </div>
+
+    <div class="span8">
+        <div id='sources_chart'></div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(function () {
+        $('#sources_chart').highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'number of sources'
+            },
+            xAxis: {
+                title: {
+                    text: 'Image'
+                },
+                tickInterval: 1
+            },
+            yAxis: {
+                title: {
+                    text: 'number of sources'
+                },
+                min: 0
+            },
+            series: [
+                {
+                    name: '{{ dataset.description }} (ID {{ dataset.id }})',
+                    data: [
+
+                        {% for image in images %}
+                            {{ image.num_extractedsources }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    ]
+
+                }
+            ]
+        });
+    });
+</script>
 
 {% endblock content %}
+
