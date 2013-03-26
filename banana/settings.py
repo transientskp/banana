@@ -37,6 +37,7 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'PORT': MONETDB_PORT,
     }
 
+INTERNAL_IPS = ('127.0.0.1',)
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -116,6 +117,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'banana.urls'
@@ -140,7 +142,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'tkpdb',
-	'django_extensions',
+	#'django_extensions',
+    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
