@@ -1,14 +1,6 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#     * Rearrange models' order
-#     * Make sure each model has one field with primary_key=True
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
-# into your database.
 from __future__ import unicode_literals
-
 from django.db import models
+
 
 class Assoccatsource(models.Model):
     xtrsrc = models.ForeignKey('Extractedsource', primary_key=True,
@@ -20,8 +12,10 @@ class Assoccatsource(models.Model):
     distance_arcsec = models.FloatField()
     r = models.FloatField()
     loglr = models.FloatField()
+
     class Meta:
         db_table = 'assoccatsource'
+
 
 class Assocskyrgn(models.Model):
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
@@ -29,8 +23,10 @@ class Assocskyrgn(models.Model):
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='assocskyrgns')
     distance_deg = models.FloatField()
+
     class Meta:
         db_table = 'assocskyrgn'
+
 
 class Assocxtrsource(models.Model):
     runcat = models.ForeignKey('Runningcatalog', primary_key=True,
@@ -42,15 +38,19 @@ class Assocxtrsource(models.Model):
     distance_arcsec = models.FloatField()
     r = models.FloatField()
     loglr = models.FloatField()
+
     class Meta:
         db_table = 'assocxtrsource'
+
 
 class Catalog(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     fullname = models.CharField(max_length=250)
+
     class Meta:
         db_table = 'catalog'
+
 
 class Catalogedsource(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -86,15 +86,19 @@ class Catalogedsource(models.Model):
     avg_f_int = models.FloatField()
     avg_f_int_err = models.FloatField()
     frame = models.CharField(max_length=20)
+
     class Meta:
         db_table = 'catalogedsource'
+
 
 class Classification(models.Model):
     transient_id = models.IntegerField()
     classification = models.CharField(max_length=256)
     weight = models.FloatField()
+
     class Meta:
         db_table = 'classification'
+
 
 class Dataset(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -110,11 +114,24 @@ class Dataset(models.Model):
     description = models.CharField(max_length=100)
     node = models.IntegerField()
     nodes = models.IntegerField()
+
     class Meta:
         db_table = 'dataset'
 
     def __unicode__(self):
         return self.description
+
+    def transients(self):
+        return Transient.objects.using(self._state.db).filter(
+            trigger_xtrsrc__runningcatalogs__dataset=self)
+
+    def extractedsources(self):
+        return Extractedsource.objects.using(self._state.db).filter(
+            image__dataset=self)
+
+    def runningcatalogs(self):
+        return Runningcatalog.objects.using(self._state.db).filter(
+            dataset=self)
 
 
 class Extractedsource(models.Model):
@@ -146,22 +163,26 @@ class Extractedsource(models.Model):
     extract_type = models.IntegerField()
     node = models.IntegerField()
     nodes = models.IntegerField()
+
     class Meta:
         db_table = 'extractedsource'
+
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
     freq_central = models.FloatField()
     freq_low = models.FloatField()
     freq_high = models.FloatField()
+
     class Meta:
         db_table = 'frequencyband'
 
     def __unicode__(self):
         if self.freq_central:
-            return "%s MHz" % (int(self.freq_central/10**6),)
+            return "%s MHz" % int(self.freq_central / 10e5)
         else:
             return "0 MHz"
+
 
 class Image(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -187,8 +208,10 @@ class Image(models.Model):
     url = models.CharField(max_length=1024)
     node = models.IntegerField()
     nodes = models.IntegerField()
+
     class Meta:
         db_table = 'image'
+
 
 class Monitoringlist(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -199,8 +222,10 @@ class Monitoringlist(models.Model):
     dataset = models.ForeignKey(Dataset, db_column='dataset',
                                 related_name='monitoringlists')
     userentry = models.BooleanField()
+
     class Meta:
         db_table = 'monitoringlist'
+
 
 class Node(models.Model):
     node = models.IntegerField(primary_key=True)
@@ -211,8 +236,10 @@ class Node(models.Model):
     zone_max_incl = models.BooleanField()
     zoneheight = models.FloatField()
     nodes = models.IntegerField()
+
     class Meta:
         db_table = 'node'
+
 
 class Rejection(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -220,14 +247,18 @@ class Rejection(models.Model):
                               related_name='rejections')
     rejectreason = models.ForeignKey('Rejectreason', db_column='rejectreason')
     comment = models.CharField(max_length=512)
+
     class Meta:
         db_table = 'rejection'
+
 
 class Rejectreason(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.CharField(max_length=512)
+
     class Meta:
         db_table = 'rejectreason'
+
 
 class Runningcatalog(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -250,8 +281,10 @@ class Runningcatalog(models.Model):
     z = models.FloatField()
     margin = models.BooleanField()
     inactive = models.BooleanField()
+
     class Meta:
         db_table = 'runningcatalog'
+
 
 class RunningcatalogFlux(models.Model):
     runcat = models.ForeignKey(Runningcatalog, primary_key=True,
@@ -270,8 +303,10 @@ class RunningcatalogFlux(models.Model):
     avg_f_int_weight = models.FloatField()
     avg_weighted_f_int = models.FloatField()
     avg_weighted_f_int_sq = models.FloatField()
+
     class Meta:
         db_table = 'runningcatalog_flux'
+
 
 class Skyregion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -283,8 +318,10 @@ class Skyregion(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
+
     class Meta:
         db_table = 'skyregion'
+
 
 class Temprunningcatalog(models.Model):
     runcat = models.ForeignKey(Runningcatalog, db_column='runcat',
@@ -327,8 +364,10 @@ class Temprunningcatalog(models.Model):
     avg_f_int_weight = models.FloatField()
     avg_weighted_f_int = models.FloatField()
     avg_weighted_f_int_sq = models.FloatField()
+
     class Meta:
         db_table = 'temprunningcatalog'
+
 
 class Transient(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -345,12 +384,14 @@ class Transient(models.Model):
                                        related_name='transients')
     status = models.IntegerField()
     t_start = models.DateTimeField()
+
     class Meta:
         db_table = 'transient'
+
 
 class Version(models.Model):
     name = models.CharField(max_length=12, primary_key=True)
     value = models.IntegerField()
+
     class Meta:
         db_table = 'version'
-
