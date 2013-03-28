@@ -22,7 +22,7 @@
     <tbody>
     {% for image in images %}
     <tr{% if image.rejections.all %} class="error"{% endif %}>
-        <td><a href="/{{ db_name }}/image/{{image.id }}/">{{ image.id }}</a></td>
+        <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
         <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
         <td>{{ image.taustart_ts }}</td>
         <td>{{ image.tau_time|floatformat:3 }}</td>

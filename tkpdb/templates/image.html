@@ -2,9 +2,9 @@
 
 {% block content %}
 
+<h2>Image {{ image.id }} from dataset {{ image.dataset }} in database {{ db_name }}</h2>
 
 <div class="row">
-
     <div class="span4">
         <dl class="dl-horizontal">
             <dt>Image ID</dt>
@@ -80,6 +80,96 @@
         </dl>
     </div>
 
+    <div class="span8">
+        <img src="{% url 'plot' db_name image.id %}">
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="span12">
+        <h2>List of extracted sources in this image</h2>
+        {% if image.extractedsources.all %}
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th>Source ID</th>
+                <th>R.A. (°)</th>
+                <th>Decl (°)</th>
+                <th>R.A. Error (as)</th>
+                <th>Decl Error (as)</th>
+                <th>Peak flux (mJy)</th>
+                <th>Peak flux error (mJy)</th>
+                <th>Integrated flux (mJy)</th>
+                <th>Integrated flux error (mJy)</th>
+
+                {% comment %}
+                <th>zone</th>
+                <th>decl_fit_err</th>
+                <th>ra_sys_err</th>
+                <th>decl_sys_err</th>
+                <th>x</th>
+                <th>y</th>
+                <th>z</th>
+                <th>racosdecl</th>
+                <th>margin</th>
+                <th>S/N</th>
+                <th>semimajor</th>
+                <th>semiminor</th>
+                <th>pa</th>
+                <th>extract_type</th>
+                <th>node</th>
+                <th>nodes</th>
+                {% endcomment %}
+
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for source in image.extractedsources.all %}
+            <tr>
+                <td>{{ source.id }}</td>
+                <td>{{ source.ra|floatformat:3 }}</td>
+                <td>{{ source.decl|floatformat:3 }}</td>
+                <td>{{ source.ra_err|floatformat:3 }}</td>
+                <td>{{ source.decl_err|floatformat:3 }}</td>
+                <td>{{ source.f_peak|floatformat:3 }}</td>
+                <td>{{ source.f_peak_err|floatformat:3 }}</td>
+                <td>{{ source.f_int|floatformat:3 }}</td>
+                <td>{{ source.f_int_err|floatformat:3 }}</td>
+
+                {% comment %}
+                <td>{{ source.zone }}</td>
+                <td>{{ source.ra_fit_err }}</td>
+                <td>{{ source.decl_fit_err }}</td>
+                <td>{{ source.ra_sys_err }}</td>
+                <td>{{ source.decl_sys_err }}</td>
+                <td>{{ source.x }}</td>
+                <td>{{ source.y }}</td>
+                <td>{{ source.z }}</td>
+                <td>{{ source.racosdecl }}</td>
+                <td>{{ source.margin }}</td>
+                <td>{{ source.det_sigma }}</td>
+                <td>{{ source.semimajor }}</td>
+                <td>{{ source.semiminor }}</td>
+                <td>{{ source.pa }}</td>
+                <td>{{ source.extract_type }}</td>
+                <td>{{ source.node }}</td>
+                <td>{{ source.nodes }}</td>
+
+                {% endcomment %}
+            </tr>
+            </a>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No sources.</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
+
 
