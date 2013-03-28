@@ -1,5 +1,5 @@
 import os
-here = os.path.join(os.path.dirname(__file__), '../../')
+here = os.path.dirname(__file__)
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -52,7 +52,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATIC_SERVER = False
+STATIC_SERVE = False
 
 
 TEMPLATE_LOADERS = (
