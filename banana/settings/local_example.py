@@ -40,3 +40,10 @@ MONGODB = {
     "port": 27017,
     "database": "tkp"
 }
+
+ALLOWED_HOSTS = [
+    "servername.nl",
+]
+
+STATIC_SERVE = True
+

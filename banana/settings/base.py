@@ -52,6 +52,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+STATIC_SERVER = False
 
 
 TEMPLATE_LOADERS = (

@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from django.conf.urls.static import static
-from banana import settings
+from django.conf import settings
 from tkpdb import views
 
 
@@ -18,6 +18,6 @@ urlpatterns = patterns('',
     url(r'^(?P<db_name>\w+)/images/$', views.images, name='images'),
 )
 
-if settings.DEBUG:
-            urlpatterns += static(settings.STATIC_URL,
-                                  document_root=settings.STATIC_ROOT)
+if settings.STATIC_SERVE:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)

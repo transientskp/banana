@@ -4,3 +4,6 @@ python-monetdb
 aplpy
 numpy
 pyfits
+pymongo
+matplotlib
+pywcs
