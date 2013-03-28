@@ -1,4 +1,5 @@
 *.pyc
 .idea
-sqlite.db
 static/
+banana/settings/local.py
+
