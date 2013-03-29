@@ -11,7 +11,10 @@ MANAGERS = ADMINS
 
 
 DATABASES = {
-    'default': {}
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(here, '../../default.db'),
+    }
 }
 
 
@@ -52,8 +55,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATIC_SERVE = False
-
 
 TEMPLATE_LOADERS = (
     #'django.template.loaders.filesystem.Loader',
@@ -63,6 +64,8 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
 ROOT_URLCONF = 'banana.urls'
@@ -76,11 +79,12 @@ TEMPLATE_DIRS = ()
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
+    'django.contrib.messages',
     'tkpdb',
 ]
 
 
-INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ['127.0.0.1',]
 
 
 LOGGING = {

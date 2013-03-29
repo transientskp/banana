@@ -27,10 +27,10 @@
             <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all|length }}</a></dd>
 
             <dt>unique sources</dt>
-            <dd>{{ dataset.runningcatalogs.all|length }}</dd>
+            <dd>{{ dataset.num_runningcatalogs }}</dd>
 
             <dt>detected sources</dt>
-            <dd>{{ dataset.extractedsources.all|length }}</dd>
+            <dd>{{ dataset.num_extractedsources }}</dd>
 
             <dt><a href="monitoringlist">monitoringlist</a></dt>
         </dl>

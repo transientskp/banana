@@ -4,6 +4,7 @@ from django.http import Http404
 from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponse
+from django.contrib import messages
 import pyfits
 from tkpdb.models import Dataset, Image
 from tkpdb.util import monetdb_list
@@ -18,9 +19,18 @@ def databases(request):
 
 
 def datasets(request, db_name):
+    fields = ['id', 'description', 'rerun', 'process_ts', 'num_transients', 'num_images']
     datasets = Dataset.objects.using(db_name).all().annotate(
-        num_transients=Count('runningcatalogs__transients'),
+        #num_transients=Count('runningcatalogs__transients'), # disabled since very slow...
         num_images=Count('images'))
+
+    try:
+        datasets.count()
+    except StandardError as e:
+        messages.add_message(request, messages.ERROR, str(e))
+        datasets = []
+
+    
     context = {
         'datasets': datasets,
         'db_name': db_name,
@@ -30,12 +40,14 @@ def datasets(request, db_name):
 
 def dataset(request, db_name, dataset_id):
     try:
-        dataset = Dataset.objects.using(db_name).get(pk=dataset_id)
+        dataset = Dataset.objects.using(db_name).annotate(num_runningcatalogs=Count('runningcatalogs'),
+                                                          num_extractedsources=Count('images__extractedsources')
+                                                          ).get(pk=dataset_id)
     except Dataset.DoesNotExist:
         raise Http404
 
     images = Image.objects.using(db_name).filter(dataset=dataset).annotate(
-        num_extractedsources=Count('extractedsources'))
+                                                                num_extractedsources=Count('extractedsources'))
     context = {
         'db_name': db_name,
         'dataset': dataset,

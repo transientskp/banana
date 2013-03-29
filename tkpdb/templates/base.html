@@ -13,7 +13,25 @@
 
 </head>
 <body>
-<h1><a href="{% url 'databases' %}">Banana</a></h1>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand">Banana</a>
+        <ul class="nav">
+            <li><a href="{% url 'databases' %}">Databases</a></li>
+        </ul>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>{{ message.tags }}</strong> {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
 {% block content %}
 Put something here
 {% endblock content %}

@@ -14,6 +14,7 @@ class Assoccatsource(models.Model):
     loglr = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'assoccatsource'
 
 
@@ -25,6 +26,7 @@ class Assocskyrgn(models.Model):
     distance_deg = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'assocskyrgn'
 
 
@@ -40,6 +42,7 @@ class Assocxtrsource(models.Model):
     loglr = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'assocxtrsource'
 
 
@@ -49,6 +52,7 @@ class Catalog(models.Model):
     fullname = models.CharField(max_length=250)
 
     class Meta:
+        managed = False
         db_table = 'catalog'
 
 
@@ -88,6 +92,7 @@ class Catalogedsource(models.Model):
     frame = models.CharField(max_length=20)
 
     class Meta:
+        managed = False
         db_table = 'catalogedsource'
 
 
@@ -97,6 +102,7 @@ class Classification(models.Model):
     weight = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'classification'
 
 
@@ -116,6 +122,7 @@ class Dataset(models.Model):
     nodes = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'dataset'
 
     def __unicode__(self):
@@ -165,6 +172,7 @@ class Extractedsource(models.Model):
     nodes = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'extractedsource'
 
 
@@ -175,6 +183,7 @@ class Frequencyband(models.Model):
     freq_high = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'frequencyband'
 
     def __unicode__(self):
@@ -211,6 +220,7 @@ class Image(models.Model):
     nodes = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'image'
 
     def filename(self):
@@ -228,6 +238,7 @@ class Monitoringlist(models.Model):
     userentry = models.BooleanField()
 
     class Meta:
+        managed = False
         db_table = 'monitoringlist'
 
 
@@ -242,6 +253,7 @@ class Node(models.Model):
     nodes = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'node'
 
 
@@ -253,6 +265,7 @@ class Rejection(models.Model):
     comment = models.CharField(max_length=512)
 
     class Meta:
+        managed = False
         db_table = 'rejection'
 
     def __unicode__(self):
@@ -264,6 +277,7 @@ class Rejectreason(models.Model):
     description = models.CharField(max_length=512)
 
     class Meta:
+        managed = False
         db_table = 'rejectreason'
 
     def __unicode__(self):
@@ -293,6 +307,7 @@ class Runningcatalog(models.Model):
     inactive = models.BooleanField()
 
     class Meta:
+        managed = False
         db_table = 'runningcatalog'
 
 
@@ -315,6 +330,7 @@ class RunningcatalogFlux(models.Model):
     avg_weighted_f_int_sq = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'runningcatalog_flux'
 
 
@@ -333,6 +349,7 @@ class Skyregion(models.Model):
         return "%s, %s" % (self.centre_ra, self.centre_decl)
 
     class Meta:
+        managed = False
         db_table = 'skyregion'
 
 
@@ -379,6 +396,7 @@ class Temprunningcatalog(models.Model):
     avg_weighted_f_int_sq = models.FloatField()
 
     class Meta:
+        managed = False
         db_table = 'temprunningcatalog'
 
 
@@ -399,6 +417,7 @@ class Transient(models.Model):
     t_start = models.DateTimeField()
 
     class Meta:
+        managed = False
         db_table = 'transient'
 
 
@@ -407,4 +426,5 @@ class Version(models.Model):
     value = models.IntegerField()
 
     class Meta:
+        managed = False
         db_table = 'version'

@@ -45,5 +45,3 @@ ALLOWED_HOSTS = [
     "servername.nl",
 ]
 
-STATIC_SERVE = True
-

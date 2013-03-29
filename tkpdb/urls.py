@@ -18,6 +18,3 @@ urlpatterns = patterns('',
     url(r'^(?P<db_name>\w+)/images/$', views.images, name='images'),
 )
 
-if settings.STATIC_SERVE:
-    urlpatterns += static(settings.STATIC_URL,
-                          document_root=settings.STATIC_ROOT)
