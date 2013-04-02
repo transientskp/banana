@@ -7,10 +7,9 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 
-# We <3 django debug toolbar
-# pip install django-debug-toolbar
 MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 INSTALLED_APPS += ['debug_toolbar']
+
 
 SECRET_KEY = ''
 
@@ -31,7 +30,8 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'PORT': MONETDB_PORT,
     }
 
-ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'),]
+
+ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
 
 
 MONGODB = {
@@ -40,6 +40,7 @@ MONGODB = {
     "port": 27017,
     "database": "tkp"
 }
+
 
 ALLOWED_HOSTS = [
     "servername.nl",
