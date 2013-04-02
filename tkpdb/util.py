@@ -4,7 +4,7 @@ import monetdb.control
 status_map = {
     1: 'running',
     2: '?',
-    3: 'under maintenance',
+    3: 'stopped',
 }
 
 

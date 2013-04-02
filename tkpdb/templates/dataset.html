@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
+{% block title %}Dataset  {{ dataset.id }} · Banana{% endblock title %}
+
 {% block content %}
 
 <h2>dataset {{ dataset }} in database {{ db_name }}</h2>
 
 <div class="row">
-
     <div class="span4">
         <dl class="dl-horizontal">
             <dt>Dataset ID</dt>
@@ -21,10 +22,10 @@
             <dd>{{ dataset.process_ts }}</dd>
 
             <dt>detected transients</dt>
-            <dd>{{ dataset.transients.all|length }}</dd>
+            <dd><a href="{% url 'transients' db_name%}?dataset={{ dataset.id }}">{{ dataset.transients.all.count }}</a></dd>
 
             <dt>available images</dt>
-            <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all|length }}</a></dd>
+            <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
 
             <dt>unique sources</dt>
             <dd>{{ dataset.num_runningcatalogs }}</dd>

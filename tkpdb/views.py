@@ -6,9 +6,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.contrib import messages
 import pyfits
-import aplpy
-import numpy
-from tkpdb.models import Dataset, Image
+from tkpdb.models import Dataset, Image, Transient, Assocxtrsource
 from tkpdb.util import monetdb_list
 import tkpdb.mongo
 import tkpdb.image
@@ -106,21 +104,69 @@ def image(request, db_name, image_id):
     return render(request, 'image.html', context)
 
 
-def plot(request, db_name, image_id):
+def transient(request, db_name, transient_id):
+    try:
+        transient = Transient.objects.using(db_name).get(pk=transient_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+
+    assocs = Assocxtrsource.objects.using(db_name).filter(xtrsrc=transient.trigger_xtrsrc)
+    related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+    lightcurve = Assocxtrsource.objects.using(db_name).filter(runcat__in=assocs).prefetch_related(*related)
+
+    context = {
+        'db_name': db_name,
+        'transient': transient,
+        'lightcurve': lightcurve,
+    }
+    return render(request, 'transient.html', context)
+
+
+def transients(request, db_name):
+    dataset_id = request.GET.get("dataset", None)
+    related = ['band', 'runcat']
+    transients = Transient.objects.using(db_name).prefetch_related(*related)
+
+    if dataset_id:
+        transients = transients.filter(runcat__dataset=dataset_id)
+
+    context = {
+        'transients': transients,
+        'db_name': db_name,
+    }
+    return render(request, 'transients.html', context)
+
+
+def nsources_plot(request, db_name, image_id):
     try:
         image = Image.objects.using(db_name).get(pk=image_id)
     except Image.DoesNotExist:
         raise Http404
 
-    response = HttpResponse(mimetype="image/png")
     sources = image.extractedsources.all()
     size = request.GET.get('size', 5)
-
     hdu = get_hdu(image.url)
-
-    canvas = tkpdb.image.plot(hdu, size, sources)
+    canvas = tkpdb.image.nsources_plot(hdu, size, sources)
+    response = HttpResponse(mimetype="image/png")
     canvas.print_figure(response, format='png')
     return response
+
+
+def transient_plot(request, db_name, transient_id):
+    try:
+        transient = Transient.objects.using(db_name).get(pk=transient_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+
+    assocs = Assocxtrsource.objects.using(db_name).filter(xtrsrc=transient.trigger_xtrsrc)
+    related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+    lightcurve = Assocxtrsource.objects.using(db_name).filter(runcat__in=assocs).prefetch_related(*related)
+
+    response = HttpResponse(mimetype="image/png")
+    canvas = tkpdb.image.plot(lightcurve)
+    canvas.print_figure(response, format='png')
+    return response
+
 
 
 def get_hdu(url):

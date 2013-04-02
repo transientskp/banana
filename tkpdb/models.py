@@ -310,6 +310,9 @@ class Runningcatalog(models.Model):
         managed = False
         db_table = 'runningcatalog'
 
+    def __unicode__(self):
+        return "%s" % (self.id)
+
 
 class RunningcatalogFlux(models.Model):
     runcat = models.ForeignKey(Runningcatalog, primary_key=True,

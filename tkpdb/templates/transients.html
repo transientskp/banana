@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+
+{% block title %}Transients · Banana{% endblock title %}
+
+{% block content %}
+
+{% load units %}
+
+<h2>Transients in {% if dataset %}dataset {{ dataset }} in {%endif %} database {{ db_name }}</h2>
+{% if transients %}
+
+<div class="row">
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th>Transient #</th>
+                <th>Position (°)</th>
+                <th>Position (h:m:s,d:m:s)</th>
+                <th>Start date</th>
+                <th>Significance level</th>
+                <th>band</th>
+                <th>freq_eff</th>
+                <th>ην</th>
+                <th>Vν</th>
+                <th># of datapoints</th>
+                <th>Running cat. #</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transient in transients %}
+            <tr>
+                <td><a href="{% url 'transient' db_name transient.id %}">{{ transient.id }}</a></td>
+                <td>{{ transient.runcat.wm_ra|stringformat:".3f" }}, {{ transient.runcat.wm_decl|stringformat:".3f" }}</td>
+                <td>{{ transient.runcat.wm_ra|format_angle:"time"}}, {{ transient.runcat.wm_decl|format_angle:"dms" }}</td>
+                <td>{{ transient.startdate|date:"c" }}</td>
+                <td>{{ transient.siglevel|stringformat:".3f" }}</td>
+                <td>{{ transient.band }}</td>
+                <td>{{ transient.freq_eff|mega }}</td>
+                <td>{{ transient.eta_int|stringformat:".2f" }}</td>
+                <td>{{ transient.v_int|stringformat:".4f" }}</td>
+                <td>{{ transient.runcat.datapoints }}</td>
+                <td>{{ transient.runcat }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No Transients.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %}Image {{ image.id }} · Banana{% endblock title %}
+
 {% block content %}
 
-<h2>Image {{ image.id }} from dataset {{ image.dataset }} in database {{ db_name }}</h2>
+<h2>Image {{ image.id }} from dataset <i>{{ image.dataset }}</i> in database <i>{{ db_name }}</i></h2>
 
 <div class="row">
-    <div class="span4">
+    <div class="span6">
         <dl class="dl-horizontal">
             <dt>Image ID</dt>
             <dd>{{ image.id }}</dd>
@@ -80,8 +82,8 @@
         </dl>
     </div>
 
-    <div class="span8">
-        <img src="{% url 'plot' db_name image.id %}">
+    <div class="span6">
+        <img src="{% url 'nsources_plot' db_name image.id %}">
     </div>
 
 </div>

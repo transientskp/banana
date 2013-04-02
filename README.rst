@@ -8,7 +8,7 @@ the `TKP website <http://www.transientskp.org/>`.
 Installation
 ============
 
-    * $ pip install -r requirements.pip
+    * $ pip install -r requirements.txt
     * $ cp banana/settings/local_example.py banana/settings/local.py
     * $ edit banana/settings/local.py
     * $ ./manage collectstatic

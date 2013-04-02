@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load units %}
+
+{% block title %}Transient {{ transient.id }} · Banana{% endblock title %}
+
+{% block content %}
+
+
+<div class="row">
+    <div class="span6">
+        <h2>Transient {{ transient.id }} in database {{ db_name }}</h2>
+        <dl class="dl-horizontal">
+            <dt>Position</dt>
+            <dd>({{ transient.runcat.wm_ra|stringformat:".3f" }}&deg;,
+                {{ transient.runcat.wm_decl|stringformat:".3f" }}&deg;) &pm;
+                ({{ transient.runcatwm_ra_err|stringformat:".3f" }}&Prime;,
+                {{ transientruncat.wm_decl_err|stringformat:".3f" }}&Prime;)</dd>
+            <dt>Frequency band</dt>
+            <dd>{{ transient.band }}</dd>
+            <dt>Effective frequency</dt>
+            <dd>{{ transient.freq_eff }} ?</dd>
+            <dt>Significance level</dt>
+            <dd>{{ transient.siglevel }}</dd>
+            <dt>&eta;<sub>&nu;</sub></dt>
+            <dd>{{ transient.eta_int|engineering }}</dd>
+            <dt>V<sub>&nu;</sub></dt>
+            <dd>{{ transient.v_int|engineering }}</dd>
+            <dt>Start date</dt>
+            <dd>{{ transient.t_start|date:"c" }}</dd>
+            <dt># of datapoints</dt>
+            <dd>{{ transient.runcat.datapoints }}</dd>
+            <dt>Running cat #</dt>
+            <dd><a href="TODO">{{ transient.runcat }}</a></dd>
+            <dt>Dataset</dt>
+            <dd><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">{{ transient.runcat.dataset_id }}</a></dd>
+        </dl>
+    </div>
+
+    <div class="span6">
+        <img src="{% url 'transient_plot' db_name transient.id %}">
+    </div>
+
+</div>
+
+{% if lightcurve %}
+<h3>Lightcurve</h3>
+
+<div class="row">
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+        <thead>
+            <th>ID</th>
+            <th>Date (UTC)</th>
+            <th>Integration time (s)</th>
+            <th>Frequency (MHz)</th>
+            <th>Flux (mJy)</th>
+            <th>Flux error (mJy)</th>
+        </thead>
+        <tbody>
+            {% for point in lightcurve %}
+            <tr class="{% cycle 'odd' 'even' %}">
+                <td><a href="">{{ point.xtrsrc_id }}</a></td>
+                <td>{{ point.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                <td>{{ point.xtrsrc.image.tau_time|engineering }}</td>
+                <td>{{ point.xtrsrc.image.band.freq_central|mega }}</td>
+                <td>{{ point.xtrsrc.f_int|engineering }}</td>
+                <td>{{ point.xtrsrc.f_int_err|engineering }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+
+
+{% endblock content %}
+
+

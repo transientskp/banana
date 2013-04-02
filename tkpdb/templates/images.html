@@ -1,64 +1,72 @@
 
 {% extends "base.html" %}
 
+{% block title %}Images · Banana{% endblock title %}
+
 {% block content %}
 
+{% load units %}
+
 <h2>Images in {% if dataset %}dataset {{ dataset }} in {%endif %} database {{ db_name }}</h2>
-{% if images %}
-<table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>center</th>
-        <th>start date (UT)</th>
-        <th>integration time <small>seconds</small></th>
-        <th>Frequency <small>MHz</small></th>
-        <th>Bandwidth <small>Mhz</small></th>
-        <th># sources</th>
-        <th>Rejection</th>
-        <th>Filename</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for image in images %}
-    <tr{% if image.rejections.all %} class="error"{% endif %}>
-        <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
-        <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
-        <td>{{ image.taustart_ts }}</td>
-        <td>{{ image.tau_time|floatformat:3 }}</td>
-        <td>{{ image.freq_eff|floatformat:3  }}</td>
-        <td>{{ image.freq_bw|floatformat:3  }}</td>
-        <td>{{ image.num_extractedsources }}</td>
-        <td>{{ image.rejections.all|join:" and " }}</td>
-        <td>{{ image.filename }}</td>
 
-        {% comment %}
-        <td>{{ image.stokes }}</td>
+<div class="row">
+    <div class="span12">
+        {% if images %}
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>center</th>
+                <th>start date (UT)</th>
+                <th>integration time <small>seconds</small></th>
+                <th>Frequency <small>MHz</small></th>
+                <th>Bandwidth <small>Mhz</small></th>
+                <th># sources</th>
+                <th>Rejection</th>
+                <th>Filename</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for image in images %}
+            <tr{% if image.rejections.all %} class="error"{% endif %}>
+                <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
+                <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
+                <td>{{ image.taustart_ts }}</td>
+                <td>{{ image.tau_time|floatformat:3 }}</td>
+                <td>{{ image.freq_eff|mega  }}</td>
+                <td>{{ image.freq_bw|mega  }}</td>
+                <td>{{ image.num_extractedsources }}</td>
+                <td>{{ image.rejections.all|join:" and " }}</td>
+                <td>{{ image.filename }}</td>
 
-        <td>{{ image.dataset }}</td>
-        <td>{{ image.tau }}</td>
-        <td>{{ image.band }}</td>
+                {% comment %}
+                <td>{{ image.stokes }}</td>
 
-        <td>{{ image.rb_smaj }}</td>
-        <td>{{ image.rb_smin }}</td>
-        <td>{{ image.rb_pa }}</td>
-        <td>{{ image.deltax }}</td>
-        <td>{{ image.deltay }}</td>
-        <td>{{ image.fwhm_arcsec }}</td>
-        <td>{{ image.fov_degrees }}</td>
-        <td>{{ image.url }}</td>
-        <td>{{ image.node }}</td>
-        <td>{{ image.nodes }}
-        {% endcomment %}
-    </tr>
-    </a>
-    {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No images.</p>
-{% endif %}
+                <td>{{ image.dataset }}</td>
+                <td>{{ image.tau }}</td>
+                <td>{{ image.band }}</td>
 
+                <td>{{ image.rb_smaj }}</td>
+                <td>{{ image.rb_smin }}</td>
+                <td>{{ image.rb_pa }}</td>
+                <td>{{ image.deltax }}</td>
+                <td>{{ image.deltay }}</td>
+                <td>{{ image.fwhm_arcsec }}</td>
+                <td>{{ image.fov_degrees }}</td>
+                <td>{{ image.url }}</td>
+                <td>{{ image.node }}</td>
+                <td>{{ image.nodes }}
+                {% endcomment %}
+            </tr>
+            </a>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No images.</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
 

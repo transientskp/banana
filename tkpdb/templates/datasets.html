@@ -1,38 +1,44 @@
 {% extends "base.html" %}
 
+{% block title %}Datasets · Banana{% endblock title %}
+
 {% block content %}
 
 <h2>Datasets in {{ db_name }}</h2>
-{% if datasets %}
-<table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
-    <thead>
-    <tr>
-        <th>ID </th>
-        <th>Description</th>
-        <th>Rerun</th>
-        <th>Images</th>
-        <th>Finished</th>
-        <th>Transients</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for dataset in datasets %}
-    <tr>
-        <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
-        <td>{{ dataset.description }}</td>
-        <td>{{ dataset.rerun }}</td>
-        <td>{{ dataset.num_images }}</td>
-        <td>{{ dataset.process_ts }}</td>
-        <td>{{ dataset.num_transients }}</td>
-    </tr>
-    </a>
-    {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No datasets are available.</p>
-{% endif %}
 
+<div class="row">
+    <div class="span12">
+        {% if datasets %}
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th>ID </th>
+                <th>Description</th>
+                <th>Rerun</th>
+                <th>Images</th>
+                <th>Finished</th>
+                <th>Transients</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for dataset in datasets %}
+            <tr>
+                <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
+                <td>{{ dataset.description }}</td>
+                <td>{{ dataset.rerun }}</td>
+                <td>{{ dataset.num_images }}</td>
+                <td>{{ dataset.process_ts }}</td>
+                <td>{{ dataset.num_transients }}</td>
+            </tr>
+            </a>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No datasets are available.</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
 

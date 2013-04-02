@@ -1,63 +1,71 @@
 {% extends "base.html" %}
 
+{% block title %}Databases · Banana{% endblock title %}
+
 {% block content %}
 
 {% if databases %}
-<H2>Databases</H2>
-<table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
-    <thead>
-    <tr>
-        <th>name</th>
-        <th>status</th>
-        <th>path</th>
-        <th>locked</th>
-        {% comment %}
-        <th>scenarios</th>
-        <th>started</th>
-        <th>stoped</th>
-        <th>crashed</th>
-        <th>avg_uptime</th>
-        <th>max_uptime</th>
-        <th>min_uptime</th>
-        <th>last_crash</th>
-        <th>last_start</th>
-        <th>last_stop</th>
-        <th>crash_avg1</th>
-        <th>crash_avg10</th>
-        <th>crash_avg30</th>
-        {% endcomment %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for database in databases %}
-    <tr>
-        <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
-        <td>{{ database.status }}</td>
-        <td>{{ database.path }}</td>
-        <td>{{ database.locked }}</td>
 
-        {% comment %}
-        <td>{{ database.scenarios }}</td>
-        <td>{{ database.start_counter }}</td>
-        <td>{{ database.stop_counter }}</td>
-        <td>{{ database.crash_counter }}</td>
-        <td>{{ database.avg_uptime }}</td>
-        <td>{{ database.max_uptime }}</td>
-        <td>{{ database.min_uptime }}</td>
-        <td>{{ database.last_crash }}</td>
-        <td>{{ database.last_start }}</td>
-        <td>{{ database.last_stop }}</td>
-        <td>{{ database.crash_avg1 }}</td>
-        <td>{{ database.crash_avg10 }}</td>
-        <td>{{ database.crash_avg30 }}</td>
-        {% endcomment %}
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No databases are available.</p>
-{% endif %}
+<H2>Databases</H2>
+
+<div class="row">
+        <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th>name</th>
+                <th>status</th>
+                <th>path</th>
+                <th>locked</th>
+                {% comment %}
+                <th>scenarios</th>
+                <th>started</th>
+                <th>stoped</th>
+                <th>crashed</th>
+                <th>avg_uptime</th>
+                <th>max_uptime</th>
+                <th>min_uptime</th>
+                <th>last_crash</th>
+                <th>last_start</th>
+                <th>last_stop</th>
+                <th>crash_avg1</th>
+                <th>crash_avg10</th>
+                <th>crash_avg30</th>
+                {% endcomment %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for database in databases %}
+            <tr{% if database.locked %} class="error"{% endif %}>
+                <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
+                <td>{{ database.status }}</td>
+                <td>{{ database.path }}</td>
+                <td>{{ database.locked }}</td>
+
+                {% comment %}
+                <td>{{ database.scenarios }}</td>
+                <td>{{ database.start_counter }}</td>
+                <td>{{ database.stop_counter }}</td>
+                <td>{{ database.crash_counter }}</td>
+                <td>{{ database.avg_uptime }}</td>
+                <td>{{ database.max_uptime }}</td>
+                <td>{{ database.min_uptime }}</td>
+                <td>{{ database.last_crash }}</td>
+                <td>{{ database.last_start }}</td>
+                <td>{{ database.last_stop }}</td>
+                <td>{{ database.crash_avg1 }}</td>
+                <td>{{ database.crash_avg10 }}</td>
+                <td>{{ database.crash_avg30 }}</td>
+                {% endcomment %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No databases are available.</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock content %}
 

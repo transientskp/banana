@@ -9,10 +9,13 @@ urlpatterns = patterns('',
         name='dataset'),
     url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$', views.image,
         name='image'),
-
-    url(r'^(?P<db_name>\w+)/plot/(?P<image_id>\d+)/$', views.plot,
-        name='plot'),
-
+    url(r'^(?P<db_name>\w+)/nsourcesplot/(?P<image_id>\d+)/$',
+        views.nsources_plot, name='nsources_plot'),
+    url(r'^(?P<db_name>\w+)/transientplot/(?P<transient_id>\d+)/$',
+        views.transient_plot, name='transient_plot'),
     url(r'^(?P<db_name>\w+)/images/$', views.images, name='images'),
+    url(r'^(?P<db_name>\w+)/transients/$', views.transients, name='transients'),
+    url(r'^(?P<db_name>\w+)/transient/(?P<transient_id>\d+)/$', views.transient,
+        name='transient'),
 )
 
