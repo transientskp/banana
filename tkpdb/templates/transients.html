@@ -1,15 +1,27 @@
 
 {% extends "base.html" %}
 
+{% load units %}
+
 {% block title %}Transients · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+{% if dataset %}
+<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+{% endif %}
+{% endblock %}
+
+{% block navtransients %}
+<li class="active"><a href="{% url 'transients' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Transients</a></li>
+{% endblock %}
+
 
 {% block content %}
 
-{% load units %}
-
-<h2>Transients in {% if dataset %}dataset {{ dataset }} in {%endif %} database {{ db_name }}</h2>
 {% if transients %}
-
 <div class="row">
     <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
@@ -46,10 +58,11 @@
             {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p>No Transients.</p>
-        {% endif %}
     </div>
 </div>
+{% else %}
+<p>No Transients.</p>
+{% endif %}
+
 
 {% endblock content %}

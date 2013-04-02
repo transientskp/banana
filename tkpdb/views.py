@@ -59,20 +59,18 @@ def dataset(request, db_name, dataset_id):
 
 def images(request, db_name):
     related = ['skyrgn', 'dataset', 'band', 'rejections', 'rejections__rejectreason']
-
-    #
-    dataset = request.GET.get("dataset", None)
     images = Image.objects.select_related().prefetch_related(*related).using(db_name).annotate(
         num_extractedsources=Count('extractedsources'))
 
-    if dataset:
-        images = images.filter(dataset=dataset)
+    dataset_id = request.GET.get("dataset", None)
+    if dataset_id:
+        images = images.filter(dataset=dataset_id)
 
     context = {
         'images': images,
         'db_name': db_name,
-        'dataset': dataset,
-        }
+        'dataset': dataset_id,
+    }
     return render(request, 'images.html', context)
 
 
@@ -133,6 +131,7 @@ def transients(request, db_name):
     context = {
         'transients': transients,
         'db_name': db_name,
+        'dataset': dataset_id,
     }
     return render(request, 'transients.html', context)
 

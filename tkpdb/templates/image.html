@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Image {{ image.id }} · Banana{% endblock title %}
+{% block title %}Image {{ image.id }}{% endblock title %}
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
+{% block navimages %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
+{% block navimage %}<li class="active"><a href="{% url 'image' db_name image.id %}">Image {{ image.id }}</a></li>{% endblock %}
+
 
 {% block content %}
-
-<h2>Image {{ image.id }} from dataset <i>{{ image.dataset }}</i> in database <i>{{ db_name }}</i></h2>
 
 <div class="row">
     <div class="span6">

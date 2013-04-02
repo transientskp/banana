@@ -2,9 +2,10 @@
 
 {% block title %}Dataset  {{ dataset.id }} · Banana{% endblock title %}
 
-{% block content %}
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block navdataset %}<li class="active"><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset.id }}</a></li>{% endblock navdataset %}
 
-<h2>dataset {{ dataset }} in database {{ db_name }}</h2>
+{% block content %}
 
 <div class="row">
     <div class="span4">

@@ -2,11 +2,13 @@
 
 {% block title %}Databases · Banana{% endblock title %}
 
+
+{% block navmain %}<li class="active"><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
+
+
 {% block content %}
 
 {% if databases %}
-
-<H2>Databases</H2>
 
 <div class="row">
         <div class="span12">

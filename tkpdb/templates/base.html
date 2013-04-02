@@ -18,7 +18,13 @@
     <div class="navbar-inner">
         <a class="brand">Banana</a>
         <ul class="nav">
-            <li><a href="{% url 'databases' %}">Databases</a></li>
+            {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
+            {% block navdatabase %}{% endblock navdatabase %}
+            {% block navdataset %}{% endblock navdataset %}
+            {% block navtransients %}{% endblock %}
+            {% block navtransient %}{% endblock %}
+            {% block navimages %}{% endblock %}
+            {% block navimage %}{% endblock %}
         </ul>
     </div>
 </div>
