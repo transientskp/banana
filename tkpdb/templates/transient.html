@@ -27,13 +27,13 @@
             <dt>V<sub>&nu;</sub></dt>
             <dd>{{ transient.v_int|engineering }}</dd>
             <dt>Start date</dt>
-            <dd>{{ transient.t_start|date:"c" }}</dd>
+            <dd>{% if transient.t_start %}{{ transient.t_start|date:"c" }}{% else %} Unkown {% endif %}</dd>
             <dt># of datapoints</dt>
             <dd>{{ transient.runcat.datapoints }}</dd>
             <dt>Running cat #</dt>
             <dd><a href="TODO">{{ transient.runcat }}</a></dd>
             <dt>Dataset</dt>
-            <dd><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">{{ transient.runcat.dataset_id }}</a></dd>
+            <dd><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">{{ transient.runcat.dataset.id }}</a></dd>
         </dl>
     </div>
 
