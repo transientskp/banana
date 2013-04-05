@@ -1,9 +1,11 @@
+import sys
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponse
 from django.contrib import messages
+from django.core.paginator import Paginator
 from banana.db import check_database, monetdb_list
 from banana.models import Dataset, Image, Transient, Assocxtrsource, Extractedsource
 import banana.mongo
@@ -20,14 +22,13 @@ def databases(request):
 
 def datasets(request, db_name):
     check_database(db_name)
-    datasets = Dataset.objects.using(db_name).all().annotate(
+    datasets_list = Dataset.objects.using(db_name).all().annotate(
         #num_transients=Count('runningcatalogs__transients'), # disabled, slow
         num_images=Count('images'))
-    try:
-        datasets.count()
-    except StandardError as e:
-        messages.add_message(request, messages.ERROR, str(e))
-        datasets = []
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(datasets_list, 100)
+    datasets = paginator.page(page)
     context = {
         'datasets': datasets,
         'db_name': db_name,
@@ -200,7 +201,6 @@ def banana_500(request):
     """a 500 error view that shows the exception. Since we have a lot of
      MonetDB problems this may become useful.
     """
-    import sys
     type, value, tb = sys.exc_info()
     context = {
          'STATIC_URL': settings.STATIC_URL,

@@ -10,6 +10,29 @@
 <div class="row">
     <div class="span12">
         {% if datasets %}
+
+        <div class="pagination">
+            <ul>
+                {% if datasets.has_previous %}
+                <li><a href="?page={{ datasets.previous_page_number }}">previous</a></li>
+                {% else %}
+                <li class="disabled"><a>previous</a></li>
+                {% endif %}
+
+                {% for page_num in datasets.paginator.page_range %}
+                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endfor %}
+
+                <span class="current">
+                </span>
+
+                {% if datasets.has_next %}
+                    <li><a href="?page={{ datasets.next_page_number }}">next</a></li>
+                {% else %}
+                    <li class="disabled"><a>next</a></li>
+                {% endif %}
+            </ul>
+        </div>
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
@@ -40,6 +63,31 @@
         {% endif %}
     </div>
 </div>
+
+        <div class="pagination">
+            <ul>
+                {% if datasets.has_previous %}
+                <li><a href="?page={{ datasets.previous_page_number }}">previous</a></li>
+                {% else %}
+                <li class="disabled"><a>previous</a></li>
+                {% endif %}
+
+                {% for page_num in datasets.paginator.page_range %}
+                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                {% endfor %}
+
+                <span class="current">
+                </span>
+
+                {% if datasets.has_next %}
+                    <li><a href="?page={{ datasets.next_page_number }}">next</a></li>
+                {% else %}
+                    <li class="disabled"><a>next</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+
 
 {% endblock content %}
 
