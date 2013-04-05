@@ -3,3 +3,4 @@
 /static/
 banana/settings/local.py
 build/
+/default.db
