@@ -194,3 +194,12 @@ def scatter_plot(request, db_name, dataset_id):
     canvas = banana.image.scatter_plot(sources)
     canvas.print_figure(response, format='png')
     return response
+
+
+def banana_500(request):
+    t = loader.get_template('500.html')
+    type, value, tb = sys.exc_info(),
+    return HttpResponseServerError(t.render(Context({
+                                    'exception_value': value,
+                                    })))
+

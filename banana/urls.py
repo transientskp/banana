@@ -22,3 +22,12 @@ urlpatterns = patterns('',
         views.scatter_plot, name='scatter_plot'),
 )
 
+handler500 = 'banana.views.banana_500'
+
+
+def banana_500(request):
+    t = loader.get_template('500.html')
+    type, value, tb = sys.exc_info(),
+    return HttpResponseServerError(t.render(Context({
+                                    'exception_value': value,
+                                    })))
