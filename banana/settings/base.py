@@ -80,6 +80,7 @@ TEMPLATE_DIRS = ()
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
+    'django.contrib.sessions',
     'tkpdb',
 ]
 
