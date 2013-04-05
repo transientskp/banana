@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Image {{ image.id }}{% endblock title %}
+{% block title %}Image {{ image.id }} · Banana{% endblock title %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
