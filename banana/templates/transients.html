@@ -24,6 +24,29 @@
 {% if transients %}
 <div class="row">
     <div class="span12">
+        <div class="pagination">
+            <ul>
+                {% if transients.has_previous %}
+                <li><a href="?page={{ transients.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">previous</a></li>
+                {% else %}
+                <li class="disabled"><a>previous</a></li>
+                {% endif %}
+
+                {% for page_num in transients.paginator.page_range %}
+                <li{% if transients.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ page_num }}</a></li>
+                {% endfor %}
+
+                <span class="current">
+                </span>
+
+                {% if transients.has_next %}
+                <li><a href="?page={{ transients.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">next</a></li>
+                {% else %}
+                <li class="disabled"><a>next</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>

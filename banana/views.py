@@ -40,7 +40,7 @@ def dataset(request, db_name, dataset_id):
     check_database(db_name)
     try:
         dataset = Dataset.objects.using(db_name).annotate(num_runningcatalogs=Count('runningcatalogs'),
-                                                          num_extractedsources=Count('images__extractedsources')
+                                                          num_extractedsources=Count('images__extractedsources'),
                                                           ).get(pk=dataset_id)
     except Dataset.DoesNotExist:
         raise Http404
@@ -60,12 +60,16 @@ def images(request, db_name):
 
     related = ['skyrgn', 'dataset', 'band', 'rejections',
                'rejections__rejectreason']
-    images = Image.objects.select_related().prefetch_related(*related).using(db_name).annotate(
+    images_list = Image.objects.select_related().prefetch_related(*related).using(db_name).annotate(
         num_extractedsources=Count('extractedsources'))
 
     dataset_id = request.GET.get("dataset", None)
     if dataset_id:
-        images = images.filter(dataset=dataset_id)
+        images_list = images_list.filter(dataset=dataset_id)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(images_list, 100)
+    images = paginator.page(page)
     context = {
         'images': images,
         'db_name': db_name,
@@ -126,9 +130,14 @@ def transients(request, db_name):
     check_database(db_name)
     dataset_id = request.GET.get("dataset", None)
     related = ['band', 'runcat']
-    transients = Transient.objects.using(db_name).prefetch_related(*related)
+    transient_list = Transient.objects.using(db_name).prefetch_related(*related)
     if dataset_id:
-        transients = transients.filter(runcat__dataset=dataset_id)
+        transient_list = transient_list.filter(runcat__dataset=dataset_id)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(transient_list, 100)
+    transients = paginator.page(page)
+
     context = {
         'transients': transients,
         'db_name': db_name,

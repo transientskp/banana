@@ -22,6 +22,30 @@
 <div class="row">
     <div class="span12">
         {% if images %}
+
+        <div class="pagination">
+            <ul>
+                {% if images.has_previous %}
+                <li><a href="?page={{ images.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">previous</a></li>
+                {% else %}
+                <li class="disabled"><a>previous</a></li>
+                {% endif %}
+
+                {% for page_num in images.paginator.page_range %}
+                <li{% if images.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ page_num }}</a></li>
+                {% endfor %}
+
+                <span class="current">
+                </span>
+
+                {% if images.has_next %}
+                <li><a href="?page={{ images.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">next</a></li>
+                {% else %}
+                <li class="disabled"><a>next</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
@@ -72,6 +96,30 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="pagination">
+            <ul>
+                {% if images.has_previous %}
+                <li><a href="?page={{ images.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">previous</a></li>
+                {% else %}
+                <li class="disabled"><a>previous</a></li>
+                {% endif %}
+
+                {% for page_num in images.paginator.page_range %}
+                <li{% if images.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ page_num }}</a></li>
+                {% endfor %}
+
+                <span class="current">
+                </span>
+
+                {% if images.has_next %}
+                <li><a href="?page={{ images.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">next</a></li>
+                {% else %}
+                <li class="disabled"><a>next</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
         {% else %}
         <p>No images.</p>
         {% endif %}
