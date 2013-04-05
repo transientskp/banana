@@ -18,8 +18,8 @@
                 <th>name</th>
                 <th>status</th>
                 <th>path</th>
-                <th>locked</th>
                 {% comment %}
+                <th>locked</th>
                 <th>scenarios</th>
                 <th>started</th>
                 <th>stoped</th>
@@ -40,11 +40,11 @@
             {% for database in databases %}
             <tr{% if database.locked %} class="error"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
-                <td>{{ database.status }}</td>
+                <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
                 <td>{{ database.path }}</td>
-                <td>{{ database.locked }}</td>
 
                 {% comment %}
+                <td>{{ database.locked }}</td>
                 <td>{{ database.scenarios }}</td>
                 <td>{{ database.start_counter }}</td>
                 <td>{{ database.stop_counter }}</td>
