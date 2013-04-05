@@ -16,7 +16,8 @@
 
 <div class="navbar">
     <div class="navbar-inner">
-        <a class="brand">Banana</a>
+
+            <a class="brand"><img src="{{ STATIC_URL }}logo_small.png" width=20 height=20></a>
         <ul class="nav">
             {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
             {% block navdatabase %}{% endblock navdatabase %}
