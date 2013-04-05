@@ -4,11 +4,11 @@ from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponse
 from django.contrib import messages
-from tkpdb.db import check_database, monetdb_list
-from tkpdb.models import Dataset, Image, Transient, Assocxtrsource, Extractedsource
-import tkpdb.mongo
-import tkpdb.image
-from tkpdb.mongo import get_hdu
+from banana.db import check_database, monetdb_list
+from banana.models import Dataset, Image, Transient, Assocxtrsource, Extractedsource
+import banana.mongo
+import banana.image
+from banana.mongo import get_hdu
 
 
 def databases(request):
@@ -145,7 +145,7 @@ def nsources_plot(request, db_name, image_id):
     sources = image.extractedsources.all()
     size = request.GET.get('size', 5)
     hdu = get_hdu(image.url)
-    canvas = tkpdb.image.nsources_plot(hdu, size, sources)
+    canvas = banana.image.nsources_plot(hdu, size, sources)
     response = HttpResponse(mimetype="image/png")
     canvas.print_figure(response, format='png')
     return response
@@ -163,7 +163,7 @@ def transient_plot(request, db_name, transient_id):
     lightcurve = Assocxtrsource.objects.using(db_name).filter(
         runcat__in=assocs).prefetch_related(*related)
     response = HttpResponse(mimetype="image/png")
-    canvas = tkpdb.image.transient_plot(lightcurve)
+    canvas = banana.image.transient_plot(lightcurve)
     canvas.print_figure(response, format='png')
     return response
 
@@ -191,6 +191,6 @@ def scatter_plot(request, db_name, dataset_id):
     sources = Extractedsource.objects.raw(scatterplot_query,
                                     {'dataset_id': dataset_id}).using(db_name)
     response = HttpResponse(mimetype="image/png")
-    canvas = tkpdb.image.scatter_plot(sources)
+    canvas = banana.image.scatter_plot(sources)
     canvas.print_figure(response, format='png')
     return response

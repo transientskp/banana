@@ -2,7 +2,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-    name='tkpdb',
+    name='banana',
     version='0.1',
     author='Gijs Molenaar',
     author_email='gijsmolenaar%(at)sgmail.com' % {'at': '@'},

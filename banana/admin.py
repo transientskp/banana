@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import *
 
 class TkpDbTabularInline(admin.TabularInline):
-    using = 'tkpdb'
+    using = 'banana'
 
     def save_model(self, request, obj, form, change):
         obj.save(using=self.using)
@@ -21,7 +21,7 @@ class TkpDbTabularInline(admin.TabularInline):
 
 
 class TkpDbAdmin(admin.ModelAdmin):
-    using = 'tkpdb'
+    using = 'banana'
 
     def save_model(self, request, obj, form, change):
         # Tell Django to save objects to the 'other' database.

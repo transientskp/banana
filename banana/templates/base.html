@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>{% block title %}Banana{% endblock title %}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="{{ STATIC_URL }}/bootstrap/css/bootstrap-rowlink.min.css" rel="stylesheet" media="screen">
 
@@ -11,13 +13,14 @@
     <script src="{{ STATIC_URL }}/bootstrap/js/bootstrap-rowlink.min.js"></script>
     <script src="{{ STATIC_URL }}/highcharts.js"></script>
 
+    <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico"/>
 </head>
 <body>
 
 <div class="navbar">
     <div class="navbar-inner">
 
-            <a class="brand"><img src="{{ STATIC_URL }}logo_small.png" width=20 height=20></a>
+            <a class="brand"><img src="{{ STATIC_URL }}logo.png" width=20 height=20></a>
         <ul class="nav">
             {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
             {% block navdatabase %}{% endblock navdatabase %}

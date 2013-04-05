@@ -68,10 +68,10 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-ROOT_URLCONF = 'banana.urls'
+ROOT_URLCONF = 'bananaproject.urls'
 
 
-WSGI_APPLICATION = 'banana.wsgi.application'
+WSGI_APPLICATION = 'bananaproject.wsgi.application'
 
 
 TEMPLATE_DIRS = ()
@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
     'django.contrib.sessions',
-    'tkpdb',
+    'banana',
 ]
 
 

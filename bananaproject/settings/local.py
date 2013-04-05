@@ -1,22 +1,23 @@
 
 from base import *
-from tkpdb.util import monetdb_list
+from banana.db import monetdb_list
 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 
+# We <3 django debug toolbar
+# pip install django-debug-toolbar
 MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 INSTALLED_APPS += ['debug_toolbar']
 
-
-SECRET_KEY = ''
+SECRET_KEY = 'p$3h$l)zt^t=14!hcx-m!%&amp;!8qt#0w(1a!ca3z%-jdsw872%in'
 
 
 MONETDB_HOST = 'localhost'
 MONETDB_PORT = 50000
-MONETDB_PASSPHRASE = 'blablabla'
+MONETDB_PASSPHRASE = 'testdb'
 
 
 for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
@@ -28,10 +29,9 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'PASSWORD': name,
         'HOST': MONETDB_HOST,
         'PORT': MONETDB_PORT,
-    }
+        }
 
-
-ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
+ADMINS += [('Gijs Molenaar', 'gijs@pythonic.nl'),]
 
 
 MONGODB = {
@@ -41,8 +41,4 @@ MONGODB = {
     "database": "tkp"
 }
 
-
-ALLOWED_HOSTS = [
-    "servername.nl",
-]
-
+STATIC_SERVE = False
