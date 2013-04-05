@@ -1,6 +1,6 @@
 *.pyc
 .idea
 /static/
-banana/settings/local.py
+bananaproject/settings/local.py
 build/
 /default.db
