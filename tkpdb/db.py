@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.http import Http404
 import monetdb.control
 
 
@@ -20,3 +22,7 @@ def monetdb_list(host, port, passphrase):
 
     return statuses
 
+
+def check_database(db_name):
+    if db_name not in settings.DATABASES:
+        raise Http404

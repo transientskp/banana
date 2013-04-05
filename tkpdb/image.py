@@ -34,8 +34,7 @@ def nsources_plot(pyfits_hdu, size=5, sources=[]):
     return canvas
 
 
-def plot(lc, T0=None, images=None, trigger_index=None):
-    size = 5
+def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
     figure = Figure(figsize=(size, size))
     canvas = FigureCanvasAgg(figure)
     times = numpy.array([time.mktime(point.xtrsrc.image.taustart_ts.timetuple()) for point in lc])
@@ -95,3 +94,44 @@ def plot(lc, T0=None, images=None, trigger_index=None):
     axes.set_ylabel('Flux (Jy)')
     return canvas
 
+
+
+
+def scatter_plot(extractedsources, size=5):
+    """Plot positions of all counterparts for all (unique) sources for
+    the given dataset.
+
+    The positions of all (unique) sources in the running catalog are
+    at the centre, whereas the positions of all their associated
+    sources are scattered around the central point.  Axes are in
+    arcsec relative to the running catalog position.
+    """
+    figure = Figure(figsize=(size, size))
+    canvas = FigureCanvasAgg(figure)
+
+    # no list comprehension here since we use raw query
+    ra_dist_arcsec= []
+    decl_dist_arcsec = []
+    ra_err = []
+    decl_err = []
+    for source in extractedsources:
+        ra_dist_arcsec.append(source.ra_dist_arcsec)
+        decl_dist_arcsec.append(source.decl_dist_arcsec)
+        ra_err.append(source.ra_err / 2)
+        decl_err.append(source.decl_err / 2)
+
+    axes = figure.add_subplot(1, 1, 1)
+    axes.errorbar(ra_dist_arcsec, decl_dist_arcsec, xerr=ra_err, yerr=decl_err,
+                  fmt='+', color='b', label="xtr")
+    axes.set_xlabel(r'RA (arcsec)')
+    axes.set_ylabel(r'DEC (arcsec)')
+    lim = 1 + max(int(numpy.trunc(max(abs(min(ra_dist_arcsec)),
+                                      abs(max(ra_dist_arcsec))))),
+                  int(numpy.trunc(max(abs(min(decl_dist_arcsec)),
+                                      abs(max(decl_dist_arcsec))))))
+    axes.set_xlim(xmin=-lim, xmax=lim)
+    axes.set_ylim(ymin=-lim, ymax=lim)
+    axes.grid(False)
+    # Shifts plot spacing to ensure that axes labels are displayed
+    figure.tight_layout()
+    return canvas
