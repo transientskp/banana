@@ -4,16 +4,10 @@
 
 {% block content %}
 
-<div class="row">
-    <div class="span12">
-        <h1>OOPS 500</h1>
-        Sorry, something went wrong.
-{{ exception_value }}
-    </div>
+<h1>error 500</h1>
+
+<div class="alert alert-error">
+    <strong>O no!</strong> {{ exception_value }}
 </div>
 
 {% endblock content %}
-
-
-
-

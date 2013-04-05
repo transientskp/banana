@@ -197,9 +197,13 @@ def scatter_plot(request, db_name, dataset_id):
 
 
 def banana_500(request):
-    t = loader.get_template('500.html')
-    type, value, tb = sys.exc_info(),
-    return HttpResponseServerError(t.render(Context({
-                                    'exception_value': value,
-                                    })))
-
+    """a 500 error view that shows the exception. Since we have a lot of
+     MonetDB problems this may become useful.
+    """
+    import sys
+    type, value, tb = sys.exc_info()
+    context = {
+         'STATIC_URL': settings.STATIC_URL,
+         'exception_value': value,
+    }
+    return render(request, '500.html', context)

@@ -6,3 +6,4 @@ from django.conf import settings
 urlpatterns = patterns('', (r'^', include('banana.urls')),) + \
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+handler500 = 'banana.views.banana_500'
