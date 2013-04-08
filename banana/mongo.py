@@ -14,7 +14,7 @@ def fetch(filename):
 
 def get_hdu(url):
     if settings.MONGODB["enabled"]:
-        mongo_file = tkpdb.mongo.fetch(url)
+        mongo_file = fetch(url)
         return pyfits.open(mongo_file, mode="readonly")
     elif os.path.exists(url):
         return pyfits.open(url, readonly=True)
