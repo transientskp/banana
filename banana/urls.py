@@ -14,10 +14,17 @@ urlpatterns = patterns('',
     url(r'^(?P<db_name>\w+)/transient/(?P<transient_id>\d+)/$', views.transient,
         name='transient'),
 
-    url(r'^(?P<db_name>\w+)/nsourcesplot/(?P<image_id>\d+)/$',
-        views.nsources_plot, name='nsources_plot'),
+    url(r'^(?P<db_name>\w+)/imageplot/(?P<image_id>\d+)/$',
+        views.image_plot, name='image_plot'),
+
+    url(r'^(?P<db_name>\w+)/imagedetail/(?P<image_id>\d+)/$',
+        views.image_detail, name='image_detail'),
+
     url(r'^(?P<db_name>\w+)/transientplot/(?P<transient_id>\d+)/$',
         views.transient_plot, name='transient_plot'),
     url(r'^(?P<db_name>\w+)/scatterplot/(?P<dataset_id>\d+)/$',
         views.scatter_plot, name='scatter_plot'),
+
+    url(r'^(?P<db_name>\w+)/extractedsourcespx/(?P<image_id>\d+)/$',
+        views.extracted_sources_pixel, name='extracted_sources_pixel'),
 )

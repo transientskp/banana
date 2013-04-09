@@ -2,6 +2,14 @@
 
 {% block title %}Image {{ image.id }} · Banana{% endblock title %}
 
+{% block morehead %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery.maphilight.min.js"></script>
+<script type="text/javascript">$(function() {
+    $('.map').maphilight();
+});</script>
+
+{% endblock %}
+
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
 {% block navimages %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
@@ -86,18 +94,32 @@
         </dl>
     </div>
 
+
+
     <div class="span6">
-        <img src="{% url 'nsources_plot' db_name image.id %}">
+        <img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
     </div>
 
 </div>
+
+<div class="row">
+    <div class="span12">
+        <a href="{% url 'image_detail' db_name image.id %}" class="btn">detailed view</a>
+    </div>
+</div>
+
+<map name="simple">
+    {% for id, x, y, size in sources %}
+        <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="#" alt="{{ id }}" title="{{ id }}" >
+    {% endfor %}
+</map>
 
 
 <div class="row">
     <div class="span12">
         <h2>List of extracted sources in this image</h2>
         {% if image.extractedsources.all %}
-        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed">
             <thead>
             <tr>
                 <th>Source ID</th>
@@ -135,7 +157,7 @@
             <tbody>
             {% for source in image.extractedsources.all %}
             <tr>
-                <td>{{ source.id }}</td>
+                <td><a id="{{ source.id }}link" href="#">{{ source.id }}</a></td>
                 <td>{{ source.ra|floatformat:3 }}</td>
                 <td>{{ source.decl|floatformat:3 }}</td>
                 <td>{{ source.ra_err|floatformat:3 }}</td>
@@ -175,6 +197,22 @@
         {% endif %}
     </div>
 </div>
+
+
+
+<script type="text/javascript">
+    $(function() {
+        {% for id, x, y, size in sources %}
+            $('#{{ id }}link').mouseover(function(e) {
+                $('#{{ id }}').mouseover();
+            }).mouseout(function(e) {
+                        $('#{{ id }}').mouseout();
+                    }).click(function(e) {
+                        e.preventDefault();
+                    });
+            {% endfor %}
+        });
+</script>
 
 {% endblock content %}
 

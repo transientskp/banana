@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Image {{ image.id }} · Banana{% endblock title %}
+
+{% block morehead %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery.maphilight.min.js"></script>
+<script type="text/javascript">$(function() {
+    $('.map').maphilight();
+});</script>
+{% endblock %}
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
+{% block navimages %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
+{% block navimage %}<li class="active"><a href="{% url 'image' db_name image.id %}">Image {{ image.id }}</a></li>{% endblock %}
+
+
+{% block content %}
+
+<img src="{% url 'image_plot' db_name image.id %}?size={{ size }}" class="map" usemap="#simple">
+
+<map name="simple">
+    {% for id, x, y, size in sources %}
+    <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="#" alt="{{ id }}" title="{{ id }}" >
+    {% endfor %}
+</map>
+
+{% endblock content %}
+
+

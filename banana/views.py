@@ -1,10 +1,12 @@
 import sys
+import json
+import numpy
+import aplpy
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Count
 from django.conf import settings
 from django.http import HttpResponse
-from django.contrib import messages
 from django.core.paginator import Paginator
 from banana.db import check_database, monetdb_list
 from banana.models import Dataset, Image, Transient, Assocxtrsource, Extractedsource
@@ -39,14 +41,15 @@ def datasets(request, db_name):
 def dataset(request, db_name, dataset_id):
     check_database(db_name)
     try:
-        dataset = Dataset.objects.using(db_name).annotate(num_runningcatalogs=Count('runningcatalogs'),
-                                                          num_extractedsources=Count('images__extractedsources'),
-                                                          ).get(pk=dataset_id)
+        dataset = Dataset.objects.using(db_name).annotate(
+            num_runningcatalogs=Count('runningcatalogs'),
+            num_extractedsources=Count('images__extractedsources'),
+    ).get(pk=dataset_id)
     except Dataset.DoesNotExist:
         raise Http404
 
     images = Image.objects.using(db_name).filter(dataset=dataset).annotate(
-                                                                num_extractedsources=Count('extractedsources'))
+        num_extractedsources=Count('extractedsources'))
     context = {
         'db_name': db_name,
         'dataset': dataset,
@@ -60,7 +63,8 @@ def images(request, db_name):
 
     related = ['skyrgn', 'dataset', 'band', 'rejections',
                'rejections__rejectreason']
-    images_list = Image.objects.select_related().prefetch_related(*related).using(db_name).annotate(
+    images_list = Image.objects.select_related(
+    ).prefetch_related(*related).using(db_name).annotate(
         num_extractedsources=Count('extractedsources'))
 
     dataset_id = request.GET.get("dataset", None)
@@ -83,28 +87,31 @@ def image(request, db_name, image_id):
     related = ['skyrgn', 'dataset', 'band', 'rejections']
     try:
         image = Image.objects.prefetch_related(*related).using(
-            db_name).annotate(num_extractedsources=Count('extractedsources')).get(pk=image_id)
+            db_name).annotate(num_extractedsources=Count('extractedsources')
+        ).get(pk=image_id)
     except Image.DoesNotExist:
         raise Http404
 
-    # This extract pixel coordinates of sources
-    """
-    hdu = get_hdu(image.url)
-    aplpy_fits = aplpy.FITSFigure(hdu)
-    source_px = []
-    for source in image.extractedsources.all():
-        decl = source.decl
-        ra = source.ra
-        source_px = aplpy.wcs_util.world2pix(aplpy_fits._wcs,
-                                             numpy.array(ra),
-                                             numpy.array(decl))
-    """
+    image_size = 4  # inches, don't ask why
+
+    sources = banana.image.extracted_sources_pixels(image, image_size)
+
     context = {
         'image': image,
         'db_name': db_name,
-        #'source_px': source_px,
+        'sources': sources,
+        'image_size': image_size,
     }
     return render(request, 'image.html', context)
+
+
+def extracted_sources_pixel(request, db_name, image_id):
+    try:
+        image = Image.objects.using(db_name).get(pk=image_id)
+    except Image.DoesNotExist:
+        raise Http404
+    sources = banana.image.extracted_sources_pixels(image)
+    return HttpResponse(json.dump(sources), "application/json")
 
 
 def transient(request, db_name, transient_id):
@@ -146,18 +153,49 @@ def transients(request, db_name):
     return render(request, 'transients.html', context)
 
 
-def nsources_plot(request, db_name, image_id):
+def image_detail(request, db_name, image_id):
+    check_database(db_name)
+    try:
+        image = Image.objects.using(db_name).get(pk=image_id)
+    except Image.DoesNotExist:
+        raise Http404
+
+    size = int(request.GET.get("size", 8))  # in inches
+
+    sources = banana.image.extracted_sources_pixels(image, size)
+    dpi = 100
+    image_size = size * dpi
+
+    sources += [
+        ('calibrate1', 0, 0, 10),
+        ('calibrate2', image_size, image_size, 10),
+        ]
+
+    context = {
+        'image': image,
+        'db_name': db_name,
+        'sources': sources,
+        'size': size,
+        }
+    return render(request, 'imagedetail.html', context)
+
+
+def image_plot(request, db_name, image_id):
     check_database(db_name)
     try:
         image = Image.objects.using(db_name).get(pk=image_id)
     except Image.DoesNotExist:
         raise Http404
     sources = image.extractedsources.all()
-    size = request.GET.get('size', 5)
+    try:
+        size = int(request.GET.get('size', 5))
+    except ValueError:
+        raise Http404
     hdu = get_hdu(image.url)
-    canvas = banana.image.nsources_plot(hdu, size, sources)
+    canvas = banana.image.image_plot(hdu, size, sources)
     response = HttpResponse(mimetype="image/png")
-    canvas.print_figure(response, format='png')
+    canvas.print_figure(response, format='png', bbox_inches='tight', \
+                        pad_inches=0, dpi=100)
     return response
 
 
@@ -210,7 +248,7 @@ def banana_500(request):
     """a 500 error view that shows the exception. Since we have a lot of
      MonetDB problems this may become useful.
     """
-    type, value, tb = sys.exc_info()
+    type_, value, tb = sys.exc_info()
     context = {
          'STATIC_URL': settings.STATIC_URL,
          'exception_value': value,
