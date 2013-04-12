@@ -41,10 +41,10 @@ def datasets(request, db_name):
 def dataset(request, db_name, dataset_id):
     check_database(db_name)
     try:
-        dataset = Dataset.objects.using(db_name).annotate(
-            num_runningcatalogs=Count('runningcatalogs'),
-            num_extractedsources=Count('images__extractedsources'),
-    ).get(pk=dataset_id)
+        dataset = Dataset.objects.using(db_name).get(pk=dataset_id)
+           # .annotate(
+           # num_runningcatalogs=Count('runningcatalogs'),
+           # num_extractedsources=Count('images__extractedsources'))
     except Dataset.DoesNotExist:
         raise Http404
 
