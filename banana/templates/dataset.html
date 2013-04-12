@@ -43,6 +43,13 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="span12">
+        <a href="{% url 'transients' db_name %}?dataset={{ dataset.id }}" class="btn">transients</a>
+        <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}" class="btn">images</a>
+        <a href="" class="btn">monitoringlist</a>
+    </div>
+</div>
 
 <div class="row">
     <div class="span6">
