@@ -24,9 +24,10 @@ def databases(request):
 
 def datasets(request, db_name):
     check_database(db_name)
+    order = request.GET.get('order', 'id')
     datasets_list = Dataset.objects.using(db_name).all().annotate(
         #num_transients=Count('runningcatalogs__transients'), # disabled, slow
-        num_images=Count('images'))
+        num_images=Count('images')).order_by(order)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(datasets_list, 100)
@@ -34,6 +35,7 @@ def datasets(request, db_name):
     context = {
         'datasets': datasets,
         'db_name': db_name,
+        'order': order,
     }
     return render(request, 'datasets.html', context)
 

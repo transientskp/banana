@@ -14,20 +14,20 @@
         <div class="pagination">
             <ul>
                 {% if datasets.has_previous %}
-                <li><a href="?page={{ datasets.previous_page_number }}">previous</a></li>
+                <li><a href="?page={{ datasets.previous_page_number }}&order={{ order }}">previous</a></li>
                 {% else %}
                 <li class="disabled"><a>previous</a></li>
                 {% endif %}
 
                 {% for page_num in datasets.paginator.page_range %}
-                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}&order={{ order }}">{{ page_num }}</a></li>
                 {% endfor %}
 
                 <span class="current">
                 </span>
 
                 {% if datasets.has_next %}
-                    <li><a href="?page={{ datasets.next_page_number }}">next</a></li>
+                    <li><a href="?page={{ datasets.next_page_number }}&order={{ order }}">next</a></li>
                 {% else %}
                     <li class="disabled"><a>next</a></li>
                 {% endif %}
@@ -37,12 +37,12 @@
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-                <th>ID </th>
-                <th>Description</th>
-                <th>Rerun</th>
-                <th>Images</th>
-                <th>Finished</th>
-                <th>Transients</th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'id' %}-{% endif %}id">ID {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'description' %}-{% endif %}description">Description {% if order == 'description' %}<i class="icon-arrow-down">{% elif order == '-description' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'rerun' %}-{% endif %}rerun">Rerun {% if order == 'rerun' %}<i class="icon-arrow-down">{% elif order == '-rerun' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'num_images' %}-{% endif %}num_images">Images {% if order == 'num_images' %}<i class="icon-arrow-down">{% elif order == '-num_images' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'process_ts' %}-{% endif %}process_ts">Finished {% if order == 'process_ts' %}<i class="icon-arrow-down">{% elif order == '-process_ts' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ datasets.number }}&order={% if order == 'num_transients' %}-{% endif %}num_transients">Transients {% if order == 'num_transients' %}<i class="icon-arrow-down">{% elif order == '-num_transients' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
             </tr>
             </thead>
             <tbody>
@@ -68,20 +68,20 @@
         <div class="pagination">
             <ul>
                 {% if datasets.has_previous %}
-                <li><a href="?page={{ datasets.previous_page_number }}">previous</a></li>
+                <li><a href="?page={{ datasets.previous_page_number }}&order={{ order }}">previous</a></li>
                 {% else %}
                 <li class="disabled"><a>previous</a></li>
                 {% endif %}
 
                 {% for page_num in datasets.paginator.page_range %}
-                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}&order={{ order }}">{{ page_num }}</a></li>
                 {% endfor %}
 
                 <span class="current">
                 </span>
 
                 {% if datasets.has_next %}
-                    <li><a href="?page={{ datasets.next_page_number }}">next</a></li>
+                    <li><a href="?page={{ datasets.next_page_number }}&order={{ order }}">next</a></li>
                 {% else %}
                     <li class="disabled"><a>next</a></li>
                 {% endif %}
