@@ -1,7 +1,5 @@
 import sys
 import json
-import numpy
-import aplpy
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Count
@@ -26,7 +24,8 @@ def datasets(request, db_name):
     check_database(db_name)
     order = request.GET.get('order', 'id')
     datasets_list = Dataset.objects.using(db_name).all().annotate(
-        #num_transients=Count('runningcatalogs__transients'), # disabled, slow
+        #num_transients=Count('runningcatalogs__transients'),  # wrong
+        #num_transients=Count('runningcatalogs'),  # wrong
         num_images=Count('images')).order_by(order)
 
     page = request.GET.get('page', 1)
@@ -138,10 +137,13 @@ def transient(request, db_name, transient_id):
 def transients(request, db_name):
     check_database(db_name)
     dataset_id = request.GET.get("dataset", None)
+    order = request.GET.get('order', 'id')
     related = ['band', 'runcat']
     transient_list = Transient.objects.using(db_name).prefetch_related(*related)
     if dataset_id:
         transient_list = transient_list.filter(runcat__dataset=dataset_id)
+
+    transient_list = transient_list.order_by(order)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(transient_list, 100)
@@ -151,6 +153,7 @@ def transients(request, db_name):
         'transients': transients,
         'db_name': db_name,
         'dataset': dataset_id,
+        'order': order,
     }
     return render(request, 'transients.html', context)
 

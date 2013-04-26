@@ -50,17 +50,17 @@
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-                <th>Transient #</th>
-                <th>Position (°)</th>
-                <th>Position (h:m:s,d:m:s)</th>
-                <th>Start date</th>
-                <th>Significance level</th>
-                <th>band</th>
-                <th>freq_eff</th>
-                <th>ην</th>
-                <th>Vν</th>
-                <th># of datapoints</th>
-                <th>Running cat. #</th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'id' %}-{% endif %}id">Transient # {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'runcat.wm_ra' %}-{% endif %}runcat.wm_ra">Position (°) {% if order == 'runcat.wm_ra' %}<i class="icon-arrow-down">{% elif order == '-runcat.wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'runcat.wm_ra' %}-{% endif %}runcat.wm_ra">Position (h:m:s,d:m:s) {% if order == 'runcat.wm_ra' %}<i class="icon-arrow-down">{% elif order == '-runcat.wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'startdate' %}-{% endif %}startdate">Start date {% if order == 'startdate' %}<i class="icon-arrow-down">{% elif order == '-startdate' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'siglevel' %}-{% endif %}siglevel">Significance level {% if order == 'siglevel' %}<i class="icon-arrow-down">{% elif order == '-siglevel' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'band' %}-{% endif %}band">Band {% if order == 'band' %}<i class="icon-arrow-down">{% elif order == '-band' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'freq_eff' %}-{% endif %}freq_eff">Freq_eff {% if order == 'freq_eff' %}<i class="icon-arrow-down">{% elif order == '-freq_eff' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'eta_int' %}-{% endif %}eta_int">ην {% if order == 'eta_int' %}<i class="icon-arrow-down">{% elif order == '-eta_int' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'v_int' %}-{% endif %}v_int">Vν{% if order == 'v_int' %}<i class="icon-arrow-down">{% elif order == '-v_int' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'runcat.datapoints' %}-{% endif %}runcat.datapoints"># of datapoints {% if order == 'runcat.datapoints' %}<i class="icon-arrow-down">{% elif order == '-runcat.datapoints' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ transients.number }}&order={% if order == 'runcat' %}-{% endif %}runcat">Running cat. # {% if order == 'runcat' %}<i class="icon-arrow-down">{% elif order == '-runcat' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
             </tr>
             </thead>
             <tbody>
