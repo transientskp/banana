@@ -24,6 +24,10 @@
 {% if transients %}
 <div class="row">
     <div class="span12">
+        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+    </div>
+
+    <div class="span12">
         <div class="pagination">
             <ul>
                 {% if transients.has_previous %}
@@ -46,7 +50,9 @@
                 {% endif %}
             </ul>
         </div>
+    </div>
 
+    <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
@@ -81,6 +87,7 @@
             {% endfor %}
             </tbody>
         </table>
+
     </div>
 </div>
 {% else %}

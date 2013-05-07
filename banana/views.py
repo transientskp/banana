@@ -1,5 +1,6 @@
 import sys
 import json
+import csv
 from django.shortcuts import render
 from django.http import Http404
 from django.db.models import Count
@@ -13,9 +14,15 @@ import banana.image
 from banana.mongo import get_hdu
 
 
+
 def databases(request):
     databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
-                             settings.MONETDB_PASSPHRASE)
+                         settings.MONETDB_PASSPHRASE)
+
+    for dbname, dbparams in settings.DATABASES.items():
+        if dbparams['ENGINE'] != 'djonet':
+            databases.append({'name': dbname})
+
     context = {'databases': databases}
     return render(request, 'databases.html', context)
 
@@ -137,6 +144,7 @@ def transient(request, db_name, transient_id):
 def transients(request, db_name):
     check_database(db_name)
     dataset_id = request.GET.get("dataset", None)
+    format = request.GET.get("format", 'html')
     order = request.GET.get('order', 'id')
     related = ['band', 'runcat']
     transient_list = Transient.objects.using(db_name).prefetch_related(*related)
@@ -145,17 +153,33 @@ def transients(request, db_name):
 
     transient_list = transient_list.order_by(order)
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(transient_list, 100)
-    transients = paginator.page(page)
+    if format == 'csv':
+        fields = ['id', 'runcat.wm_ra', 'runcat.wm_decl', 'startdate', 'siglevel', 'band', 'eta_int', 'v_int', 'runcat.datapoints', 'runcat']
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s_transients.csv"' % db_name
 
-    context = {
-        'transients': transients,
-        'db_name': db_name,
-        'dataset': dataset_id,
-        'order': order,
-    }
-    return render(request, 'transients.html', context)
+        writer = csv.writer(response)
+        writer.writerow(fields)
+        for transient in transient_list:
+            #writer.writerow([getattr(transient, field) for field in fields])
+            writer.writerow([transient.id, transient.runcat.wm_ra, transient.runcat.wm_decl,
+                             transient.t_start, transient.siglevel,
+                             transient.band,
+                             transient.eta_int, transient.v_int,
+                             transient.runcat.datapoints, transient.runcat])
+        return response
+    else:
+        page = request.GET.get('page', 1)
+        paginator = Paginator(transient_list, 100)
+        transients = paginator.page(page)
+
+        context = {
+            'transients': transients,
+            'db_name': db_name,
+            'dataset': dataset_id,
+            'order': order,
+        }
+        return render(request, 'transients.html', context)
 
 
 def image_detail(request, db_name, image_id):
