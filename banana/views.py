@@ -20,8 +20,8 @@ def databases(request):
                          settings.MONETDB_PASSPHRASE)
 
     for dbname, dbparams in settings.DATABASES.items():
-        if dbparams['ENGINE'] != 'djonet':
-            databases.append({'name': dbname})
+        if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
+            databases.append({'name': dbname, 'type': 'postgresql'})
 
     context = {'databases': databases}
     return render(request, 'databases.html', context)

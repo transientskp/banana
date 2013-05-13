@@ -17,6 +17,7 @@
             <tr>
                 <th>name</th>
                 <th>status</th>
+                <th>type</th>
                 <th>path</th>
                 {% comment %}
                 <th>locked</th>
@@ -41,6 +42,7 @@
             <tr{% if database.locked %} class="error"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
                 <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
+                <td>{{ database.type }}</td>
                 <td>{{ database.path }}</td>
 
                 {% comment %}

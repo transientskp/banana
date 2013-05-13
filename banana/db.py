@@ -19,6 +19,7 @@ def monetdb_list(host, port, passphrase):
 
     for status in statuses:
         status['status'] = status_map[status['state']]
+        status['type'] = 'monetdb'
 
     return statuses
 
