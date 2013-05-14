@@ -1,9 +1,9 @@
-<div class="pagination">
+<div class="pagination pagination-centered pagination-mini">
     <ul>
         {% if paginated.has_previous %}
-        <li><a href="?page={{ paginated.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">previous</a></li>
+        <li><a href="?page={{ paginated.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">&laquo;</a></li>
         {% else %}
-        <li class="disabled"><a>previous</a></li>
+        <li class="disabled"><a>&laquo;</a></li>
         {% endif %}
 
         <li{% if paginated.number == 1 %} class="active"{% endif %}><a href="?page=1{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">1</a></li>
@@ -25,9 +25,9 @@
         {% endif %}
 
         {% if paginated.has_next %}
-        <li><a href="?page={{ paginated.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">next</a></li>
+        <li><a href="?page={{ paginated.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">&raquo;</a></li>
         {% else %}
-        <li class="disabled"><a>next</a></li>
+        <li class="disabled"><a>&raquo;</a></li>
         {% endif %}
     </ul>
 </div>
