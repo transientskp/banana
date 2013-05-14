@@ -1,30 +1,34 @@
 from django.conf.urls import patterns, url
-from banana import views
+from banana.views import etc, images, tables
 
 
 urlpatterns = patterns('',
-    url(r'^$', views.databases, name='databases'),
-    url(r'^(?P<db_name>\w+)/$', views.datasets, name='datasets'),
-    url(r'^(?P<db_name>\w+)/dataset/(?P<dataset_id>\d+)/$', views.dataset,
+    url(r'^$', tables.databases, name='databases'),
+    url(r'^(?P<db_name>\w+)/$', tables.datasets, name='datasets'),
+    url(r'^(?P<db_name>\w+)/dataset/(?P<dataset_id>\d+)/$', tables.dataset,
         name='dataset'),
-    url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$', views.image,
-        name='image'),
-    url(r'^(?P<db_name>\w+)/images/$', views.images, name='images'),
-    url(r'^(?P<db_name>\w+)/transients/$', views.transients, name='transients'),
-    url(r'^(?P<db_name>\w+)/transient/(?P<transient_id>\d+)/$', views.transient,
+    url(r'^(?P<db_name>\w+)/images/$', tables.images, name='images'),
+    url(r'^(?P<db_name>\w+)/transients/$', tables.transients,
+        name='transients'),
+    url(r'^(?P<db_name>\w+)/extractedsources/$', tables.extractedsources,
+        name='extractedsources'),
+
+    url(r'^(?P<db_name>\w+)/transient/(?P<transient_id>\d+)/$', etc.transient,
         name='transient'),
 
+    url(r'^(?P<db_name>\w+)/extractedsource/(?P<extractedsource_id>\d+)/$',
+        etc.extractedsource, name='extractedsource'),
+
+    url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$', images.image,
+        name='image'),
     url(r'^(?P<db_name>\w+)/imageplot/(?P<image_id>\d+)/$',
-        views.image_plot, name='image_plot'),
-
+        images.image_plot, name='image_plot'),
     url(r'^(?P<db_name>\w+)/imagedetail/(?P<image_id>\d+)/$',
-        views.image_detail, name='image_detail'),
-
+        images.image_detail, name='image_detail'),
     url(r'^(?P<db_name>\w+)/transientplot/(?P<transient_id>\d+)/$',
-        views.transient_plot, name='transient_plot'),
+        images.transient_plot, name='transient_plot'),
     url(r'^(?P<db_name>\w+)/scatterplot/(?P<dataset_id>\d+)/$',
-        views.scatter_plot, name='scatter_plot'),
-
+        images.scatter_plot, name='scatter_plot'),
     url(r'^(?P<db_name>\w+)/extractedsourcespx/(?P<image_id>\d+)/$',
-        views.extracted_sources_pixel, name='extracted_sources_pixel'),
+        images.extracted_sources_pixel, name='extracted_sources_pixel'),
 )
