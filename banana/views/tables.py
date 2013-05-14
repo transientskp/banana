@@ -5,7 +5,8 @@ from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from banana.db import monetdb_list, check_database
-from banana.models import Dataset, Image, Transient, Extractedsource
+from banana.models import Dataset, Image, Transient, Extractedsource,\
+    Runningcatalog
 from banana.tools import recur_getattr
 
 
@@ -182,6 +183,55 @@ def extractedsources(request, db_name):
             'order': order,
         }
         return render(request, 'extractedsources.html', context)
+
+
+runningcatalogs_fields = [
+    'id',
+    'wm_ra',
+    'wm_ra_err',
+    'wm_decl',
+    'wm_decl_err',
+    'datapoints',
+]
+
+
+def runningcatalogs(request, db_name):
+    check_database(db_name)
+    dataset_id = request.GET.get("dataset", None)
+    format = request.GET.get("format", 'html')
+    order = request.GET.get('order', 'id')
+    order_ = order[1:] if order.startswith('-') else order
+    if order_ not in runningcatalogs_fields:
+            raise Http404
+    runcat_list = Runningcatalog.objects.using(db_name)
+    if dataset_id:
+        runcat_list = runcat_list.filter(dataset=dataset_id)
+    runcat_list = runcat_list.order_by(order)
+
+    if format == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s_extractedsources.csv"' % db_name
+        writer = csv.writer(response)
+        writer.writerow(runningcatalogs_fields)
+        for runningcatalog in runcat_list:
+            writer.writerow([getattr(runningcatalog, field)
+                             for field in runningcatalogs_fields])
+        return response
+    else:
+        page = request.GET.get('page', 1)
+        paginator = Paginator(runcat_list, 100)
+        runningcatalogs = paginator.page(page)
+
+        context = {
+            'page': page,
+            'fields': extractedsources_fields,
+            'runningcatalogs': runningcatalogs,
+            'db_name': db_name,
+            'dataset': dataset_id,
+            'order': order,
+        }
+        return render(request, 'runningcatalogs.html', context)
+
 
 """
 other tables:

@@ -38,7 +38,7 @@
             <tr>
             {% for field in fields %}
                 <th>
-                    <a href="?page={{ extractedsources.number }}&order={% if order == field %}-{% endif %}{{ field }}">
+                    <a href="?page={{ extractedsources.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
                         {{ field }}
                         {% with "-"|safe|add:field as antifield %}
                             {% if order == field %}<i class="icon-arrow-down"></i>

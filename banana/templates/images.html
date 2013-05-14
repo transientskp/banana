@@ -54,25 +54,6 @@
                 <td>{{ image.num_extractedsources }}</td>
                 <td>{{ image.rejections.all|join:" and " }}</td>
                 <td>{{ image.filename }}</td>
-
-                {% comment %}
-                <td>{{ image.stokes }}</td>
-
-                <td>{{ image.dataset }}</td>
-                <td>{{ image.tau }}</td>
-                <td>{{ image.band }}</td>
-
-                <td>{{ image.rb_smaj }}</td>
-                <td>{{ image.rb_smin }}</td>
-                <td>{{ image.rb_pa }}</td>
-                <td>{{ image.deltax }}</td>
-                <td>{{ image.deltay }}</td>
-                <td>{{ image.fwhm_arcsec }}</td>
-                <td>{{ image.fov_degrees }}</td>
-                <td>{{ image.url }}</td>
-                <td>{{ image.node }}</td>
-                <td>{{ image.nodes }}
-                {% endcomment %}
             </tr>
             </a>
             {% endfor %}

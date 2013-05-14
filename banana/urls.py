@@ -12,12 +12,16 @@ urlpatterns = patterns('',
         name='transients'),
     url(r'^(?P<db_name>\w+)/extractedsources/$', tables.extractedsources,
         name='extractedsources'),
+    url(r'^(?P<db_name>\w+)/runningcatalogs/$', tables.runningcatalogs,
+        name='runningcatalogs'),
 
     url(r'^(?P<db_name>\w+)/transient/(?P<transient_id>\d+)/$', etc.transient,
         name='transient'),
 
     url(r'^(?P<db_name>\w+)/extractedsource/(?P<extractedsource_id>\d+)/$',
         etc.extractedsource, name='extractedsource'),
+    url(r'^(?P<db_name>\w+)/runningcatalog/(?P<runningcatalog_id>\d+)/$',
+        etc.runningcatalog, name='runningcatalog'),
 
     url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$', images.image,
         name='image'),

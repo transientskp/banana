@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+
+{% block title %}Running Catalogs · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+{% if dataset %}
+<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+{% endif %}
+{% endblock %}
+
+{% block navdeep %}
+<li class="active"><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+{% endblock %}
+
+
+{% block content %}
+
+{% if runningcatalogs %}
+<div class="row">
+    <div class="span12 text-center">
+        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+    </div>
+
+    <div class="span12 text-center">
+        {% load paginator %}
+        {% paginatorizer runningcatalogs %}
+    </div>
+
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'id' %}-{% endif %}id{% if dataset %}&dataset={{ dataset }}{% endif %}">Running cat. # {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra' %}-{% endif %}wm_ra{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. (&deg;) {% if order == 'wm_ra' %}<i class="icon-arrow-down">{% elif order == '-wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl' %}-{% endif %}wm_decl{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl (&deg;) {% if order == 'wm_decl' %}<i class="icon-arrow-down">{% elif order == '-wm_decl' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra_err' %}-{% endif %}wm_ra_err{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. Error (&Prime;) {% if order == 'wm_ra_err' %}<i class="icon-arrow-down">{% elif order == '-wm_ra_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl_err' %}-{% endif %}wm_decl_err{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl Error (&Prime;) {% if order == 'wm_decl_err' %}<i class="icon-arrow-down">{% elif order == '-wm_decl_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra' %}-{% endif %}wm_ra{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. (h:m:s.) {% if order == 'wm_ra' %}<i class="icon-arrow-down">{% elif order == '-wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl' %}-{% endif %}wm_decl{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl (d:m:s.) {% if order == 'wm_decl' %}<i class="icon-arrow-down">{% elif order == '-wm_decl' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'datapoints' %}-{% endif %}datapoints{% if dataset %}&dataset={{ dataset }}{% endif %}"># of data points {% if order == 'datapoints' %}<i class="icon-arrow-down">{% elif order == '-datapoints' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for runningcatalog in runningcatalogs %}
+            <tr>
+                <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
+                <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_decl|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_ra_err|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_decl_err|stringformat:".3f" }}</td>
+                <td> {{runningcatalog.wm_ra|format_angle:"time"}}</td>
+                <td> {{runningcatalog.wm_decl|format_angle:"dms"}}</td>
+                <td>{{ runningcatalog.datapoints }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="span12 text-center">
+        {% load paginator %}
+        {% paginatorizer runningcatalogs %}
+    </div>
+
+
+</div>
+{% else %}
+<p>No Running Catalogs.</p>
+{% endif %}
+
+
+{% endblock content %}
