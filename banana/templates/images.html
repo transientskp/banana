@@ -22,6 +22,9 @@
 
 <div class="row">
     {% if images %}
+        <div class="span12 text-center">
+            <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+        </div>
 
         <div class="span12 text-center">
             {% paginatorizer images %}
@@ -31,15 +34,15 @@
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-                <th>id</th>
-                <th>center</th>
-                <th>start date (UT)</th>
-                <th>integration time <small>seconds</small></th>
-                <th>Frequency <small>MHz</small></th>
-                <th>Bandwidth <small>Mhz</small></th>
-                <th># sources</th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'id' %}-{% endif %}id{% if dataset %}&dataset={{ dataset }}{% endif %}">Image #{% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'skyrgn__centre_ra' %}-{% endif %}skyrgn__centre_ra{% if dataset %}&dataset={{ dataset }}{% endif %}">center{% if order == 'skyrgn__centre_ra' %}<i class="icon-arrow-down">{% elif order == '-skyrgn__centre_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'taustart_ts' %}-{% endif %}taustart_ts{% if dataset %}&dataset={{ dataset }}{% endif %}">start date (UT){% if order == 'taustart_ts' %}<i class="icon-arrow-down">{% elif order == '-taustart_ts' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'tau_time' %}-{% endif %}tau_time{% if dataset %}&dataset={{ dataset }}{% endif %}">integration time <small>seconds</small>{% if order == 'tau_time' %}<i class="icon-arrow-down">{% elif order == '-tau_time' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'freq_eff' %}-{% endif %}freq_eff{% if dataset %}&dataset={{ dataset }}{% endif %}">Frequency <small>MHz</small>{% if order == 'freq_eff' %}<i class="icon-arrow-down">{% elif order == '-freq_eff' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'freq_bw' %}-{% endif %}freq_bw{% if dataset %}&dataset={{ dataset }}{% endif %}">Bandwidth <small>Mhz</small>{% if order == 'freq_bw' %}<i class="icon-arrow-down">{% elif order == '-freq_bw' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'num_extractedsources' %}-{% endif %}num_extractedsources{% if dataset %}&dataset={{ dataset }}{% endif %}"># sources{% if order == 'num_extractedsources' %}<i class="icon-arrow-down">{% elif order == '-num_extractedsources' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th>Rejection</th>
-                <th>Filename</th>
+                <th><a href="?page={{ images.number }}&order={% if order == 'url' %}-{% endif %}url{% if dataset %}&dataset={{ dataset }}{% endif %}">Filename{% if order == 'url' %}<i class="icon-arrow-down">{% elif order == '-url' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
             </tr>
             </thead>
             <tbody>
