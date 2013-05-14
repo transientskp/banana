@@ -8,10 +8,8 @@ def paginatorizer(context, paginated, adjacent_pages=5):
     start_page = max(current_page - adjacent_pages, 2)
     end_page = min(current_page + adjacent_pages + 1, num_pages)
     page_numbers = range(start_page, end_page)
-    context = {
-        'paginated': paginated,
-        'page_numbers': page_numbers,
-    }
+    context['paginated'] = paginated
+    context['page_numbers'] = page_numbers
     if len(page_numbers) > (adjacent_pages - 1):
         if page_numbers[0] > 2:
             context['show_begin_dots'] = True

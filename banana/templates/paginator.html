@@ -1,19 +1,19 @@
 <div class="pagination">
     <ul>
         {% if paginated.has_previous %}
-        <li><a href="?page={{ paginated.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">previous</a></li>
+        <li><a href="?page={{ paginated.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">previous</a></li>
         {% else %}
         <li class="disabled"><a>previous</a></li>
         {% endif %}
 
-        <li{% if paginated.number == 1 %} class="active"{% endif %}><a href="?page=1{% if dataset %}&dataset={{ dataset }}{% endif %}">1</a></li>
+        <li{% if paginated.number == 1 %} class="active"{% endif %}><a href="?page=1{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">1</a></li>
 
         {% if show_begin_dots %}
             <li class="disabled"><a>...</a></li>
         {% endif %}
 
         {% for page_num in page_numbers %}
-        <li{% if paginated.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ page_num }}</a></li>
+        <li{% if paginated.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">{{ page_num }}</a></li>
         {% endfor %}
 
         {% if show_end_dots %}
@@ -21,11 +21,11 @@
         {% endif %}
 
         {% if show_end %}
-        <li{% if paginated.number == paginated.paginator.num_pages %} class="active"{% endif %}><a href="?page={{ paginated.paginator.num_pages }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ paginated.paginator.num_pages }}</a></li>
+        <li{% if paginated.number == paginated.paginator.num_pages %} class="active"{% endif %}><a href="?page={{ paginated.paginator.num_pages }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">{{ paginated.paginator.num_pages }}</a></li>
         {% endif %}
 
         {% if paginated.has_next %}
-        <li><a href="?page={{ paginated.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">next</a></li>
+        <li><a href="?page={{ paginated.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">next</a></li>
         {% else %}
         <li class="disabled"><a>next</a></li>
         {% endif %}
