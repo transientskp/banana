@@ -1,39 +1,23 @@
 {% extends "base.html" %}
 
+{% load paginator %}
+
 {% block title %}Datasets · Banana{% endblock title %}
 
 {% block navdatabase %}<li class="active"><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
-
 {% block content %}
-
 <div class="row">
+{% if not datasets %}
+    <div class="span12 text-center">
+        No datasets are available.
+    </div>
+{% else %}
+    <div class="span12 text-center">
+        {% paginatorizer datasets %}
+    </div>
+
     <div class="span12">
-        {% if datasets %}
-
-        <div class="pagination">
-            <ul>
-                {% if datasets.has_previous %}
-                <li><a href="?page={{ datasets.previous_page_number }}&order={{ order }}">previous</a></li>
-                {% else %}
-                <li class="disabled"><a>previous</a></li>
-                {% endif %}
-
-                {% for page_num in datasets.paginator.page_range %}
-                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}&order={{ order }}">{{ page_num }}</a></li>
-                {% endfor %}
-
-                <span class="current">
-                </span>
-
-                {% if datasets.has_next %}
-                    <li><a href="?page={{ datasets.next_page_number }}&order={{ order }}">next</a></li>
-                {% else %}
-                    <li class="disabled"><a>next</a></li>
-                {% endif %}
-            </ul>
-        </div>
-
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
@@ -59,34 +43,15 @@
             {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p>No datasets are available.</p>
-        {% endif %}
     </div>
+
+    <div class="span12 text-center">
+        {% paginatorizer datasets %}
+    </div>
+{% endif %}
 </div>
 
-        <div class="pagination">
-            <ul>
-                {% if datasets.has_previous %}
-                <li><a href="?page={{ datasets.previous_page_number }}&order={{ order }}">previous</a></li>
-                {% else %}
-                <li class="disabled"><a>previous</a></li>
-                {% endif %}
 
-                {% for page_num in datasets.paginator.page_range %}
-                    <li{% if datasets.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}&order={{ order }}">{{ page_num }}</a></li>
-                {% endfor %}
-
-                <span class="current">
-                </span>
-
-                {% if datasets.has_next %}
-                    <li><a href="?page={{ datasets.next_page_number }}&order={{ order }}">next</a></li>
-                {% else %}
-                    <li class="disabled"><a>next</a></li>
-                {% endif %}
-            </ul>
-        </div>
 
 
 

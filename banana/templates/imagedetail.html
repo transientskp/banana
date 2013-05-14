@@ -11,8 +11,8 @@
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
-{% block navimages %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
-{% block navimage %}<li class="active"><a href="{% url 'image' db_name image.id %}">Image {{ image.id }}</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
+{% block navdeeper %}<li class="active"><a href="{% url 'image' db_name image.id %}">Image {{ image.id }}</a></li>{% endblock %}
 
 
 {% block content %}

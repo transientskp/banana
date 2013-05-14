@@ -4,8 +4,8 @@
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">Dataset {{ transient.runcat.dataset_id }}</a></li>{% endblock %}
-{% block navtransients %}<li><a href="{% url 'transients' db_name %}?dataset={{ transient.runcat.dataset_id }}">Transients</a></li>{% endblock %}
-{% block navtransient %}<li class="active"><a href="{% url 'transient' db_name transient.id %}">Transient {{ transient.id }}</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'transients' db_name %}?dataset={{ transient.runcat.dataset_id }}">Transients</a></li>{% endblock %}
+{% block navdeper %}<li class="active"><a href="{% url 'transient' db_name transient.id %}">Transient {{ transient.id }}</a></li>{% endblock %}
 
 {% block title %}Transient {{ transient.id }} · Banana{% endblock title %}
 

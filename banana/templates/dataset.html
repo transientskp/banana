@@ -3,9 +3,18 @@
 {% block title %}Dataset  {{ dataset.id }} · Banana{% endblock title %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
 {% block navdataset %}<li class="active"><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset.id }}</a></li>{% endblock navdataset %}
 
 {% block content %}
+
+<div class="row">
+    <div class="span12 text-center">
+        <a href="{% url 'transients' db_name %}?dataset={{ dataset.id }}" class="btn">Transients</a>
+        <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}" class="btn">Images</a>
+        <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}" class="btn">Extracted Sources</a>
+    </div>
+</div>
 
 <div class="row">
     <div class="span4">
@@ -33,8 +42,6 @@
 
             <dt>detected sources</dt>
             <dd>{{ dataset.num_extractedsources }}</dd>
-
-            <dt><a href="monitoringlist">monitoringlist</a></dt>
         </dl>
     </div>
 
@@ -43,16 +50,10 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="span12">
-        <a href="{% url 'transients' db_name %}?dataset={{ dataset.id }}" class="btn">transients</a>
-        <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}" class="btn">images</a>
-        <a href="" class="btn">monitoringlist</a>
-    </div>
-</div>
+
 
 <div class="row">
-    <div class="span6">
+    <div class="span12 text-center">
         <img src="{% url 'scatter_plot' db_name dataset.id %}">
     </div>
 </div>

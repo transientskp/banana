@@ -2,6 +2,7 @@
 {% extends "base.html" %}
 
 {% load units %}
+{% load paginator %}
 
 {% block title %}Transients · Banana{% endblock title %}
 
@@ -14,7 +15,7 @@
 {% endif %}
 {% endblock %}
 
-{% block navtransients %}
+{% block navdeep %}
 <li class="active"><a href="{% url 'transients' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Transients</a></li>
 {% endblock %}
 
@@ -23,33 +24,12 @@
 
 {% if transients %}
 <div class="row">
-    <div class="span12">
+    <div class="span12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
-    <div class="span12">
-        <div class="pagination">
-            <ul>
-                {% if transients.has_previous %}
-                <li><a href="?page={{ transients.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">previous</a></li>
-                {% else %}
-                <li class="disabled"><a>previous</a></li>
-                {% endif %}
-
-                {% for page_num in transients.paginator.page_range %}
-                <li{% if transients.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}">{{ page_num }}</a></li>
-                {% endfor %}
-
-                <span class="current">
-                </span>
-
-                {% if transients.has_next %}
-                <li><a href="?page={{ transients.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}">next</a></li>
-                {% else %}
-                <li class="disabled"><a>next</a></li>
-                {% endif %}
-            </ul>
-        </div>
+    <div class="span12 text-center">
+        {% paginatorizer transients %}
     </div>
 
     <div class="span12">
@@ -87,8 +67,12 @@
             {% endfor %}
             </tbody>
         </table>
-
     </div>
+
+    <div class="span12 text-center">
+        {% paginatorizer transients %}
+    </div>
+
 </div>
 {% else %}
 <p>No Transients.</p>
