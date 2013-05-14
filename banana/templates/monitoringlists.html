@@ -1,0 +1,81 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+
+{% block title %}Monitoring Lists · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+{% if dataset %}
+<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+{% endif %}
+{% endblock %}
+
+{% block navdeep %}
+<li class="active"><a href="{% url 'monitoringlists' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Monitoring Lists</a></li>
+{% endblock %}
+
+
+{% block content %}
+
+{% if monitoringlists %}
+<div class="row">
+    <div class="span12 text-center">
+        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+    </div>
+
+    <div class="span12 text-center">
+        {% load paginator %}
+        {% paginatorizer monitoringlists %}
+    </div>
+
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+            {% for field in fields %}
+                <th>
+                    <a href="?page={{ monitoringlists.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
+                        {{ field }}
+                        {% with "-"|safe|add:field as antifield %}
+                            {% if order == field %}<i class="icon-arrow-down"></i>
+                            {% elif order == antifield %}<i class="icon-arrow-up"></i>
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+                </th>
+            {% endfor %}
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for monitoringlist in monitoringlists %}
+            <tr>
+                <td><a href="{% url 'monitoringlist' db_name monitoringlist.id %}">{{ monitoringlist.id }}</a></td>
+                <td>{{ monitoringlist.runcat }}</td>
+                <td>{{ monitoringlist.ra|stringformat:".3f" }}</td>
+                <td>{{ monitoringlist.decl|stringformat:".3f" }}</td>
+                <td>{{ monitoringlist.dataset }}</td>
+                <td>{{ monitoringlist.userentry }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="span12 text-center">
+        {% load paginator %}
+        {% paginatorizer monitoringlists %}
+    </div>
+
+
+</div>
+{% else %}
+<p>No Monitoring Lists.</p>
+{% endif %}
+
+
+{% endblock content %}

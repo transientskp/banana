@@ -6,7 +6,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from banana.db import monetdb_list, check_database
 from banana.models import Dataset, Image, Transient, Extractedsource,\
-    Runningcatalog
+    Runningcatalog, Monitoringlist
 from banana.tools import recur_getattr
 
 
@@ -61,28 +61,55 @@ def dataset(request, db_name, dataset_id):
     return render(request, 'dataset.html', context)
 
 
+images_fields = [
+    'id',
+    'skyrgn__centre_ra',
+    'skyrgn__centre_decl',
+    'taustart_ts',
+    'tau_time',
+    'freq_eff',
+    'freq_bw',
+    'num_extractedsources',
+    'url',
+]
+
+
 def images(request, db_name):
     check_database(db_name)
-
+    dataset_id = request.GET.get("dataset", None)
+    format = request.GET.get("format", 'html')
+    order = request.GET.get('order', 'id')
+    order_ = order[1:] if order.startswith('-') else order
+    if order_ not in images_fields:
+        raise Http404
     related = ['skyrgn', 'dataset', 'band', 'rejections',
                'rejections__rejectreason']
-    images_list = Image.objects.select_related(
+    image_list = Image.objects.select_related(
     ).prefetch_related(*related).using(db_name).annotate(
         num_extractedsources=Count('extractedsources'))
-
-    dataset_id = request.GET.get("dataset", None)
     if dataset_id:
-        images_list = images_list.filter(dataset=dataset_id)
+        image_list = image_list.filter(dataset=dataset_id)
+    image_list = image_list.order_by(order)
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(images_list, 100)
-    images = paginator.page(page)
-    context = {
-        'images': images,
-        'db_name': db_name,
-        'dataset': dataset_id,
-    }
-    return render(request, 'images.html', context)
+    if format == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s_%s_images.csv"' % (db_name, dataset_id)
+        writer = csv.writer(response)
+        writer.writerow(images_fields)
+        for image in image_list:
+            writer.writerow([recur_getattr(image, field) for field in images_fields])
+        return response
+    else:
+        page = request.GET.get('page', 1)
+        paginator = Paginator(image_list, 100)
+        images = paginator.page(page)
+        context = {
+            'images': images,
+            'db_name': db_name,
+            'dataset': dataset_id,
+            'order': order,
+        }
+        return render(request, 'images.html', context)
 
 
 transients_fields = [
@@ -114,7 +141,7 @@ def transients(request, db_name):
 
     if format == 'csv':
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s_transients.csv"' % db_name
+        response['Content-Disposition'] = 'attachment; filename="%s_%s_transients.csv"' % (db_name, dataset_id)
         writer = csv.writer(response)
         writer.writerow(transients_fields)
         for transient in transient_list:
@@ -163,7 +190,7 @@ def extractedsources(request, db_name):
 
     if format == 'csv':
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s_extractedsources.csv"' % db_name
+        response['Content-Disposition'] = 'attachment; filename="%s_%s_extractedsources.csv"' % (db_name, dataset_id)
         writer = csv.writer(response)
         writer.writerow(extractedsources_fields)
         for extrsrc in extrsrc_list:
@@ -210,7 +237,7 @@ def runningcatalogs(request, db_name):
 
     if format == 'csv':
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s_extractedsources.csv"' % db_name
+        response['Content-Disposition'] = 'attachment; filename="%s_%s_runningcatalogs.csv"' % (db_name, dataset_id)
         writer = csv.writer(response)
         writer.writerow(runningcatalogs_fields)
         for runningcatalog in runcat_list:
@@ -233,18 +260,51 @@ def runningcatalogs(request, db_name):
         return render(request, 'runningcatalogs.html', context)
 
 
-"""
-other tables:
-Assoccatsource
-Assocskyrgn
-Assocxtrsource
-Catalog
-Catalogedsource
-Classification
-Extractedsource
-Frequencyband
-Monitoringlist
-Runningcatalog
-RunningcatalogFlux
-Temprunningcatalog
-"""
+monitoringlists_fields = [
+    'id',
+    'runcat',
+    'ra',
+    'decl',
+    'dataset',
+    'userentry',
+]
+
+
+def monitoringlists(request, db_name):
+    check_database(db_name)
+    dataset_id = request.GET.get("dataset", None)
+    format = request.GET.get("format", 'html')
+    order = request.GET.get('order', 'id')
+    order_ = order[1:] if order.startswith('-') else order
+    if order_ not in monitoringlists_fields:
+            raise Http404
+
+    related = ['runcat', 'dataset']
+    monlist_list = Monitoringlist.objects.using(db_name).prefetch_related(*related)
+    if dataset_id:
+        monlist_list = monlist_list.filter(dataset=dataset_id)
+    monlist_list = monlist_list.order_by(order)
+
+    if format == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s_%s_monitoringlists.csv"' % (db_name, dataset_id)
+        writer = csv.writer(response)
+        writer.writerow(monitoringlists_fields)
+        for monitoringlist in monlist_list:
+            writer.writerow([getattr(monitoringlist, field)
+                             for field in monitoringlists_fields])
+        return response
+    else:
+        page = request.GET.get('page', 1)
+        paginator = Paginator(monlist_list, 100)
+        monitoringlists = paginator.page(page)
+
+        context = {
+            'page': page,
+            'fields': monitoringlists_fields,
+            'monitoringlists': monitoringlists,
+            'db_name': db_name,
+            'dataset': dataset_id,
+            'order': order,
+        }
+        return render(request, 'monitoringlists.html', context)

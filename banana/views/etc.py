@@ -34,6 +34,11 @@ def extractedsource(request, db_name, extractedsource_id):
 def runningcatalog(request, db_name, runningcatalog_id):
     pass
 
+
+def monitoringlist(request, db_name, monitoringlist_id):
+    pass
+
+
 def banana_500(request):
     """a 500 error view that shows the exception. Since we have a lot of
      MonetDB problems this may become useful.
