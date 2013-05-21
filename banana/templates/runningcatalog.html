@@ -1,0 +1,87 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+
+{% block title %}Running Catalog · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+<li><a href="{% url 'dataset' db_name runningcatalog.dataset.id %}">Dataset {{ runningcatalog.dataset }}</a></li>
+{% endblock %}
+
+{% block navdeep %}
+<li><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
+{% endblock %}
+
+{% block navdeeper %}
+<li class="active"><a href="{% url 'runningcatalog' db_name runningcatalog.id%}">Running catalog {{ runningcatalog.id }}</a></li>
+{% endblock %}
+
+{% block content %}
+
+<h1>Source #{{ runningcatalog.id }}</h1>
+
+<h2>Properties</h2>
+
+<table class="properties">
+  <tr>
+    <th>Position</th>
+    <td>({{ runningcatalog.wm_ra|stringformat:".3f" }}&deg;, {{ runningcatalog.wm_decl|stringformat:".3f" }}&deg;) &pm; ({{ runningcatalog.wm_ra_err|stringformat:".3f" }}&Prime;, {{ runningcatalog.wm_decl_err|stringformat:".3f" }}&Prime;)</td>
+  </tr>
+  <tr>
+    <th># of datapoints</th>
+    <td>{{ runningcatalog.datapoints }}</td>
+  </tr>
+  <tr>
+    <th>Dataset</th>
+    <td><a href="{% url 'dataset' db_name runningcatalog.dataset.id %}">{{ runningcatalog.dataset }}</a></td>
+  </tr>
+</table>
+
+
+
+{% if extractedsources %}
+<h2>Lightcurve</h2>
+
+<figure>
+    <figcaption>Light curve for this transient; horizontal error bars indicate the integration time. Red bars indicate the timestamps of all available images; their width again indicates the image integration time for the image.</figcaption>
+    <img src="{{ lightcurve.plot }}" />
+</figure>
+
+<div class="row">
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+                <th>ID</th>
+                <th>Date (UTC)</th>
+                <th>Integration time (s)</th>
+                <th>Frequency (MHz)</th>
+                <th>Flux (mJy)</th>
+                <th>Flux error (mJy)</th>
+            </thead>
+            <tbody>
+                {% for extractedsource in extractedsources %}
+                <tr class="{% cycle 'odd' 'even' %}">
+                    <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
+                    <td>{{ extractedsource.image.taustart_ts|date:"c" }}</td>
+                    <td>{{ extractedsource.image.tau_time|engineering }}</td>
+                    <td>{{ extractedsource.image.band.freq_central|engineering }}</td>
+                    <td>{{ extractedsource.f_int|engineering }}</td>
+                    <td>{{ extractedsource.f_int_err|engineering }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% else %}
+        No extracted sources.
+{% endif %}
+
+
+{% endblock content %}
+

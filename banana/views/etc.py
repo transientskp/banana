@@ -3,7 +3,8 @@ from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
 from banana.db import check_database
-from banana.models import Transient, Dataset, Assocxtrsource
+from banana.models import Transient, Dataset, Assocxtrsource, Extractedsource,\
+    Runningcatalog, Monitoringlist
 
 __author__ = 'gijs'
 
@@ -28,15 +29,49 @@ def transient(request, db_name, transient_id):
 
 
 def extractedsource(request, db_name, extractedsource_id):
-    pass
+    check_database(db_name)
+    try:
+        extractedsource = Extractedsource.objects.using(db_name).get(
+            pk=extractedsource_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+    context = {
+        'db_name': db_name,
+        'extractedsource': extractedsource,
+    }
+    return render(request, 'extractedsource.html', context)
 
 
 def runningcatalog(request, db_name, runningcatalog_id):
-    pass
+    check_database(db_name)
+    try:
+        runningcatalog = Runningcatalog.objects.using(db_name).get(
+            pk=runningcatalog_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+
+    assocs = Assocxtrsource.objects.using(db_name).filter(runcat=runningcatalog_id)
+    extractedsources = [x.xtrsrc for x in assocs]
+    context = {
+        'db_name': db_name,
+        'runningcatalog': runningcatalog,
+        'extractedsources': extractedsources,
+    }
+    return render(request, 'runningcatalog.html', context)
 
 
 def monitoringlist(request, db_name, monitoringlist_id):
-    pass
+    check_database(db_name)
+    try:
+        monitoringlist = Monitoringlist.objects.using(db_name).get(
+            pk=monitoringlist_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+    context = {
+        'db_name': db_name,
+        'monitoringlist': monitoringlist,
+    }
+    return render(request, 'monitoringlist.html', context)
 
 
 def banana_500(request):

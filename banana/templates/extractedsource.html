@@ -1,0 +1,111 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+
+{% block title %}Extracted Source · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+<li><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">Dataset {{ extractedsource.image.dataset }}</a></li>
+{% endblock %}
+
+{% block navdeep %}
+<li><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
+{% endblock %}
+
+{% block navdeeper %}
+<li class="active"><a href="{% url 'extractedsource' db_name extractedsource.id%}">Extracted Source {{ extractedsource.id }}</a></li>
+{% endblock %}
+
+{% block content %}
+<h1>Extractedsource #{{ extractedsource.id }}</h1>
+
+<table class="properties">
+  <tr>
+    <th>Position</th>
+    <td>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|stringformat:".3f" }}&Prime;)</td>
+  </tr>
+  <tr>
+    <th>Signal to noise</th>
+    <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
+  </tr>
+  <tr>
+    <th>Peak flux (mJy)</th>
+    <td>{{ extractedsource.f_peak|engineering }} &pm; {{ extractedsource.f_peak_err|engineering }}</td>
+  </tr>
+  <tr>
+    <th>Integrated flux (mJy)</th>
+    <td>{{ extractedsource.f_int|engineering }} &pm; {{ extractedsource.f_int_err|engineering }}</td>
+  </tr>
+  <tr>
+    <th>Dataset</th>
+    <td><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></td>
+  </tr>
+  <tr>
+    <th>Image</th>
+    <td><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></td>
+  </tr>
+  <tr>
+    <th>Running Catalog</th>
+    <td>
+      {% if extractedsource.runcat %}
+        <a href="{% url 'runningcatalog' db_name extractedsource.runcat %}">{{ extractedsource.runcat }}</a>
+      {% else %}
+        None
+      {% endif %}
+    </td>
+  </tr>
+
+    <tr>
+        <th>semimajor</th>
+        <td>{{ extractedsource.semimajor|engineering }}</td>
+    </tr>
+
+    <tr>
+        <th>extract_type</th>
+        <td>{{ extractedsource.extract_type }}</td>
+    </tr>
+
+    <tr>
+        <th>zone</th>
+        <td>{{ extractedsource.zone }}</td>
+    </tr>
+
+    <tr>
+        <th>pa</th>
+        <td>{{ extractedsource.pa|engineering }}</td>
+    </tr>
+
+    <tr>
+        <th>x</th>
+        <td>{{ extractedsource.x|engineering }}</td>
+    </tr>
+
+    <tr>
+        <th>y</th>
+        <td>{{ extractedsource.y|engineering }}</td>
+    </tr>
+
+    <tr>
+        <th>z</th>
+        <td>{{ extractedsource.z|engineering }}</td>
+    </tr>
+
+    <tr>
+        <th>Margin</th>
+        <td>{{ extractedsource.margin }}</td>
+    </tr>
+
+    <tr>
+        <th>semiminor</th>
+        <td>{{ extractedsource.semiminor|engineering }}</td>
+    </tr>
+
+
+</table>
+
+{% endblock content %}
+
