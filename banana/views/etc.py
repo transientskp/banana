@@ -51,7 +51,9 @@ def runningcatalog(request, db_name, runningcatalog_id):
         raise Http404
 
     assocs = Assocxtrsource.objects.using(db_name).filter(runcat=runningcatalog_id)
-    extractedsources = [x.xtrsrc for x in assocs]
+    #extractedsources = [x.xtrsrc for x in assocs]
+    related = ['image', 'image__band']
+    extractedsources = Extractedsource.objects.using(db_name).filter(asocxtrsources__in=assocs).prefetch_related(*related)
     context = {
         'db_name': db_name,
         'runningcatalog': runningcatalog,

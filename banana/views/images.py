@@ -52,6 +52,18 @@ def transient_plot(request, db_name, transient_id):
     return response
 
 
+def lightcurve_plot(request, db_name, runningcatalog_id):
+    check_database(db_name)
+    assocs = Assocxtrsource.objects.using(db_name).filter(runcat=runningcatalog_id)
+    related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+    lightcurve = Assocxtrsource.objects.using(db_name).filter(
+        runcat__in=assocs).prefetch_related(*related)
+    response = HttpResponse(mimetype="image/png")
+    canvas = banana.image.transient_plot(lightcurve)
+    canvas.print_figure(response, format='png')
+    return response
+
+
 def image_plot(request, db_name, image_id):
     check_database(db_name)
     try:

@@ -13,11 +13,11 @@
 {% endblock %}
 
 {% block navdeep %}
-<li><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
+<li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
 {% endblock %}
 
 {% block navdeeper %}
-<li class="active"><a href="{% url 'runningcatalog' db_name runningcatalog.id%}">Running catalog {{ runningcatalog.id }}</a></li>
+<li class="active"><a href="{% url 'runningcatalog' db_name runningcatalog.id%}">Running Catalog {{ runningcatalog.id }}</a></li>
 {% endblock %}
 
 {% block content %}
@@ -26,30 +26,25 @@
 
 <h2>Properties</h2>
 
-<table class="properties">
-  <tr>
-    <th>Position</th>
-    <td>({{ runningcatalog.wm_ra|stringformat:".3f" }}&deg;, {{ runningcatalog.wm_decl|stringformat:".3f" }}&deg;) &pm; ({{ runningcatalog.wm_ra_err|stringformat:".3f" }}&Prime;, {{ runningcatalog.wm_decl_err|stringformat:".3f" }}&Prime;)</td>
-  </tr>
-  <tr>
-    <th># of datapoints</th>
-    <td>{{ runningcatalog.datapoints }}</td>
-  </tr>
-  <tr>
-    <th>Dataset</th>
-    <td><a href="{% url 'dataset' db_name runningcatalog.dataset.id %}">{{ runningcatalog.dataset }}</a></td>
-  </tr>
-</table>
+<div class="row">
+    <div class="span6">
+        <dl class="dl-horizontal">
+            <dt>Position</dt>
+            <dd>({{ runningcatalog.wm_ra|stringformat:".3f" }}&deg;, {{ runningcatalog.wm_decl|stringformat:".3f" }}&deg;) &pm; ({{ runningcatalog.wm_ra_err|stringformat:".3f" }}&Prime;, {{ runningcatalog.wm_decl_err|stringformat:".3f" }}&Prime;)</dd>
+            <dt># of datapoints</dt>
+            <dd>{{ runningcatalog.datapoints }}</dd>
+            <dt>Dataset</dt>
+            <dd><a href="{% url 'dataset' db_name runningcatalog.dataset.id %}">{{ runningcatalog.dataset }}</a></dd>
+        </dl>
+    </div>
+
+    <div class="span6">
+        <img src="{% url 'lightcurve_plot' db_name runningcatalog.id %}" />
+    </div>
+</div>
 
 
-
-{% if extractedsources %}
-<h2>Lightcurve</h2>
-
-<figure>
-    <figcaption>Light curve for this transient; horizontal error bars indicate the integration time. Red bars indicate the timestamps of all available images; their width again indicates the image integration time for the image.</figcaption>
-    <img src="{{ lightcurve.plot }}" />
-</figure>
+<h2>Extracted Sources</h2>
 
 <div class="row">
     <div class="span12">
@@ -77,11 +72,6 @@
         </table>
     </div>
 </div>
-
-{% else %}
-        No extracted sources.
-{% endif %}
-
 
 {% endblock content %}
 

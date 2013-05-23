@@ -49,13 +49,11 @@
     <td><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></td>
   </tr>
   <tr>
-    <th>Running Catalog</th>
+    <th>Running Catalogs</th>
     <td>
-      {% if extractedsource.runcat %}
-        <a href="{% url 'runningcatalog' db_name extractedsource.runcat %}">{{ extractedsource.runcat }}</a>
-      {% else %}
-        None
-      {% endif %}
+      {% for runcat in extractedsource.runningcatalogs.all %}
+        <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
+      {% endfor %}
     </td>
   </tr>
 

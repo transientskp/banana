@@ -44,7 +44,6 @@
     <div class="span6">
         <img src="{% url 'transient_plot' db_name transient.id %}">
     </div>
-
 </div>
 
 {% if lightcurve %}
@@ -64,7 +63,7 @@
         <tbody>
             {% for point in lightcurve %}
             <tr class="{% cycle 'odd' 'even' %}">
-                <td><a href="">{{ point.xtrsrc_id }}</a></td>
+                <td><a href="{% url 'extractedsource' db_name point.xtrsrc.id %}">{{ point.xtrsrc_id }}</a></td>
                 <td>{{ point.xtrsrc.image.taustart_ts|date:"c" }}</td>
                 <td>{{ point.xtrsrc.image.tau_time|engineering }}</td>
                 <td>{{ point.xtrsrc.image.band.freq_central|mega }}</td>
