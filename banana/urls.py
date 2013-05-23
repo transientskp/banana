@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'^(?P<db_name>\w+)/runningcatalog/(?P<runningcatalog_id>\d+)/$',
         etc.runningcatalog, name='runningcatalog'),
     url(r'^(?P<db_name>\w+)/monitoringlist/(?P<monitoringlist_id>\d+)/$',
-        etc.runningcatalog, name='monitoringlist'),
+        etc.monitoringlist, name='monitoringlist'),
 
     url(r'^(?P<db_name>\w+)/image/(?P<image_id>\d+)/$', images.image,
         name='image'),
