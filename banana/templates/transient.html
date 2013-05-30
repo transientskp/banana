@@ -11,7 +11,7 @@
 
 {% block content %}
 
-
+<h2>Transient #{{ transient.id }}</h2>
 <div class="row">
     <div class="span6">
         <dl class="dl-horizontal">
@@ -59,6 +59,7 @@
             <th>Frequency (Hz)</th>
             <th>Flux (Jy)</th>
             <th>Flux error (Jy)</th>
+            <th>Thumbnail</th>
         </thead>
         <tbody>
             {% for point in lightcurve %}
@@ -69,6 +70,7 @@
                 <td>{{ point.xtrsrc.image.band.freq_central|engineering }}</td>
                 <td>{{ point.xtrsrc.f_int|engineering }}</td>
                 <td>{{ point.xtrsrc.f_int_err|engineering }}</td>
+                <td><img src="{% url 'extractedsource_plot' db_name point.xtrsrc.id %}?size=1"></td>
             </tr>
             {% endfor %}
             </tbody>

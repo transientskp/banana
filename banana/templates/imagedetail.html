@@ -21,9 +21,11 @@
 
 <map name="simple">
     {% for id, x, y, size in sources %}
-    <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="#" alt="{{ id }}" title="{{ id }}" >
+        <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
     {% endfor %}
 </map>
+
+
 
 {% endblock content %}
 

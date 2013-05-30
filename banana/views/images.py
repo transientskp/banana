@@ -2,10 +2,12 @@ import json
 from django.db.models import Count
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from django.core.cache import cache
 from banana.db import check_database
 import banana.image
 from banana.models import Extractedsource, Transient, Dataset, Assocxtrsource, Image
 from banana.mongo import get_hdu
+
 
 scatterplot_query = """\
 SELECT
@@ -96,11 +98,6 @@ def image_detail(request, db_name, image_id):
     dpi = 100
     image_size = size * dpi
 
-    sources += [
-        ('calibrate1', 0, 0, 10),
-        ('calibrate2', image_size, image_size, 10),
-    ]
-
     context = {
         'image': image,
         'db_name': db_name,
@@ -140,3 +137,22 @@ def extracted_sources_pixel(request, db_name, image_id):
         raise Http404
     sources = banana.image.extracted_sources_pixels(image)
     return HttpResponse(json.dump(sources), "application/json")
+
+
+def extractedsource_plot(request, db_name, extractedsource_id):
+    check_database(db_name)
+    try:
+        extractedsource = Extractedsource.objects.using(db_name).get(id=extractedsource_id)
+    except Image.DoesNotExist:
+        raise Http404
+    try:
+        size = int(request.GET.get('size', 1))
+    except ValueError:
+
+        raise Http404
+    hdu = get_hdu(extractedsource.image.url)
+    canvas = banana.image.extractedsource(hdu, extractedsource, size)
+    response = HttpResponse(mimetype="image/png")
+    canvas.print_figure(response, format='png', bbox_inches='tight',
+                        pad_inches=0, dpi=100)
+    return response

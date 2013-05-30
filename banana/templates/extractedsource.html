@@ -23,87 +23,68 @@
 {% block content %}
 <h1>Extractedsource #{{ extractedsource.id }}</h1>
 
-<table class="properties">
-  <tr>
-    <th>Position</th>
-    <td>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|stringformat:".3f" }}&Prime;)</td>
-  </tr>
-  <tr>
-    <th>Signal to noise</th>
-    <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
-  </tr>
-  <tr>
-    <th>Peak flux (Jy)</th>
-    <td>{{ extractedsource.f_peak|engineering }} &pm; {{ extractedsource.f_peak_err|engineering }}</td>
-  </tr>
-  <tr>
-    <th>Integrated flux (Jy)</th>
-    <td>{{ extractedsource.f_int|engineering }} &pm; {{ extractedsource.f_int_err|engineering }}</td>
-  </tr>
-  <tr>
-    <th>Dataset</th>
-    <td><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></td>
-  </tr>
-  <tr>
-    <th>Image</th>
-    <td><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></td>
-  </tr>
-  <tr>
-    <th>Running Catalogs</th>
-    <td>
-      {% for runcat in extractedsource.runningcatalogs.all %}
-        <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
-      {% endfor %}
-    </td>
-  </tr>
 
-    <tr>
-        <th>semimajor</th>
-        <td>{{ extractedsource.semimajor|engineering }}</td>
-    </tr>
+<div class="row">
+    <div class="span6">
+        <dl class="dl-horizontal">
+            <dt>Position</dt>
+            <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|stringformat:".3f" }}&Prime;)</dd>
 
-    <tr>
-        <th>extract_type</th>
-        <td>{{ extractedsource.extract_type }}</td>
-    </tr>
+            <dt>Signal to noise</dt>
+            <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
 
-    <tr>
-        <th>zone</th>
-        <td>{{ extractedsource.zone }}</td>
-    </tr>
+            <dt>Peak flux (Jy)</dt>
+            <dd>{{ extractedsource.f_peak|engineering }} &pm; {{ extractedsource.f_peak_err|engineering }}</dd>
 
-    <tr>
-        <th>pa</th>
-        <td>{{ extractedsource.pa|engineering }}</td>
-    </tr>
+            <dt>Integrated flux (Jy)</dt>
+            <dd>{{ extractedsource.f_int|engineering }} &pm; {{ extractedsource.f_int_err|engineering }}</dd>
 
-    <tr>
-        <th>x</th>
-        <td>{{ extractedsource.x|engineering }}</td>
-    </tr>
+            <dt>Dataset</dt>
+            <dd><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></dd>
 
-    <tr>
-        <th>y</th>
-        <td>{{ extractedsource.y|engineering }}</td>
-    </tr>
+            <dt>Image</dt>
+            <dd><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></dd>
 
-    <tr>
-        <th>z</th>
-        <td>{{ extractedsource.z|engineering }}</td>
-    </tr>
+            <dt>Running Catalogs</dt>
+            <dd>
+            {% for runcat in extractedsource.runningcatalogs.all %}
+            <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
+            {% endfor %}
+            </dd>
 
-    <tr>
-        <th>Margin</th>
-        <td>{{ extractedsource.margin }}</td>
-    </tr>
+            <dt>semimajor</dt>
+            <dd>{{ extractedsource.semimajor|engineering }}</dd>
 
-    <tr>
-        <th>semiminor</th>
-        <td>{{ extractedsource.semiminor|engineering }}</td>
-    </tr>
+            <dt>extract_type</dt>
+            <dd>{{ extractedsource.extract_type }}</dd>
 
+            <dt>zone</dt>
+            <dd>{{ extractedsource.zone }}</dd>
 
-</table>
+            <dt>pa</dt>
+            <dd>{{ extractedsource.pa|engineering }}</dd>
+
+            <dt>x</dt>
+            <dd>{{ extractedsource.x|engineering }}</dd>
+
+            <dt>y</dt>
+            <dd>{{ extractedsource.y|engineering }}</dd>
+
+            <dt>z</dt>
+            <dd>{{ extractedsource.z|engineering }}</dd>
+
+            <dt>Margin</dt>
+            <dd>{{ extractedsource.margin }}</dd>
+
+            <dt>semiminor</dt>
+            <dd>{{ extractedsource.semiminor|engineering }}</dd>
+        </dl>
+    </div>
+
+    <div class="span6">
+        <img src="{% url 'extractedsource_plot' db_name extractedsource.id %}?size=3">
+    </div>
+</div>
 
 {% endblock content %}
 

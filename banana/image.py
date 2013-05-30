@@ -178,3 +178,17 @@ def extracted_sources_pixels(image, size):
     # create average size since areamap can only draw circles
     size_px = (w_plot + h_plot) / 4
     return zip(ids, list(x_px), list(y_px), list(size_px))
+
+
+def extractedsource(hdu, source, size=1):
+    fig = pyplot.figure(figsize=(size, size))
+    fits = aplpy.FITSFigure(hdu, figure=fig, subplot=[0, 0, 1, 1],
+                            auto_refresh=False)
+    #fits.show_grayscale()
+    fits.show_colorscale()
+    fits.axis_labels.hide()
+    fits.tick_labels.hide()
+    fits.ticks.hide()
+    fits.recenter(source.ra, source.decl, width=source.semimajor / 90,
+                  height=source.semiminor / 90)
+    return fig.canvas
