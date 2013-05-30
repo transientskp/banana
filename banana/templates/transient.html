@@ -56,9 +56,9 @@
             <th>ID</th>
             <th>Date (UTC)</th>
             <th>Integration time (s)</th>
-            <th>Frequency (MHz)</th>
-            <th>Flux (mJy)</th>
-            <th>Flux error (mJy)</th>
+            <th>Frequency (Hz)</th>
+            <th>Flux (Jy)</th>
+            <th>Flux error (Jy)</th>
         </thead>
         <tbody>
             {% for point in lightcurve %}
@@ -66,7 +66,7 @@
                 <td><a href="{% url 'extractedsource' db_name point.xtrsrc.id %}">{{ point.xtrsrc_id }}</a></td>
                 <td>{{ point.xtrsrc.image.taustart_ts|date:"c" }}</td>
                 <td>{{ point.xtrsrc.image.tau_time|engineering }}</td>
-                <td>{{ point.xtrsrc.image.band.freq_central|mega }}</td>
+                <td>{{ point.xtrsrc.image.band.freq_central|engineering }}</td>
                 <td>{{ point.xtrsrc.f_int|engineering }}</td>
                 <td>{{ point.xtrsrc.f_int_err|engineering }}</td>
             </tr>
