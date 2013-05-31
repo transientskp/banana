@@ -1,4 +1,5 @@
 import sys
+import time
 from django.conf import settings
 from django.db.models import Count
 from django.http import Http404
@@ -19,10 +20,20 @@ def transient(request, db_name, transient_id):
     related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
     lightcurve = Assocxtrsource.objects.using(db_name).filter(
         runcat__in=assocs).prefetch_related(*related)
+
+    points_per_band = {}
+    for point in lightcurve:
+        label = str(point.xtrsrc.image.band)
+        if label not in points_per_band:
+           points_per_band[label] = []
+        points_per_band[label].append((point.xtrsrc.image.taustart_ts.strftime("%s"), point.xtrsrc.f_int))
+
+
     context = {
         'db_name': db_name,
         'transient': transient,
         'lightcurve': lightcurve,
+        'points_per_band': points_per_band,
     }
     return render(request, 'transient.html', context)
 

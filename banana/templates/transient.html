@@ -46,6 +46,10 @@
     </div>
 </div>
 
+    <div class="span12">
+        <div id='lightcurve'></div>
+    </div>
+
 {% if lightcurve %}
 <h3>Lightcurve</h3>
 
@@ -79,6 +83,76 @@
 </div>
 {% endif %}
 
+
+<script>
+    $(function () {
+        $('#lightcurve').highcharts({
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Lightcurve for transient #{{transient.id}}'
+            },
+            subtitle: {
+                text: 'yeah babeh'
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    enabled: true,
+                    text: 'moment'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: 'Flux (jY)'
+                }
+            },
+
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>',
+                        pointFormat: '{point.x}, {point.y}'
+                    }
+                }
+            },
+            series: [
+                {% for freq, points in points_per_band.items %}
+                    {
+                        name: '{{ freq }}',
+                        data: [
+                            {% for time, flux in points %}
+                                [{{ time }},{{ flux }}]
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        ]
+                    }{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ]
+        });
+    });
+</script>
 
 
 {% endblock content %}
