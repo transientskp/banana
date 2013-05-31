@@ -1,12 +1,11 @@
 import sys
 from django.conf import settings
+from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import render
 from banana.db import check_database
 from banana.models import Transient, Dataset, Assocxtrsource, Extractedsource,\
-    Runningcatalog, Monitoringlist
-
-__author__ = 'gijs'
+    Runningcatalog, Monitoringlist, Image
 
 
 def transient(request, db_name, transient_id):
@@ -86,3 +85,32 @@ def banana_500(request):
          'exception_value': value,
     }
     return render(request, '500.html', context)
+
+
+def dataset(request, db_name, dataset_id):
+    check_database(db_name)
+    try:
+        dataset = Dataset.objects.using(db_name).get(pk=dataset_id)
+    except Dataset.DoesNotExist:
+        raise Http404
+
+    images_per_band = {}
+    related = ['band']
+    images = Image.objects.using(db_name).filter(dataset=dataset).prefetch_related(*related).annotate(
+        num_extractedsources=Count('extractedsources')).order_by('taustart_ts')
+    num_extractedsources = Extractedsource.objects.using(db_name).filter(image__in=images.all()).count()
+
+    for image in images:
+        label = str(image.band)
+        if label not in images_per_band:
+           images_per_band[label] = []
+        images_per_band[label].append(image.num_extractedsources)
+
+    context = {
+        'db_name': db_name,
+        'dataset': dataset,
+        'images': images,
+        'num_extractedsources': num_extractedsources,
+        'images_per_band': images_per_band,
+    }
+    return render(request, 'dataset.html', context)

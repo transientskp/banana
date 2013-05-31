@@ -1,11 +1,12 @@
 from django.conf.urls import patterns, url
 from banana.views import etc, images, tables
+from banana.views.etc import dataset
 
 
 urlpatterns = patterns('',
     url(r'^$', tables.databases, name='databases'),
     url(r'^(?P<db_name>\w+)/$', tables.datasets, name='datasets'),
-    url(r'^(?P<db_name>\w+)/dataset/(?P<dataset_id>\d+)/$', tables.dataset,
+    url(r'^(?P<db_name>\w+)/dataset/(?P<dataset_id>\d+)/$', dataset,
         name='dataset'),
     url(r'^(?P<db_name>\w+)/images/$', tables.images, name='images'),
     url(r'^(?P<db_name>\w+)/transients/$', tables.transients,

@@ -39,11 +39,11 @@
             <dt>available images</dt>
             <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
 
-            <dt>unique sources</dt>
-            <dd>{{ dataset.num_runningcatalogs }}</dd>
+            <dt>running catalogs</dt>
+            <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
 
-            <dt>detected sources</dt>
-            <dd>{{ dataset.num_extractedsources }}</dd>
+            <dt>extracted sources</dt>
+            <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>
         </dl>
     </div>
 
@@ -67,7 +67,8 @@
     $(function () {
         $('#sources_chart').highcharts({
             chart: {
-                type: 'line'
+
+                zoomType: 'x'
             },
             title: {
                 text: 'number of sources'
@@ -75,8 +76,7 @@
             xAxis: {
                 title: {
                     text: 'Image'
-                },
-                tickInterval: 1
+                }
             },
             yAxis: {
                 title: {
@@ -84,18 +84,41 @@
                 },
                 min: 0
             },
-            series: [
-                {
-                    name: '{{ dataset.description }} (ID {{ dataset.id }})',
-                    data: [
-
-                        {% for image in images %}
-                            {{ image.num_extractedsources }}
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    ]
-
+plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    lineWidth: 1,
+                    marker: {
+                        enabled: false
+                    },
+                    shadow: false,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
                 }
+            },
+            series: [
+                {% for freq, points in images_per_band.items %}
+                    {
+                        type: 'area',
+                        name: '{{ freq }}',
+                        data: [
+                            {% for point in points %}
+                                {{ point }}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        ]
+                    }{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             ]
         });
     });
