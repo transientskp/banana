@@ -49,6 +49,8 @@
             <dd>
             {% for runcat in extractedsource.runningcatalogs.all %}
             <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
+            {% empty %}
+                None
             {% endfor %}
             </dd>
 
