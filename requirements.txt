@@ -1,6 +1,7 @@
 django
 djonet
 python-monetdb
+astropy
 aplpy
 numpy
 pyfits
@@ -8,3 +9,4 @@ pymongo
 matplotlib
 pywcs
 python-dateutil
+psycopg2
