@@ -1,6 +1,6 @@
 
 from base import *
-from banana.util import monetdb_list
+from banana.db import monetdb_list
 
 
 DEBUG = True
@@ -11,7 +11,7 @@ MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 INSTALLED_APPS += ['debug_toolbar']
 
 
-SECRET_KEY = ''
+SECRET_KEY = 'changeme!@'
 
 
 MONETDB_HOST = 'localhost'
@@ -31,6 +31,14 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
     }
 
 
+DATABASES['postgres_you'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'you',
+        'USER': 'you',
+        'PASSWORD': 'you',
+        'HOST': 'localhost',
+}
+
 ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
 
 
@@ -43,6 +51,6 @@ MONGODB = {
 
 
 ALLOWED_HOSTS = [
-    "servername.nl",
+    '127.0.0.1',
+    'servername.nl',
 ]
-
