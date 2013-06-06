@@ -27,9 +27,9 @@
             <dt>Significance level</dt>
             <dd>{{ transient.siglevel }}</dd>
             <dt>&eta;<sub>&nu;</sub></dt>
-            <dd>{{ transient.eta_int|engineering }}</dd>
+            <dd>{{ transient.eta_int|scientific }}</dd>
             <dt>V<sub>&nu;</sub></dt>
-            <dd>{{ transient.v_int|engineering }}</dd>
+            <dd>{{ transient.v_int|scientific }}</dd>
             <dt>Start date</dt>
             <dd>{% if transient.t_start %}{{ transient.t_start|date:"c" }}{% else %} Unkown {% endif %}</dd>
             <dt># of datapoints</dt>
@@ -70,10 +70,10 @@
             <tr class="{% cycle 'odd' 'even' %}">
                 <td><a href="{% url 'extractedsource' db_name point.xtrsrc.id %}">{{ point.xtrsrc_id }}</a></td>
                 <td>{{ point.xtrsrc.image.taustart_ts|date:"c" }}</td>
-                <td>{{ point.xtrsrc.image.tau_time|engineering }}</td>
-                <td>{{ point.xtrsrc.image.band.freq_central|engineering }}</td>
-                <td>{{ point.xtrsrc.f_int|engineering }}</td>
-                <td>{{ point.xtrsrc.f_int_err|engineering }}</td>
+                <td>{{ point.xtrsrc.image.tau_time|scientific }}</td>
+                <td>{{ point.xtrsrc.image.band.freq_central|scientific }}</td>
+                <td>{{ point.xtrsrc.f_int|scientific }}</td>
+                <td>{{ point.xtrsrc.f_int_err|scientific }}</td>
                 <td><img src="{% url 'extractedsource_plot' db_name point.xtrsrc.id %}?size=1"></td>
             </tr>
             {% endfor %}

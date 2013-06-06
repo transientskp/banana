@@ -34,10 +34,10 @@
             <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
 
             <dt>Peak flux (Jy)</dt>
-            <dd>{{ extractedsource.f_peak|engineering }} &pm; {{ extractedsource.f_peak_err|engineering }}</dd>
+            <dd>{{ extractedsource.f_peak|scientific }} &pm; {{ extractedsource.f_peak_err|scientific }}</dd>
 
             <dt>Integrated flux (Jy)</dt>
-            <dd>{{ extractedsource.f_int|engineering }} &pm; {{ extractedsource.f_int_err|engineering }}</dd>
+            <dd>{{ extractedsource.f_int|scientific }} &pm; {{ extractedsource.f_int_err|scientific }}</dd>
 
             <dt>Dataset</dt>
             <dd><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></dd>
@@ -55,7 +55,7 @@
             </dd>
 
             <dt>semimajor</dt>
-            <dd>{{ extractedsource.semimajor|engineering }}</dd>
+            <dd>{{ extractedsource.semimajor|scientific }}</dd>
 
             <dt>extract_type</dt>
             <dd>{{ extractedsource.extract_type }}</dd>
@@ -64,22 +64,22 @@
             <dd>{{ extractedsource.zone }}</dd>
 
             <dt>pa</dt>
-            <dd>{{ extractedsource.pa|engineering }}</dd>
+            <dd>{{ extractedsource.pa|scientific }}</dd>
 
             <dt>x</dt>
-            <dd>{{ extractedsource.x|engineering }}</dd>
+            <dd>{{ extractedsource.x|scientific }}</dd>
 
             <dt>y</dt>
-            <dd>{{ extractedsource.y|engineering }}</dd>
+            <dd>{{ extractedsource.y|scientific }}</dd>
 
             <dt>z</dt>
-            <dd>{{ extractedsource.z|engineering }}</dd>
+            <dd>{{ extractedsource.z|scientific }}</dd>
 
             <dt>Margin</dt>
             <dd>{{ extractedsource.margin }}</dd>
 
             <dt>semiminor</dt>
-            <dd>{{ extractedsource.semiminor|engineering }}</dd>
+            <dd>{{ extractedsource.semiminor|scientific }}</dd>
         </dl>
     </div>
 

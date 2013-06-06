@@ -34,10 +34,10 @@
             <dd><a href="{% url 'runningcatalog' db_name monitoringlist.runcat%}">{{ monitoringlist.runcat }}</a></dd>
 
             <dt>ra</dt>
-            <dd>{{ monitoringlist.ra|engineering }}</dd>
+            <dd>{{ monitoringlist.ra|scientific }}</dd>
 
             <dt>decl</dt>
-            <dd>{{ monitoringlist.decl|engineering }}</dd>
+            <dd>{{ monitoringlist.decl|scientific }}</dd>
 
             <dt>dataset</dt>
             <dd><a href="{% url 'dataset' db_name monitoringlist.dataset.id%}">#{{monitoringlist.dataset.id }}: {{ monitoringlist.dataset.description }}</a></dd>

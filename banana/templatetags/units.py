@@ -86,6 +86,17 @@ def engineering(value, precision=3):
 
 
 @register.filter
+def scientific(value, precision=3):
+    if type(value) is str and not value.isdigit():
+        return
+    if -1000 < value < 1000:
+        format = "%%.%sf" % precision
+    else:
+        format = "%%.%se" % precision
+    return format % value
+
+
+@register.filter
 def mega(value, precision=3):
     if type(value) is str and not value.isdigit():
         return

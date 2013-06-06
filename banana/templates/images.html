@@ -51,9 +51,9 @@
                 <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
                 <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
                 <td>{{ image.taustart_ts }}</td>
-                <td>{{ image.tau_time|engineering }}</td>
-                <td>{{ image.freq_eff|engineering  }}</td>
-                <td>{{ image.freq_bw|engineering  }}</td>
+                <td>{{ image.tau_time|scientific }}</td>
+                <td>{{ image.freq_eff|scientific  }}</td>
+                <td>{{ image.freq_bw|scientific  }}</td>
                 <td>{{ image.num_extractedsources }}</td>
                 <td>{{ image.rejections.all|join:" and " }}</td>
                 <td>{{ image.filename }}</td>

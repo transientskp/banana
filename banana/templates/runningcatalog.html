@@ -62,10 +62,10 @@
                 <tr class="{% cycle 'odd' 'even' %}">
                     <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
                     <td>{{ extractedsource.image.taustart_ts|date:"c" }}</td>
-                    <td>{{ extractedsource.image.tau_time|engineering }}</td>
-                    <td>{{ extractedsource.image.band.freq_central|engineering }}</td>
-                    <td>{{ extractedsource.f_int|engineering }}</td>
-                    <td>{{ extractedsource.f_int_err|engineering }}</td>
+                    <td>{{ extractedsource.image.tau_time|scientific }}</td>
+                    <td>{{ extractedsource.image.band.freq_central|scientific }}</td>
+                    <td>{{ extractedsource.f_int|scientific }}</td>
+                    <td>{{ extractedsource.f_int_err|scientific }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
