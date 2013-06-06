@@ -89,7 +89,7 @@ def engineering(value, precision=3):
 def scientific(value, precision=3):
     if type(value) is str and not value.isdigit():
         return
-    if -1000 < value < 1000:
+    if 0.0001 < abs(value) < 1000 or value == 0:
         format = "%%.%sf" % precision
     else:
         format = "%%.%se" % precision
