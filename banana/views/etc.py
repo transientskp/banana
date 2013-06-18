@@ -1,8 +1,8 @@
 import sys
-import time
+import csv
 from django.conf import settings
 from django.db.models import Count
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from banana.db import check_database
 from banana.models import Transient, Dataset, Assocxtrsource, Extractedsource,\
@@ -59,17 +59,33 @@ def runningcatalog(request, db_name, runningcatalog_id):
             pk=runningcatalog_id)
     except Dataset.DoesNotExist:
         raise Http404
-
+    format = request.GET.get("format", 'html')
     assocs = Assocxtrsource.objects.using(db_name).filter(runcat=runningcatalog_id)
     #extractedsources = [x.xtrsrc for x in assocs]
     related = ['image', 'image__band']
     extractedsources = Extractedsource.objects.using(db_name).filter(asocxtrsources__in=assocs).prefetch_related(*related)
-    context = {
-        'db_name': db_name,
-        'runningcatalog': runningcatalog,
-        'extractedsources': extractedsources,
-    }
-    return render(request, 'runningcatalog.html', context)
+
+    if format == 'csv':
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s_runningcatalog_%s.csv"' % (db_name, runningcatalog_id)
+        writer = csv.writer(response)
+        writer.writerow(['id', 'taustart_ts', 'tau_time', 'freq_central', 'f_int', 'fint_err'])
+
+        for extractedsource in extractedsources:
+            writer.writerow([extractedsource.id,
+                             extractedsource.image.taustart_ts,
+                             extractedsource.image.tau_time,
+                             extractedsource.image.band.freq_central,
+                             extractedsource.f_int,
+                             extractedsource.f_int_err])
+        return response
+    else:
+        context = {
+            'db_name': db_name,
+            'runningcatalog': runningcatalog,
+            'extractedsources': extractedsources,
+        }
+        return render(request, 'runningcatalog.html', context)
 
 
 def monitoringlist(request, db_name, monitoringlist_id):
