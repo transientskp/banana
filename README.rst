@@ -27,7 +27,7 @@ complain about not being able to import the ``PyQT4`` or ``sip`` modules.
 The solution to this is to use a non-interactive backend by default. 
 Editing **~/.matplotlib/matplotlibrc** to read::
 
- backend      : pdf
+ backend      : agg
 
 should do the trick.
 
