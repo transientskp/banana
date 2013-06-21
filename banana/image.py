@@ -123,10 +123,13 @@ def scatter_plot(extractedsources, size=5):
                   fmt='+', color='b', label="xtr")
     axes.set_xlabel(r'RA (arcsec)')
     axes.set_ylabel(r'DEC (arcsec)')
-    lim = 1 + max(int(numpy.trunc(max(abs(min(ra_dist_arcsec)),
-                                      abs(max(ra_dist_arcsec))))),
-                  int(numpy.trunc(max(abs(min(decl_dist_arcsec)),
-                                      abs(max(decl_dist_arcsec))))))
+    if len(ra_dist_arcsec):
+        lim = 1 + max(int(numpy.trunc(max(abs(min(ra_dist_arcsec)),
+                                          abs(max(ra_dist_arcsec))))),
+                      int(numpy.trunc(max(abs(min(decl_dist_arcsec)),
+                                          abs(max(decl_dist_arcsec))))))
+    else:
+        lim = 1
     axes.set_xlim(xmin=-lim, xmax=lim)
     axes.set_ylim(ymin=-lim, ymax=lim)
     axes.grid(False)

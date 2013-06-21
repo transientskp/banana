@@ -41,9 +41,6 @@ def datasets(request, db_name):
     return render(request, 'datasets.html', context)
 
 
-
-
-
 images_fields = [
     'id',
     'skyrgn__centre_ra',
@@ -53,6 +50,7 @@ images_fields = [
     'freq_eff',
     'freq_bw',
     'num_extractedsources',
+    'rejections',
     'url',
 ]
 
