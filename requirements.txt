@@ -2,9 +2,11 @@ django
 djonet
 python-monetdb
 aplpy==0.9.8
+astropy
 numpy
 pyfits
 pymongo
 matplotlib
 pywcs
 python-dateutil
+psycopg2
