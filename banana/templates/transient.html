@@ -35,7 +35,7 @@
             <dt># of datapoints</dt>
             <dd>{{ transient.runcat.datapoints }}</dd>
             <dt>Running cat #</dt>
-            <dd><a href="TODO">{{ transient.runcat }}</a></dd>
+            <dd><a href="{% url 'runningcatalog' db_name transient.runcat %}">{{ transient.runcat }}</a></dd>
             <dt>Dataset</dt>
             <dd><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">{{ transient.runcat.dataset.id }}</a></dd>
         </dl>
