@@ -11,8 +11,12 @@ from banana.tools import recur_getattr
 
 
 def databases(request):
-    databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
-                             settings.MONETDB_PASSPHRASE)
+    if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
+        # no monetdb database configureds
+        databases = []
+    else:
+        databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
+                                 settings.MONETDB_PASSPHRASE)
 
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
