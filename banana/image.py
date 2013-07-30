@@ -144,6 +144,8 @@ def extracted_sources_pixels(image, size):
     :returns: a list of sources of an image
     """
     hdu = get_hdu(image.url)
+    if not hdu:
+        return None
 
     # make an image
     fig = pyplot.figure(figsize=(size, size))

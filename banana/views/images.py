@@ -77,11 +77,12 @@ def image_plot(request, db_name, image_id):
         size = int(request.GET.get('size', 5))
     except ValueError:
         raise Http404
-    hdu = get_hdu(image.url)
-    canvas = banana.image.image_plot(hdu, size, sources)
     response = HttpResponse(mimetype="image/png")
-    canvas.print_figure(response, format='png', bbox_inches='tight',
-                        pad_inches=0, dpi=100)
+    hdu = get_hdu(image.url)
+    if hdu:
+        canvas = banana.image.image_plot(hdu, size, sources)
+        canvas.print_figure(response, format='png', bbox_inches='tight',
+                            pad_inches=0, dpi=100)
     return response
 
 
@@ -151,8 +152,9 @@ def extractedsource_plot(request, db_name, extractedsource_id):
 
         raise Http404
     hdu = get_hdu(extractedsource.image.url)
-    canvas = banana.image.extractedsource(hdu, extractedsource, size)
     response = HttpResponse(mimetype="image/png")
-    canvas.print_figure(response, format='png', bbox_inches='tight',
-                        pad_inches=0, dpi=100)
+    if hdu:
+        canvas = banana.image.extractedsource(hdu, extractedsource, size)
+        canvas.print_figure(response, format='png', bbox_inches='tight',
+                            pad_inches=0, dpi=100)
     return response
