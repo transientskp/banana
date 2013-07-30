@@ -93,6 +93,7 @@ def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
         axes.add_collection(patches)
     axes.set_xlabel('Seconds since %s' % T0.strftime('%Y-%m-%dT%H:%M:%S'))
     axes.set_ylabel('Flux (Jy)')
+    figure.tight_layout()
     return figure.canvas
 
 
