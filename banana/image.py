@@ -4,6 +4,7 @@ import time
 import datetime
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
+from matplotlib.ticker import MaxNLocator
 from  matplotlib import pyplot
 from banana.mongo import get_hdu
 
@@ -36,7 +37,7 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     return fig.canvas
 
 
-def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
+def transient_plot(lc, images=None, trigger_index=None, size=5):
     figure = pyplot.figure(figsize=(size, size))
     times = numpy.array([time.mktime(point.xtrsrc.image.taustart_ts.timetuple()) for point in lc])
     tau_times = [point.xtrsrc.image.tau_time / 2. for point in lc]
@@ -59,20 +60,12 @@ def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
 
     ecolor = [mapping[x][0] for x in bands]
 
-    if T0 is None:
-        tmin = sorted(times)[0]
-        if images:
-            tmin2 = time.mktime(sorted(zip(*images)[0])[0].timetuple())
-            if tmin2  < tmin:
-                tmin = tmin2
-        tmin = datetime.datetime.fromtimestamp(tmin)
-        T0 = datetime.datetime(tmin.year, tmin.month, tmin.day, 0, 0, 0)
-    tdiff = T0 - datetime.datetime(1970, 1, 1)
-    tdiff = (tdiff.microseconds + (tdiff.seconds + tdiff.days * 86400) * 1e6) / 1e6
-    times -= tdiff
+    times -= times.min()
     axes = figure.add_subplot(1, 1, 1)
     axes.errorbar(x=times, y=fluxes, yerr=errors, xerr=numpy.array(tau_times)/2., fmt='bo')
     axes.scatter(x=times, y=fluxes, color=ecolor, zorder=100)
+    axes.xaxis.get_major_formatter().set_powerlimits((-0,1))
+    axes.xaxis.set_major_locator(MaxNLocator(prune="lower"))
 
     # construct legend
     sorted_mapping = sorted(mapping.values(), key=lambda x: x[1])
@@ -91,7 +84,7 @@ def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
                    for xx, xxerr in zip(x, xerr)]
         patches = PatchCollection(patches, alpha=0.3, linewidth=0, visible=True, color='r')
         axes.add_collection(patches)
-    axes.set_xlabel('Seconds since %s' % T0.strftime('%Y-%m-%dT%H:%M:%S'))
+    axes.set_xlabel('Time (s)')
     axes.set_ylabel('Flux (Jy)')
     figure.tight_layout()
     return figure.canvas
