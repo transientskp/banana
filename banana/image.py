@@ -37,7 +37,7 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     return fig.canvas
 
 
-def transient_plot(lc, images=None, trigger_index=None, size=5):
+def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
     figure = pyplot.figure(figsize=(size, size))
     times = numpy.array([time.mktime(point.xtrsrc.image.taustart_ts.timetuple()) for point in lc])
     tau_times = [point.xtrsrc.image.tau_time / 2. for point in lc]
@@ -60,7 +60,17 @@ def transient_plot(lc, images=None, trigger_index=None, size=5):
 
     ecolor = [mapping[x][0] for x in bands]
 
-    times -= times.min()
+    if T0 is None:
+        tmin = times.min()
+        if images:
+            tmin2 = time.mktime(sorted(zip(*images)[0])[0].timetuple())
+            tmin = min(tmin, tmin2)
+        tmin = datetime.datetime.fromtimestamp(tmin)
+        T0 = datetime.datetime(tmin.year, tmin.month, tmin.day, 0, 0, 0)
+    tdiff = T0 - datetime.datetime(1970, 1, 1)
+    tdiff = (tdiff.microseconds + (tdiff.seconds + tdiff.days * 86400) * 1e6) / 1e6
+    times -= tdiff
+
     axes = figure.add_subplot(1, 1, 1)
     axes.errorbar(x=times, y=fluxes, yerr=errors, xerr=numpy.array(tau_times)/2., fmt='bo')
     axes.scatter(x=times, y=fluxes, color=ecolor, zorder=100)
