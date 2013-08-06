@@ -19,4 +19,4 @@ def get_hdu(url):
     elif os.path.exists(url):
         return pyfits.open(url, readonly=True)
     else:
-        raise Exception("Can't find file")
+        return None
