@@ -37,7 +37,7 @@
             <dd><a href="{% url 'dataset' db_name runningcatalog.dataset.id %}">{{ runningcatalog.dataset }}</a></dd>
         </dl>
         <div class="text-center">
-          <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ runningcatalog.wm_ra }}d-{{ runningcatalog.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
+          <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ runningcatalog.wm_ra }}d{{ runningcatalog.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
         </div>
     </div>
 
