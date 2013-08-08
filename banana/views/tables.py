@@ -1,3 +1,6 @@
+"""
+All views that generate tables of model objects
+"""
 import csv
 from django.conf import settings
 from django.core.paginator import Paginator

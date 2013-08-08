@@ -1,11 +1,11 @@
-import json
-from django.db.models import Count
+"""
+All views that generate images
+"""
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from django.core.cache import cache
 from banana.db import check_database
 import banana.image
-from banana.models import Extractedsource, Transient, Dataset, Assocxtrsource, Image
+from banana.models import Extractedsource, Transient, Dataset, Assocxtrsource,\
+    Image
 from banana.mongo import get_hdu
 
 
@@ -84,60 +84,6 @@ def image_plot(request, db_name, image_id):
         canvas.print_figure(response, format='png', bbox_inches='tight',
                             pad_inches=0, dpi=100)
     return response
-
-
-def image_detail(request, db_name, image_id):
-    check_database(db_name)
-    try:
-        image = Image.objects.using(db_name).get(pk=image_id)
-    except Image.DoesNotExist:
-        raise Http404
-
-    size = int(request.GET.get("size", 8))  # in inches
-
-    sources = banana.image.extracted_sources_pixels(image, size)
-    dpi = 100
-    image_size = size * dpi
-
-    context = {
-        'image': image,
-        'db_name': db_name,
-        'sources': sources,
-        'size': size,
-    }
-    return render(request, 'imagedetail.html', context)
-
-
-def image(request, db_name, image_id):
-    check_database(db_name)
-    related = ['skyrgn', 'dataset', 'band', 'rejections']
-    try:
-        image = Image.objects.prefetch_related(*related).using(
-            db_name).annotate(num_extractedsources=Count('extractedsources')
-        ).get(pk=image_id)
-    except Image.DoesNotExist:
-        raise Http404
-
-    image_size = 4  # inches, don't ask why
-
-    sources = banana.image.extracted_sources_pixels(image, image_size)
-
-    context = {
-        'image': image,
-        'db_name': db_name,
-        'sources': sources,
-        'image_size': image_size,
-    }
-    return render(request, 'image.html', context)
-
-
-def extracted_sources_pixel(request, db_name, image_id):
-    try:
-        image = Image.objects.using(db_name).get(pk=image_id)
-    except Image.DoesNotExist:
-        raise Http404
-    sources = banana.image.extracted_sources_pixels(image)
-    return HttpResponse(json.dump(sources), "application/json")
 
 
 def extractedsource_plot(request, db_name, extractedsource_id):
