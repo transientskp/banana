@@ -316,6 +316,11 @@ class Runningcatalog(models.Model):
     def __unicode__(self):
         return "%s" % (self.id)
 
+    def extractedsources(self):
+        assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
+        related = ['image', 'image__band']
+        return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs).prefetch_related(*related)
+
 
 class RunningcatalogFlux(models.Model):
     runcat = models.ForeignKey(Runningcatalog, primary_key=True,

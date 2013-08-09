@@ -1,7 +1,6 @@
 """
 All views that visualise a model object (banana.models)
 """
-import csv
 import json
 from django.db.models import Count
 from django.http import Http404, HttpResponse
@@ -9,9 +8,9 @@ from django.shortcuts import render
 from banana.db import check_database
 import banana.image
 from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
-    Runningcatalog, Assocxtrsource, Transient
+    Runningcatalog, Transient
 from banana.views.etc import MultiDbMixin, HybridDetailView
-#from django.views.generic import DetailView
+from django.views.generic import DetailView
 
 
 def image_detail(request, db_name, image_id):
@@ -111,58 +110,27 @@ def dataset(request, db_name, dataset_id):
     return render(request, 'dataset.html', context)
 
 
-def runningcatalog(request, db_name, runningcatalog_id):
-    check_database(db_name)
-    try:
-        runningcatalog = Runningcatalog.objects.using(db_name).get(
-            pk=runningcatalog_id)
-    except Dataset.DoesNotExist:
-        raise Http404
-    format = request.GET.get("format", 'html')
-    assocs = Assocxtrsource.objects.using(db_name).filter(runcat=runningcatalog_id)
-    #extractedsources = [x.xtrsrc for x in assocs]
-    related = ['image', 'image__band']
-    extractedsources = Extractedsource.objects.using(db_name).filter(asocxtrsources__in=assocs).prefetch_related(*related)
+class RunningcatalogDetail(MultiDbMixin, HybridDetailView):
+    model = Runningcatalog
 
-    if format == 'csv':
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s_runningcatalog_%s.csv"' % (db_name, runningcatalog_id)
-        writer = csv.writer(response)
-        writer.writerow(['id', 'taustart_ts', 'tau_time', 'freq_central', 'f_int', 'fint_err'])
-
-        for extractedsource in extractedsources:
-            writer.writerow([extractedsource.id,
-                             extractedsource.image.taustart_ts,
-                             extractedsource.image.tau_time,
-                             extractedsource.image.band.freq_central,
-                             extractedsource.f_int,
-                             extractedsource.f_int_err])
-        return response
-    else:
-        context = {
-            'db_name': db_name,
-            'runningcatalog': runningcatalog,
-            'extractedsources': extractedsources,
-        }
-        return render(request, 'runningcatalog.html', context)
+    def get_context_data(self, **kwargs):
+        context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
+        context['runningcatalog'] = self.object
+        context['extractedsources'] = self.object.extractedsources()
+        return context
 
 
-def extractedsource(request, db_name, extractedsource_id):
-    check_database(db_name)
-    try:
-        extractedsource = Extractedsource.objects.using(db_name).get(
-            pk=extractedsource_id)
-    except Dataset.DoesNotExist:
-        raise Http404
-    context = {
-        'db_name': db_name,
-        'extractedsource': extractedsource,
-    }
-    return render(request, 'extractedsource.html', context)
+
+class ExtractedSourceDetail(MultiDbMixin, HybridDetailView):
+    model = Extractedsource
+
+    def get_context_data(self, **kwargs):
+        context = super(ExtractedSourceDetail, self).get_context_data(**kwargs)
+        context['extractedsource'] = self.object
+        return context
 
 
 class TransientDetail(MultiDbMixin, HybridDetailView):
-
     model = Transient
 
     def get_context_data(self, **kwargs):
