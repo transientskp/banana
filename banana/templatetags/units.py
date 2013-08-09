@@ -117,3 +117,12 @@ def format_angle(value, format_type):
             sign = '-'
         result = "%s%d:%d:%.1f" % (sign, d, m, s)
     return result
+
+
+@register.filter
+def datetime2seconds(value):
+    return value.strftime('%s.%f')
+
+@register.filter
+def datetime2miliseconds(value):
+    return float(value.strftime('%s.%f')) * 1000

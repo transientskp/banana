@@ -1,0 +1,8 @@
+ {% for point in lightcurve %}
+   "band": {{ point.xtrsrc.image.band }},
+   "taustart_ts": {{ point.xtrsrc.image.taustart_ts }},
+   "f_int": {{ point.xtrsrc.f_int }},
+   "f_int_err": {{ point.xtrsrc.f_int_err }},
+   "tau_time": {{ point.xtrsrc.image.tau_time }}
+ {% endfor %}
+

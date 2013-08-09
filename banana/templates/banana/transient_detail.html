@@ -88,6 +88,38 @@
 
 
 <script>
+    // get data from django template
+    var lightcurve = [
+        {% for assocxtrsource in lightcurve %}{
+            "band": '{{ assocxtrsource.xtrsrc.image.band }}',
+            "taustart_ts": {{ assocxtrsource.xtrsrc.image.taustart_ts|datetime2miliseconds }},
+            "f_int": {{ assocxtrsource.xtrsrc.f_int }},
+            "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err }},
+            "tau_time": {{ assocxtrsource.xtrsrc.image.tau_time }},
+        }{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    ];
+    var title = 'Lightcurve for transient #{{transient.id}}';
+    var subtitle = 'start date {% if transient.t_start %}{{ transient.t_start|date:"c" }}{% else %} Unknown {% endif %}';
+
+    // group per band
+    var lightcurve_per_band = {};
+    lightcurve.forEach(function(entry) {
+        var band = entry["band"];
+        var datapoint = [entry['taustart_ts'], entry['f_int']];
+        if (band in lightcurve_per_band) {
+            lightcurve_per_band[band].push(datapoint);
+        } else {
+            lightcurve_per_band[band] = [datapoint];
+        }
+    });
+
+    // convert to highchart series
+    series = [];
+    for(key in lightcurve_per_band) {
+        series.push({'name': key, data: lightcurve_per_band[key]});
+    }
+
     $(function () {
         $('#lightcurve').highcharts({
             chart: {
@@ -95,21 +127,27 @@
                 zoomType: 'xy'
             },
             title: {
-                text: 'Lightcurve for transient #{{transient.id}}'
+                text: title
             },
             subtitle: {
-                text: 'yeah babeh'
+                text: subtitle
             },
             xAxis: {
                 type: 'datetime',
                 title: {
                     enabled: true,
-                    text: 'moment'
+                    text: 'date & time'
                 },
                 startOnTick: true,
                 endOnTick: true,
-                showLastLabel: true
+                showLastLabel: true,
+                labels: {
+                    formatter: function() {
+                        return Highcharts.dateFormat('%b %e %H:%M', this.value);
+                    }
+                }
             },
+
             yAxis: {
                 title: {
                     text: 'Flux (jY)'
@@ -140,19 +178,7 @@
                     }
                 }
             },
-            series: [
-                {% for freq, points in points_per_band.items %}
-                    {
-                        name: '{{ freq }}',
-                        data: [
-                            {% for time, flux in points %}
-                                [{{ time }},{{ flux }}]
-                                {% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        ]
-                    }{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            ]
+            series: series
         });
     });
 </script>

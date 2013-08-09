@@ -175,6 +175,9 @@ class Extractedsource(models.Model):
         managed = False
         db_table = 'extractedsource'
 
+    def __unicode__(self):
+        return str(self.id)
+
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -422,6 +425,16 @@ class Transient(models.Model):
     class Meta:
         managed = False
         db_table = 'transient'
+
+    def __unicode__(self):
+        return str(self.id)
+
+    def lightcurve(self):
+        assocs = Assocxtrsource.objects.using(self._state.db).filter(
+                    xtrsrc=self.trigger_xtrsrc)
+        related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+        return Assocxtrsource.objects.using(self._state.db).filter(
+                        runcat__in=assocs).prefetch_related(*related)
 
 
 class Version(models.Model):

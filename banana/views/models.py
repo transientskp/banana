@@ -10,6 +10,8 @@ from banana.db import check_database
 import banana.image
 from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
     Runningcatalog, Assocxtrsource, Transient
+from banana.views.etc import MultiDbMixin, HybridDetailView
+#from django.views.generic import DetailView
 
 
 def image_detail(request, db_name, image_id):
@@ -159,30 +161,11 @@ def extractedsource(request, db_name, extractedsource_id):
     return render(request, 'extractedsource.html', context)
 
 
-def transient(request, db_name, transient_id):
-    check_database(db_name)
-    try:
-        transient = Transient.objects.using(db_name).get(pk=transient_id)
-    except Dataset.DoesNotExist:
-        raise Http404
-    assocs = Assocxtrsource.objects.using(db_name).filter(
-        xtrsrc=transient.trigger_xtrsrc)
-    related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
-    lightcurve = Assocxtrsource.objects.using(db_name).filter(
-        runcat__in=assocs).prefetch_related(*related)
+class TransientDetail(MultiDbMixin, HybridDetailView):
 
-    points_per_band = {}
-    for point in lightcurve:
-        label = str(point.xtrsrc.image.band)
-        if label not in points_per_band:
-           points_per_band[label] = []
-        points_per_band[label].append((point.xtrsrc.image.taustart_ts.strftime("%s"), point.xtrsrc.f_int))
+    model = Transient
 
-
-    context = {
-        'db_name': db_name,
-        'transient': transient,
-        'lightcurve': lightcurve,
-        'points_per_band': points_per_band,
-    }
-    return render(request, 'transient.html', context)
+    def get_context_data(self, **kwargs):
+        context = super(TransientDetail, self).get_context_data(**kwargs)
+        context['lightcurve'] = self.object.lightcurve()
+        return context
