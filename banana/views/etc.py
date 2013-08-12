@@ -1,12 +1,15 @@
+import json
 import sys
 from django.conf import settings
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.views.generic.detail import SingleObjectTemplateResponseMixin,\
     BaseDetailView
 from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from banana.db import check_database
-
+import banana.image
+from banana.models import Image
 
 
 def banana_500(request):
@@ -92,3 +95,12 @@ class HybridSingleObjectTemplateResponseMixin(SingleObjectTemplateResponseMixin)
 
 class HybridDetailView(HybridSingleObjectTemplateResponseMixin, BaseDetailView):
     pass
+
+
+def extracted_sources_pixel(request, db_name, image_id):
+    try:
+        image = Image.objects.using(db_name).get(pk=image_id)
+    except Image.DoesNotExist:
+        raise Http404
+    sources = banana.image.extracted_sources_pixels(image)
+    return HttpResponse(json.dump(sources), "application/json")

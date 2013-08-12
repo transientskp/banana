@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.db.models import Count
 
 
 class Assoccatsource(models.Model):
@@ -136,9 +137,10 @@ class Dataset(models.Model):
         return Extractedsource.objects.using(self._state.db).filter(
             image__dataset=self)
 
-    def runningcatalogs(self):
-        return Runningcatalog.objects.using(self._state.db).filter(
-            dataset=self)
+    # TODO: check if this can be removed, already avaiable with back ref
+    #def runningcatalogs(self):
+    #    return Runningcatalog.objects.using(self._state.db).filter(
+    #        dataset=self)
 
 
 class Extractedsource(models.Model):
