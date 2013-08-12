@@ -2,30 +2,20 @@
 All views that generate tables of model objects
 """
 import csv
-from django.conf import settings
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from banana.db import monetdb_list, check_database
+from banana.db import check_database
+import banana.db
 from banana.models import Dataset, Image, Transient, Extractedsource,\
     Runningcatalog, Monitoringlist
 from banana.tools import recur_getattr
 
 
 def databases(request):
-    if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
-        # no monetdb database configureds
-        databases = []
-    else:
-        databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
-                                 settings.MONETDB_PASSPHRASE)
-
-    for dbname, dbparams in settings.DATABASES.items():
-        if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
-            databases.append({'name': dbname, 'type': 'postgresql'})
-
-    context = {'databases': databases}
+    database_list = banana.db.list()
+    context = {'databases': database_list}
     return render(request, 'databases.html', context)
 
 

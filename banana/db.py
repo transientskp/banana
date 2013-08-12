@@ -31,6 +31,23 @@ def monetdb_list(host, port, passphrase):
     return statuses
 
 
+def list():
+    """
+    :return: a list of all configured databases
+    """
+    if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
+        # no monetdb database configureds
+        databases = []
+    else:
+        databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
+                                 settings.MONETDB_PASSPHRASE)
+
+    for dbname, dbparams in settings.DATABASES.items():
+        if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
+            databases.append({'name': dbname, 'type': 'postgresql'})
+    return databases
+
+
 def check_database(db_name):
     if db_name not in settings.DATABASES:
         raise Http404
