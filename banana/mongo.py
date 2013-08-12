@@ -1,7 +1,7 @@
 import os.path
 from django.conf import settings
 from pymongo import Connection
-from gridfs import GridFS
+from gridfs import GridFS, NoFile
 import pyfits
 
 
@@ -14,7 +14,10 @@ def fetch(filename):
 
 def get_hdu(url):
     if settings.MONGODB["enabled"]:
-        mongo_file = fetch(url)
+        try:
+            mongo_file = fetch(url)
+        except NoFile:
+            return None
         return pyfits.open(mongo_file, mode="readonly")
     elif os.path.exists(url):
         return pyfits.open(url, readonly=True)
