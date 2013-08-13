@@ -1,10 +1,10 @@
-
 {% extends "base.html" %}
 
+{% load paginator %}
+{% load tableheader %}
 {% load units %}
 
 {% block title %}Extracted Sources · Banana{% endblock title %}
-
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
@@ -18,41 +18,39 @@
 <li class="active"><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
 {% endblock %}
 
-
 {% block content %}
 
-{% if extractedsources %}
+{% if extractedsource_list %}
 <div class="row">
     <div class="span12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
     <div class="span12 text-center">
-        {% load paginator %}
-        {% paginatorizer extractedsources %}
+
+        {% paginatorizer page_obj %}
     </div>
 
     <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-            {% for field in fields %}
-                <th>
-                    <a href="?page={{ extractedsources.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
-                        {{ field }}
-                        {% with "-"|safe|add:field as antifield %}
-                            {% if order == field %}<i class="icon-arrow-down"></i>
-                            {% elif order == antifield %}<i class="icon-arrow-up"></i>
-                            {% endif %}
-                        {% endwith %}
-                    </a>
-                </th>
-            {% endfor %}
+                {% tableheader 'id' %}
+                {% tableheader 'ra' %}
+                {% tableheader 'ra_err' %}
+                {% tableheader 'decl' %}
+                {% tableheader 'decl_err' %}
+                {% tableheader 'det_sigma' %}
+                {% tableheader 'f_peak' %}
+                {% tableheader 'f_peak_err' %}
+                {% tableheader 'f_int' %}
+                {% tableheader 'f_int_err' %}
+                {% tableheader 'extract_type' %}
             </tr>
             </thead>
 
             <tbody>
-            {% for extractedsource in extractedsources %}
+            {% for extractedsource in extractedsource_list %}
             <tr>
                 <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
                 <td>{{ extractedsource.ra|stringformat:".3f" }}</td>
@@ -72,8 +70,7 @@
     </div>
 
     <div class="span12 text-center">
-        {% load paginator %}
-        {% paginatorizer extractedsources %}
+        {% paginatorizer page_obj %}
     </div>
 
 

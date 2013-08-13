@@ -1,0 +1,10 @@
+<th>
+    <a href="?page={{ extractedsource_list.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
+        {{ field }}
+        {% with "-"|safe|add:field as antifield %}
+            {% if order == field %}<i class="icon-arrow-down"></i>
+            {% elif order == antifield %}<i class="icon-arrow-up"></i>
+            {% endif %}
+        {% endwith %}
+    </a>
+</th>

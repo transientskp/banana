@@ -1,12 +1,9 @@
 import json
 import sys
 from django.conf import settings
+from django.db import models
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
-from django.views.generic.detail import SingleObjectTemplateResponseMixin,\
-    BaseDetailView
-from django.core.exceptions import ImproperlyConfigured
-from django.db import models
 from banana.db import check_database
 import banana.image
 from banana.models import Image
@@ -31,9 +28,9 @@ class MultiDbMixin(object):
     It requires a db_name variable in your request.
     """
     def get_queryset(self):
-        self.db_name = self.kwargs['db_name']
+        self.db_name = self.kwargs.get('db', 'default')
         check_database(self.db_name)
-        return self.model._default_manager.all().using(self.db_name)
+        return super(MultiDbMixin, self).get_queryset().using(self.db_name)
 
     def get_context_data(self, **kwargs):
         context = super(MultiDbMixin, self).get_context_data(**kwargs)
@@ -41,14 +38,9 @@ class MultiDbMixin(object):
         return context
 
 
-class HybridSingleObjectTemplateResponseMixin(SingleObjectTemplateResponseMixin):
+class HybridTemplateMixin(object):
 
     def get_template_names(self):
-        """
-        This does the same as ``get_template_names`` in
-        ``SingleObjectTemplateResponseMixin`` but checks the request for a
-        ``format`` variable and sets template and content_type accordingly.
-        """
         format = self.request.GET.get('format', 'html')
         if format == 'json':
             self.content_type = 'application/json'
@@ -57,44 +49,30 @@ class HybridSingleObjectTemplateResponseMixin(SingleObjectTemplateResponseMixin)
             self.content_type = 'text/csv'
             extension = format
         else:
-            self.content_type = extension = 'html'
+            extension = 'html'
 
-        try:
-            names = super(SingleObjectTemplateResponseMixin, self).get_template_names()
-        except ImproperlyConfigured:
-            # If template_name isn't specified, it's not a problem --
-            # we just start with an empty list.
-            names = []
+        if hasattr(self, 'object') and \
+                isinstance(self.object, models.Model) and \
+                hasattr(self.object, 'model'):
+            opts = self.object.model._meta
+        elif hasattr(self, 'model') and self.model is not None and \
+                issubclass(self.model, models.Model):
+            opts = self.model._meta
+        else:
+            return []
 
-        # If self.template_name_field is set, grab the value of the field
-        # of that name from the object; this is the most specific template
-        # name, if given.
-        if self.object and self.template_name_field:
-            name = getattr(self.object, self.template_name_field, None)
-            if name:
-                names.insert(0, name)
+        return ["%s/%s%s.%s" % (opts.app_label,
+                                opts.object_name.lower(),
+                                self.template_name_suffix,
+                                extension)]
 
-        # The least-specific option is the default <app>/<model>_detail.html;
-        # only use this if the object in question is a model.
-        if isinstance(self.object, models.Model):
-            names.append("%s/%s%s.%s" % (
-                self.object._meta.app_label,
-                self.object._meta.object_name.lower(),
-                self.template_name_suffix,
-                extension
-            ))
-        elif hasattr(self, 'model') and self.model is not None and issubclass(self.model, models.Model):
-            names.append("%s/%s%s.%s" % (
-                self.model._meta.app_label,
-                self.model._meta.object_name.lower(),
-                self.template_name_suffix,
-                extension
-            ))
-        return names
-
-
-class HybridDetailView(HybridSingleObjectTemplateResponseMixin, BaseDetailView):
-    pass
+    def render_to_response(self, context, **response_kwargs):
+        format = self.request.GET.get('format', 'html')
+        if format == 'json':
+            response_kwargs['content_type'] = 'application/json'
+        elif format == 'csv':
+            response_kwargs['content_type'] = 'text/csv'
+        return super(HybridTemplateMixin, self).render_to_response(context, **response_kwargs)
 
 
 def extracted_sources_pixel(request, db_name, image_id):
@@ -104,3 +82,32 @@ def extracted_sources_pixel(request, db_name, image_id):
         raise Http404
     sources = banana.image.extracted_sources_pixels(image)
     return HttpResponse(json.dump(sources), "application/json")
+
+
+class SortListMixin(object):
+    """
+    View mixin which provides sorting for ListView.
+    """
+    default_order = 'id'
+
+    def get_order(self):
+        return self.request.GET.get('order', self.default_order)
+
+    def get_queryset(self):
+        order = self.get_order()
+
+        # TODO: this does not work with annotated fields
+        #if order not in self.model._meta.get_all_field_names():
+        #    raise Http404
+
+        qs = super(SortListMixin, self).get_queryset()
+        return qs.order_by(order)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(SortListMixin, self).get_context_data(*args, **kwargs)
+        order = self.get_order()
+        context.update({
+            'order': order,
+        })
+        return context
+

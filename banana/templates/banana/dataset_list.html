@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load paginator %}
+
+{% block title %}Datasets · Banana{% endblock title %}
+
+{% block navdatabase %}<li class="active"><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block content %}
+<div class="row">
+{% if not dataset_list %}
+    <div class="span12 text-center">
+        No datasets are available.
+    </div>
+{% else %}
+    <div class="span12 text-center">
+        <a href="{% url 'transients' db_name %}" class="btn">All Transients</a>
+        <a href="{% url 'images' db_name %}" class="btn">All Images</a>
+        <a href="{% url 'extractedsources' db_name %}" class="btn">All Extracted Sources</a>
+        <a href="{% url 'runningcatalogs' db_name %}" class="btn">All Running Catalogs</a>
+        <a href="{% url 'monitoringlists' db_name %}" class="btn">All Monitoring Lists</a>
+    </div>
+
+    <div class="span12 text-center">
+        {% paginatorizer page_obj %}
+    </div>
+
+    <div class="span12">
+        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
+            <thead>
+            <tr>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'id' %}-{% endif %}id">ID {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'description' %}-{% endif %}description">Description {% if order == 'description' %}<i class="icon-arrow-down">{% elif order == '-description' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'rerun' %}-{% endif %}rerun">Rerun {% if order == 'rerun' %}<i class="icon-arrow-down">{% elif order == '-rerun' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'num_images' %}-{% endif %}num_images">Images {% if order == 'num_images' %}<i class="icon-arrow-down">{% elif order == '-num_images' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'process_ts' %}-{% endif %}process_ts">Finished {% if order == 'process_ts' %}<i class="icon-arrow-down">{% elif order == '-process_ts' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'num_transients' %}-{% endif %}num_transients">Transients {% if order == 'num_transients' %}<i class="icon-arrow-down">{% elif order == '-num_transients' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for dataset in dataset_list %}
+            <tr>
+                <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
+                <td>{{ dataset.description }}</td>
+                <td>{{ dataset.rerun }}</td>
+                <td>{{ dataset.num_images }}</td>
+                <td>{{ dataset.process_ts }}</td>
+                <td>{{ dataset.num_transients }}</td>
+            </tr>
+            </a>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="span12 text-center">
+        {% paginatorizer page_obj %}
+    </div>
+{% endif %}
+</div>
+
+
+
+
+
+{% endblock content %}
+
+

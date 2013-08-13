@@ -1,9 +1,4 @@
 #band, taustart_ts, f_int, f_int_err, tau_time
-{% for point in lightcurve %}
-    {{ point.xtrsrc.image.band }},
-    {{ point.xtrsrc.image.taustart_ts }},
-    {{ point.xtrsrc.f_int }},
-    {{ point.xtrsrc.f_int_err }},
-    {{ point.xtrsrc.image.tau_time }}
+{% for point in lightcurve %}{{ point.xtrsrc.image.band }}, {{ point.xtrsrc.image.taustart_ts }}, {{ point.xtrsrc.f_int }}, {{ point.xtrsrc.f_int_err }}, {{ point.xtrsrc.image.tau_time }}
 {% endfor %}
 

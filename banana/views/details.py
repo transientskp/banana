@@ -7,7 +7,7 @@ from django.views.generic import DetailView
 import banana.image
 from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
     Runningcatalog, Transient
-from banana.views.etc import MultiDbMixin, HybridDetailView
+from banana.views.etc import MultiDbMixin, HybridTemplateMixin
 
 
 class ImageDetail(MultiDbMixin, DetailView):
@@ -80,7 +80,7 @@ class DatasetDetail(MultiDbMixin, DetailView):
         return context
 
 
-class RunningcatalogDetail(MultiDbMixin, HybridDetailView):
+class RunningcatalogDetail(MultiDbMixin, HybridTemplateMixin, DetailView):
     model = Runningcatalog
 
     def get_context_data(self, **kwargs):
@@ -99,7 +99,7 @@ class ExtractedSourceDetail(MultiDbMixin, DetailView):
         return context
 
 
-class TransientDetail(MultiDbMixin, HybridDetailView):
+class TransientDetail(MultiDbMixin, HybridTemplateMixin, DetailView):
     model = Transient
 
     def get_context_data(self, **kwargs):
