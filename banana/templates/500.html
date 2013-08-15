@@ -1,13 +1,29 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>500 · Banana</title>
 
-{% block title %}500 · Banana{% endblock title %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap-rowlink.min.css" rel="stylesheet" media="screen">
+    <script src="{{ STATIC_URL }}jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-rowlink.min.js"></script>
 
+
+    <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico"/>
+</head>
+<body>
+
+<div class="container">
 <h1>error 500</h1>
 
 <div class="alert alert-error">
     <strong>O no!</strong> {{ exception_value }}
 </div>
 
-{% endblock content %}
+</div>
+
+</body>
+</html>
