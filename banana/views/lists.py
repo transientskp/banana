@@ -61,7 +61,7 @@ class TransientList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
 
 
 class ExtractedsourcesList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
-                            ListView):
+                           DatasetMixin, ListView):
     model = Extractedsource
     paginate_by = 100
 
