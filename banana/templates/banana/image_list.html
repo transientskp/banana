@@ -21,13 +21,13 @@
 {% load units %}
 
 <div class="row">
-    {% if images %}
+    {% if image_list %}
         <div class="span12 text-center">
             <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
         </div>
 
         <div class="span12 text-center">
-            {% paginatorizer page_obj %}
+            {% paginatorizer %}
         </div>
 
 
@@ -46,7 +46,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for image in images %}
+            {% for image in image_list %}
             <tr{% if image.rejections.all %} class="error"{% endif %}>
                 <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
                 <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
@@ -65,7 +65,7 @@
     </div>
 
     <div class="span12 text-center">
-        {% paginatorizer page_obj %}
+        {% paginatorizer %}
     </div>
 
 {% else %}

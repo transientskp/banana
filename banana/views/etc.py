@@ -111,3 +111,14 @@ class SortListMixin(object):
         })
         return context
 
+
+class DatasetMixin(object):
+    def get_dataset_id(self):
+        return self.request.GET.get("dataset", None)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(DatasetMixin, self).get_context_data(*args, **kwargs)
+        context['dataset'] = self.get_dataset_id()
+        return context
+
+

@@ -21,7 +21,7 @@
 
 {% block content %}
 
-{% if runningcatalogs %}
+{% if runningcatalog_list %}
 <div class="row">
     <div class="span12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
@@ -29,7 +29,7 @@
 
     <div class="span12 text-center">
         {% load paginator %}
-        {% paginatorizer runningcatalogs %}
+        {% paginatorizer %}
     </div>
 
     <div class="span12">
@@ -48,7 +48,7 @@
             </thead>
 
             <tbody>
-            {% for runningcatalog in runningcatalogs %}
+            {% for runningcatalog in runningcatalog_list %}
             <tr>
                 <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
                 <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
@@ -66,7 +66,7 @@
 
     <div class="span12 text-center">
         {% load paginator %}
-        {% paginatorizer runningcatalogs %}
+        {% paginatorizer %}
     </div>
 
 

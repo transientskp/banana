@@ -1,0 +1,3 @@
+# id, runcat, ra, decl, dataset, userentry
+{% for monitoringlist in monitoringlist_list %}{{ monitoringlist.id }}, {{ monitoringlist.runcat }}, {{ monitoringlist.ra }}, {{ monitoringlist.decl }}, "{{ monitoringlist.dataset }}", {{ monitoringlist.userentry }}
+{% endfor %}

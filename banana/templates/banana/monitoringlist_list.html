@@ -2,6 +2,8 @@
 {% extends "base.html" %}
 
 {% load units %}
+{% load paginator %}
+{% load tableheader %}
 
 {% block title %}Monitoring Lists · Banana{% endblock title %}
 
@@ -21,38 +23,32 @@
 
 {% block content %}
 
-{% if monitoringlists %}
+{% if monitoringlist_list %}
 <div class="row">
     <div class="span12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
     <div class="span12 text-center">
-        {% load paginator %}
-        {% paginatorizer monitoringlists %}
+
+        {% paginatorizer  %}
     </div>
 
     <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-            {% for field in fields %}
-                <th>
-                    <a href="?page={{ monitoringlists.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
-                        {{ field }}
-                        {% with "-"|safe|add:field as antifield %}
-                            {% if order == field %}<i class="icon-arrow-down"></i>
-                            {% elif order == antifield %}<i class="icon-arrow-up"></i>
-                            {% endif %}
-                        {% endwith %}
-                    </a>
-                </th>
-            {% endfor %}
+                {% tableheader 'id' %}
+                {% tableheader 'runcat' %}
+                {% tableheader 'ra' %}
+                {% tableheader 'decl' %}
+                {% tableheader 'dataset' %}
+                {% tableheader 'userentry' %}
             </tr>
             </thead>
 
             <tbody>
-            {% for monitoringlist in monitoringlists %}
+            {% for monitoringlist in monitoringlist_list %}
             <tr>
                 <td><a href="{% url 'monitoringlist' db_name monitoringlist.id %}">{{ monitoringlist.id }}</a></td>
                 <td>{{ monitoringlist.runcat }}</td>
@@ -67,8 +63,7 @@
     </div>
 
     <div class="span12 text-center">
-        {% load paginator %}
-        {% paginatorizer monitoringlists %}
+        {% paginatorizer %}
     </div>
 
 
