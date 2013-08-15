@@ -7,7 +7,7 @@ from django.views.generic import DetailView
 import banana.image
 from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
     Runningcatalog, Transient
-from banana.views.etc import MultiDbMixin, HybridTemplateMixin
+from banana.views.mixins import MultiDbMixin, HybridTemplateMixin
 
 
 class ImageDetail(MultiDbMixin, DetailView):

@@ -2,17 +2,11 @@
 All views that generate lists of model objects
 """
 from django.db.models import Count
-from django.shortcuts import render
-from django.views.generic import ListView
-from banana.db import check_database
+from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.models import Dataset, Image, Transient, Extractedsource, \
     Runningcatalog, Monitoringlist
-from banana.views.etc import MultiDbMixin, HybridTemplateMixin, \
-    SortListMixin, DatasetMixin
-
-
-from django.views.generic import TemplateView
+from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, SortListMixin, DatasetMixin
 
 
 class DatabaseList(TemplateView):
