@@ -7,14 +7,8 @@ the `TKP website <http://www.transientskp.org/>`.
 
 Installation
 ============
-If running with monetdb, don't forget to run::
 
-  monetdbd set control=yes /path/to/dbfarm
-  monetdbd set passphrase=mysecretpassphrase /path/to/dbfarm
-  
-And then reboot the monetdb server.
-
-Then, to install banana::
+to install banana::
 
     pip install -r requirements.txt
     cp bananaproject/settings/local_example.py bananaproject/settings/local.py
@@ -22,18 +16,34 @@ Then, to install banana::
     ./manage collectstatic
     ./manage runserver
 
-Finally, it is possible to run banana in a virtualenv, but matplotlib may 
+Finally, it is possible to run banana in a virtualenv, but matplotlib may
 complain about not being able to import the ``PyQT4`` or ``sip`` modules.
-The solution to this is to use a non-interactive backend by default. 
+The solution to this is to use a non-interactive backend by default.
 Editing **~/.matplotlib/matplotlibrc** to read::
 
  backend      : agg
 
 should do the trick.
 
+If running with monetdb, don't forget to run::
 
-Using
-=====
+  monetdbd set control=yes /path/to/dbfarm
+  monetdbd set passphrase=mysecretpassphrase /path/to/dbfarm
+
+And then reboot the monetdb server.
+
+
+Testing
+=======
+
+To run the banana test suite run::
+
+    $ ./manage.py test --settings=bananaproject.settings.testing
+
+
+
+Credits
+=======
 
 see requirements file, and:
 
