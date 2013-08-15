@@ -8,7 +8,7 @@
 
 {% block content %}
 
-{% if databases %}
+{% if database_list %}
 
 <div class="row">
         <div class="span12 text-center">
@@ -43,7 +43,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for database in databases %}
+            {% for database in database_list %}
             <tr{% if database.locked %} class="error"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
                 <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>

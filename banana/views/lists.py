@@ -14,7 +14,7 @@ class DatabaseList(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DatabaseList, self).get_context_data(*args, **kwargs)
-        context['databases'] = banana.db.list()
+        context['database_list'] = banana.db.list()
         return context
 
 
