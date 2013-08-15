@@ -20,7 +20,10 @@ class MultiDbMixin(object):
 
 
 class HybridTemplateMixin(object):
-
+    """
+    Checks the request for a format variable. If it is json or csv, will
+    set the content_type and template accordingly.
+    """
     def get_template_names(self):
         format = self.request.GET.get('format', 'html')
         if format == 'json':
@@ -53,7 +56,8 @@ class HybridTemplateMixin(object):
             response_kwargs['content_type'] = 'application/json'
         elif format == 'csv':
             response_kwargs['content_type'] = 'text/csv'
-        return super(HybridTemplateMixin, self).render_to_response(context, **response_kwargs)
+        return super(HybridTemplateMixin,
+                     self).render_to_response(context, **response_kwargs)
 
 
 class SortListMixin(object):
