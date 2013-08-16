@@ -47,6 +47,9 @@ def transient_plot(lc, T0=None, images=None, trigger_index=None, size=5):
     #stokes = [point[6] for point in lc]
     bandnames = ["%.1f MHz" % (point.xtrsrc.image.band.freq_central / 1e6,) for point in lc]
 
+    if not len(times):
+        return figure.canvas
+
     # colors to use for band labeling.
     colors = 'bgrcmykw'
 
