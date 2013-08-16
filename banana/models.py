@@ -24,7 +24,7 @@ class Assocskyrgn(models.Model):
                                related_name='assocskyrgns')
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='assocskyrgns')
-    distance_deg = models.FloatField()
+    distance_deg = models.FloatField(null=True)
 
     class Meta:
         managed = False
@@ -40,7 +40,7 @@ class Assocxtrsource(models.Model):
     type = models.IntegerField()
     distance_arcsec = models.FloatField()
     r = models.FloatField()
-    loglr = models.FloatField()
+    loglr = models.FloatField(null=True)
 
     class Meta:
         managed = False
@@ -113,12 +113,12 @@ class Dataset(models.Model):
     rerun = models.IntegerField()
     type = models.IntegerField()
     process_ts = models.DateTimeField()
-    detection_threshold = models.FloatField()
-    analysis_threshold = models.FloatField()
-    assoc_radius = models.FloatField()
-    backsize_x = models.IntegerField()
-    backsize_y = models.IntegerField()
-    margin_width = models.FloatField()
+    detection_threshold = models.FloatField(null=True)
+    analysis_threshold = models.FloatField(null=True)
+    assoc_radius = models.FloatField(null=True)
+    backsize_x = models.IntegerField(null=True)
+    backsize_y = models.IntegerField(null=True)
+    margin_width = models.FloatField(null=True)
     description = models.CharField(max_length=100)
     node = models.IntegerField()
     nodes = models.IntegerField()
@@ -184,9 +184,9 @@ class Extractedsource(models.Model):
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
-    freq_central = models.FloatField()
-    freq_low = models.FloatField()
-    freq_high = models.FloatField()
+    freq_central = models.FloatField(null=True)
+    freq_low = models.FloatField(null=True)
+    freq_high = models.FloatField(null=True)
 
     class Meta:
         managed = False
@@ -203,11 +203,11 @@ class Image(models.Model):
     id = models.IntegerField(primary_key=True)
     dataset = models.ForeignKey(Dataset, db_column='dataset',
                                 related_name='images')
-    tau = models.IntegerField()
+    tau = models.IntegerField(null=True)
     band = models.ForeignKey(Frequencyband, db_column='band',
                              related_name='images')
     stokes = models.IntegerField()
-    tau_time = models.FloatField()
+    tau_time = models.FloatField(null=True)
     freq_eff = models.FloatField()
     freq_bw = models.FloatField()
     taustart_ts = models.DateTimeField()
@@ -219,8 +219,8 @@ class Image(models.Model):
     rb_pa = models.FloatField()
     deltax = models.FloatField()
     deltay = models.FloatField()
-    fwhm_arcsec = models.FloatField()
-    fov_degrees = models.FloatField()
+    fwhm_arcsec = models.FloatField(null=True)
+    fov_degrees = models.FloatField(null=True)
     url = models.CharField(max_length=1024)
     node = models.IntegerField()
     nodes = models.IntegerField()
@@ -332,7 +332,7 @@ class RunningcatalogFlux(models.Model):
     band = models.ForeignKey(Frequencyband, db_column='band')
     stokes = models.IntegerField()
     f_datapoints = models.IntegerField()
-    resolution = models.FloatField()
+    resolution = models.FloatField(null=True)
     avg_f_peak = models.FloatField()
     avg_f_peak_sq = models.FloatField()
     avg_f_peak_weight = models.FloatField()
@@ -430,7 +430,7 @@ class Transient(models.Model):
                                        db_column='trigger_xtrsrc',
                                        related_name='transients')
     status = models.IntegerField()
-    t_start = models.DateTimeField()
+    t_start = models.DateTimeField(null=True)
 
     class Meta:
         managed = False
