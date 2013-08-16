@@ -17,6 +17,16 @@ class ViewTest(TestCase):
         'monitoringlists',
     ]
 
+    detail_views = [
+        'transient',
+        'dataset',
+        'extractedsource',
+        'runningcatalog',
+        'monitoringlist',
+        'image',
+        'bigimage'
+    ]
+
     def test_database_view(self):
         response = self.client.get(reverse('databases',))
         self.assertEqual(response.status_code, 200)
@@ -26,3 +36,55 @@ class ViewTest(TestCase):
             response = self.client.get(reverse(list_view,
                                                kwargs={'db': test_db}))
             self.assertEqual(response.status_code, 200)
+
+    def test_list_views_with_dataset(self):
+        for list_view in self.list_views:
+            response = self.client.get(reverse(list_view,
+                                               kwargs={'db': test_db}) +
+                                       "?dataset=1"
+            )
+            self.assertEqual(response.status_code, 200)
+
+    def test_detail_views(self):
+        for detail_view in self.detail_views:
+            response = self.client.get(reverse(detail_view,
+                                               kwargs={'db': test_db,
+                                                       'pk': 1}))
+            self.assertEqual(response.status_code, 200)
+
+    def test_extracted_sources_pixel(self):
+         response = self.client.get(reverse('extracted_sources_pixel',
+                                            kwargs={'db': test_db,
+                                                    'image_id': 1}))
+         self.assertEqual(response.status_code, 200)
+
+
+    def test_extractedsource_plot(self):
+         response = self.client.get(reverse('extractedsource_plot',
+                                            kwargs={'db': test_db,
+                                                    'extractedsource_id': 1}))
+         self.assertEqual(response.status_code, 200)
+
+    def test_image_plot(self):
+         response = self.client.get(reverse('image_plot',
+                                            kwargs={'db': test_db,
+                                                    'image_id': 1}))
+         self.assertEqual(response.status_code, 200)
+
+    def test_transient_plot(self):
+         response = self.client.get(reverse('transient_plot',
+                                            kwargs={'db': test_db,
+                                                    'transient_id': 1}))
+         self.assertEqual(response.status_code, 200)
+
+    def test_lightcurve_plot(self):
+         response = self.client.get(reverse('lightcurve_plot',
+                                            kwargs={'db': test_db,
+                                                    'runningcatalog_id': 1}))
+         self.assertEqual(response.status_code, 200)
+
+    def test_scatter_plot(self):
+         response = self.client.get(reverse('scatter_plot',
+                                            kwargs={'db': test_db,
+                                                    'dataset_id': 1}))
+         self.assertEqual(response.status_code, 200)
