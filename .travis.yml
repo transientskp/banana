@@ -6,5 +6,5 @@ before_install: sudo apt-get install python-psycopg2 python-pywcs python-matplot
 install: "pip install -r requirements.txt --use-mirrors"
 script:
   - cp bananaproject/settings/local_example.py bananaproject/settings/local.py
-  - ./manage.py test --settings=bananaproject.settings.testing
+  - ./manage.py test --settings=testing.settings
 
