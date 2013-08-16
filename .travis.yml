@@ -3,5 +3,7 @@ python:
   - "2.6"
   - "2.7"
 install: "pip install -r requirements.txt --use-mirrors"
-script: ./manage.py test --settings=bananaproject.settings.testing
+script:
+  - cp bananaproject/settings/local_example.py bananaproject/settings/local.py
+  - ./manage.py test --settings=bananaproject.settings.testing
 
