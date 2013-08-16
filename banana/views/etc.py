@@ -19,12 +19,12 @@ def banana_500(request):
     return render(request, '500.html', context)
 
 
-def extracted_sources_pixel(request, db_name, image_id):
+def extracted_sources_pixel(request, db, image_id):
     try:
-        image = Image.objects.using(db_name).get(pk=image_id)
+        image = Image.objects.using(db).get(pk=image_id)
     except Image.DoesNotExist:
         raise Http404
-    sources = banana.image.extracted_sources_pixels(image)
-    return HttpResponse(json.dump(sources), "application/json")
+    sources = banana.image.extracted_sources_pixels(image, 5)
+    return HttpResponse(json.dumps(sources), "application/json")
 
 
