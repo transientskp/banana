@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
@@ -37,12 +38,34 @@ class ViewTest(TestCase):
                                                kwargs={'db': test_db}))
             self.assertEqual(response.status_code, 200)
 
+    def test_list_csv_views(self):
+        for list_view in self.list_views:
+            response = self.client.get(reverse(list_view,
+                                               kwargs={'db': test_db}) +
+                                       "?format=csv")
+            self.assertEqual(response.status_code, 200)
+            for row in response.content.split():
+                columns = row.split(',')
+
+
+
+    def test_list_json_views(self):
+        for list_view in self.list_views:
+            response = self.client.get(reverse(list_view,
+                                               kwargs={'db': test_db}) +
+                                       "?format=json")
+            self.assertEqual(response.status_code, 200)
+            try:
+                json.loads(response.content)
+            except ValueError as e:
+                self.fail("can't parse json view %s: %s" % (list_view, e))
+
+
     def test_list_views_with_dataset(self):
         for list_view in self.list_views:
             response = self.client.get(reverse(list_view,
                                                kwargs={'db': test_db}) +
-                                       "?dataset=1"
-            )
+                                       "?dataset=1")
             self.assertEqual(response.status_code, 200)
 
     def test_detail_views(self):

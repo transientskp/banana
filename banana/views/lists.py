@@ -18,7 +18,7 @@ class DatabaseList(TemplateView):
         return context
 
 
-class DatasetList(SortListMixin, MultiDbMixin, ListView):
+class DatasetList(SortListMixin, MultiDbMixin, HybridTemplateMixin, ListView):
     model = Dataset
     paginate_by = 100
 
