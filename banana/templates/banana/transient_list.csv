@@ -1,3 +1,3 @@
 #id, runcat.wm_ra, runcat.wm_decl, t_start, siglevel, band, eta_int, v_int, runcat.datapoints, runcat
-{% for transient in transient_list %}{{ transient.id }}, {{ transient.runcat.wm_ra }}, {{ transient.runcat.wm_decl }}, {{ transient.t_start }}, {{ transient.siglevel }}, {{ transient.band }}, {{ transient.eta_int }}, {{ transient.v_int }}, {{ transient.runcat.datapoints }}, {{ transient.runcat }}
+{% for transient in transient_list %}{{ transient.id }}, {{ transient.runcat.wm_ra }}, {{ transient.runcat.wm_decl }}, "{{ transient.t_start }}", {{ transient.siglevel }}, "{{ transient.band }}", {{ transient.eta_int }}, {{ transient.v_int }}, {{ transient.runcat.datapoints }}, {{ transient.runcat }}
 {% endfor %}

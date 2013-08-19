@@ -1,0 +1,3 @@
+# id, description, rerun, num_images, process_ts
+{% for dataset in dataset_list %}{{ dataset.id }}, "{{ dataset.description }}", {{ dataset.rerun }}, {{ dataset.num_images }}, "{{ dataset.process_ts }}", {{ dataset.num_transients }}
+{% endfor %}

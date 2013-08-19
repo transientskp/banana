@@ -6,10 +6,6 @@
    "f_int": {{ point.xtrsrc.f_int }},
    "f_int_err": {{ point.xtrsrc.f_int_err }},
    "tau_time": {{ point.xtrsrc.image.tau_time }},
-  {% if not forloop.last %}
-    ,
-  {% else %}
-   }
-  {% endif %}
+    }{% if not forloop.last %},{% endif %}
  {% endfor %}
 ]

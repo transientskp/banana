@@ -1,0 +1,12 @@
+[
+{% for runningcatalog in runningcatalog_list %}
+    {
+        "id": {{ runningcatalog.id }},
+        "wm_ra": {{ runningcatalog.wm_ra }},
+        "wm_decl": {{ runningcatalog.wm_ra_err }},
+        "wm_decl": {{ runningcatalog.wm_decl }},
+        "wm_decl_err": {{ runningcatalog.wm_decl_err }},
+        "datapoints": {{ runningcatalog.datapoints }}
+    }{% if not forloop.last %},{% endif %}
+ {% endfor %}
+]

@@ -1,0 +1,17 @@
+[
+{% for extractedsource in extractedsource_list %}
+    {
+        "id": {{ extractedsource.id }},
+        "ra": {{ extractedsource.ra }},
+        "ra_err": {{ extractedsource.ra_err }},
+        "decl": {{ extractedsource.decl }},
+        "decl_err": {{ extractedsource.decl_err }},
+        "det_sigma": {{ extractedsource.det_sigma }},
+        "f_peak": {{ extractedsource.f_peak }},
+        "f_peak_err": {{ extractedsource.f_peak_err }},
+        "f_int": {{ extractedsource.f_int }},
+        "f_int_err": {{ extractedsource.f_int_err }},
+        "extract_type": {{ extractedsource.extract_type }}
+    }{% if not forloop.last %},{% endif %}
+ {% endfor %}
+]

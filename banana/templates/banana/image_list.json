@@ -1,0 +1,16 @@
+[
+{% for image in image_list %}
+    {
+        "id": {{ image.id }},
+        "skyrgn.centre_ra": {{ image.skyrgn.centre_ra }},
+        "skyrgn.centre_decl": {{ image.skyrgn.centre_decl }},
+        "taustart_ts": "{{ image.taustart_ts }}",
+        "tau_time": {{ image.tau_time }},
+        "freq_eff": {{ image.freq_eff }},
+        "freq_bw": {{ image.freq_bw }},
+        "num_extractedsources": {{ image.num_extractedsources }},
+        "rejections": "{{ image.rejections.all|join:" and " }}",
+        "url": "{{ image.url }}"
+    }{% if not forloop.last %},{% endif %}
+ {% endfor %}
+]
