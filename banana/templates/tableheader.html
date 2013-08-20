@@ -1,6 +1,6 @@
 <th>
     <a href="?page={{ page_obj.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}">
-        {{ field }}
+        {{ description }}
         {% with "-"|safe|add:field as antifield %}
             {% if order == field %}<i class="icon-arrow-down"></i>
             {% elif order == antifield %}<i class="icon-arrow-up"></i>
