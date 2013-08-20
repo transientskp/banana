@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load paginator %}
+{% load tableheader %}
 
 {% block title %}Datasets · Banana{% endblock title %}
 
@@ -29,12 +30,15 @@
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'id' %}-{% endif %}id">ID {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'description' %}-{% endif %}description">Description {% if order == 'description' %}<i class="icon-arrow-down">{% elif order == '-description' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'rerun' %}-{% endif %}rerun">Rerun {% if order == 'rerun' %}<i class="icon-arrow-down">{% elif order == '-rerun' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'num_images' %}-{% endif %}num_images">Images {% if order == 'num_images' %}<i class="icon-arrow-down">{% elif order == '-num_images' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'process_ts' %}-{% endif %}process_ts">Finished {% if order == 'process_ts' %}<i class="icon-arrow-down">{% elif order == '-process_ts' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ dataset_list.number }}&order={% if order == 'num_transients' %}-{% endif %}num_transients">Transients {% if order == 'num_transients' %}<i class="icon-arrow-down">{% elif order == '-num_transients' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                {% tableheader 'id' %}
+                {% tableheader 'description' %}
+                {% tableheader 'rerun' %}
+                {% tableheader 'num_images' 'Number of Images' %}
+                {% tableheader 'process_start_ts' 'Start time' %}
+                {% tableheader 'process_end_ts' 'End time' %}
+                {% tableheader 'num_transients' 'Number of Transients' %}
+
+
             </tr>
             </thead>
             <tbody>
@@ -44,7 +48,8 @@
                 <td>{{ dataset.description }}</td>
                 <td>{{ dataset.rerun }}</td>
                 <td>{{ dataset.num_images }}</td>
-                <td>{{ dataset.process_ts }}</td>
+                <td>{{ dataset.process_start_ts }}</td>
+                <td>{{ dataset.process_end_ts }}</td>
                 <td>{{ dataset.num_transients }}</td>
             </tr>
             </a>
