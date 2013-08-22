@@ -1,15 +1,14 @@
 language: python
 python:
-- '2.6'
-- '2.7'
-before_install: sudo apt-get install python-psycopg2 python-pywcs python-matplotlib
-  python-numpy
-install: pip install -r requirements.txt --use-mirrors
+  - '2.6'
+  - '2.7'
+before_install:
+  - sudo apt-get install python-psycopg2 python-pywcs python-matplotlib python-numpy
+install:
+  - pip install -r requirements.txt --use-mirrors
 script:
-- touch bananaproject/settings/local.py
-- ./manage.py test --settings=testing.settings
-notifications:
-  hipchat: ${HIPCHAT_KEY}
-env:
-  global:
-    secure: Ba9L9jRHdNoH8N4v8STE2eVSOAfNFPC/jV8a9rQd4ioxeBx2d6AXEn9OJOO09fbMzBbL3DoK1m4aaCK4wdf50Bqrw9uX3K9hl9u+CWne4mffQeygkn74GfC4qAIZHLqyz7bLaqsaeQuAnJDPTnnme4L+J3EEkQS4GCgK+ijZ7sQ=
+  - touch bananaproject/settings/local.py
+  - ./manage.py test --settings=testing.settings
+branches:
+  only:
+    - master
