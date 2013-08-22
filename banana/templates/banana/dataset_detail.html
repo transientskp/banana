@@ -30,11 +30,8 @@
             <dt>Reprocessing step</dt>
             <dd>{{ dataset.rerun }}</dd>
 
-            <dt>Processing started</dt>
-            <dd>{{ dataset.process_start_ts }}</dd>
-
             <dt>Processing Finished</dt>
-            <dd>{{ dataset.process_end_ts }}</dd>
+            <dd>{{ dataset.process_ts }}</dd>
 
             <dt>detected transients</dt>
             <dd><a href="{% url 'transients' db_name%}?dataset={{ dataset.id }}">{{ dataset.transients.all.count }}</a></dd>
