@@ -3,8 +3,8 @@ from django.db import models
 
 
 class Assoccatsource(models.Model):
-    id = models.IntegerField(primary_key=True)
-    xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
+    xtrsrc = models.ForeignKey('Extractedsource', primary_key=True,
+                               db_column='xtrsrc',
                                related_name='assoccatsources')
     catsrc = models.ForeignKey('Catalogedsource', db_column='catsrc',
                                related_name='assoccatsources')
@@ -19,7 +19,6 @@ class Assoccatsource(models.Model):
 
 
 class Assocskyrgn(models.Model):
-    id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
                                related_name='assocskyrgns')
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
@@ -32,8 +31,8 @@ class Assocskyrgn(models.Model):
 
 
 class Assocxtrsource(models.Model):
-    id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
+    runcat = models.ForeignKey('Runningcatalog', primary_key=True,
+                               db_column='runcat',
                                related_name='Assocxtrsources')
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
                                related_name='asocxtrsources')
@@ -98,7 +97,6 @@ class Catalogedsource(models.Model):
 
 
 class Classification(models.Model):
-    id = models.IntegerField(primary_key=True)
     transient_id = models.IntegerField()
     classification = models.CharField(max_length=256)
     weight = models.FloatField()
@@ -112,8 +110,7 @@ class Dataset(models.Model):
     id = models.IntegerField(primary_key=True)
     rerun = models.IntegerField()
     type = models.IntegerField()
-    process_start_ts = models.DateTimeField()
-    process_end_ts = models.DateTimeField()
+    process_ts = models.DateTimeField()
     detection_threshold = models.FloatField(null=True)
     analysis_threshold = models.FloatField(null=True)
     assoc_radius = models.FloatField(null=True)
@@ -250,8 +247,7 @@ class Monitoringlist(models.Model):
 
 
 class Node(models.Model):
-    id = models.IntegerField(primary_key=True)
-    node = models.IntegerField()
+    node = models.IntegerField(primary_key=True)
     zone = models.IntegerField()
     zone_min = models.IntegerField()
     zone_max = models.IntegerField()
@@ -328,8 +324,8 @@ class Runningcatalog(models.Model):
 
 
 class RunningcatalogFlux(models.Model):
-    id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey(Runningcatalog, db_column='runcat')
+    runcat = models.ForeignKey(Runningcatalog, primary_key=True,
+                               db_column='runcat')
     band = models.ForeignKey(Frequencyband, db_column='band')
     stokes = models.IntegerField()
     f_datapoints = models.IntegerField()
@@ -370,7 +366,6 @@ class Skyregion(models.Model):
 
 
 class Temprunningcatalog(models.Model):
-    id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey(Runningcatalog, db_column='runcat',
                                related_name='Temprunningcatalogs')
     xtrsrc = models.ForeignKey(Extractedsource, db_column='xtrsrc',
