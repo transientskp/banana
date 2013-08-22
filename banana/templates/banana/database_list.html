@@ -37,6 +37,9 @@
                 <th>status</th>
                 <th>type</th>
                 <th>path</th>
+                <th>last_crash</th>
+                <th>last_start</th>
+                <th>version</th>
                 {% comment %}
                 <th>locked</th>
                 <th>scenarios</th>
@@ -46,23 +49,24 @@
                 <th>avg_uptime</th>
                 <th>max_uptime</th>
                 <th>min_uptime</th>
-                <th>last_crash</th>
-                <th>last_start</th>
+
                 <th>last_stop</th>
                 <th>crash_avg1</th>
                 <th>crash_avg10</th>
                 <th>crash_avg30</th>
                 {% endcomment %}
             </tr>
-            </thead>
+            </thead> 
             <tbody>
             {% for database in database_list %}
-            <tr{% if database.locked %} class="error"{% endif %}>
+            <tr{% if database.locked or database.version == 'error' %} class="error"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
                 <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
                 <td>{{ database.type }}</td>
                 <td>{{ database.path }}</td>
-
+                <td>{{ database.last_crash }}</td>
+                <td>{{ database.last_start }}</td>
+                <td>{{ database.version }} </td>
                 {% comment %}
                 <td>{{ database.locked }}</td>
                 <td>{{ database.scenarios }}</td>
@@ -72,8 +76,7 @@
                 <td>{{ database.avg_uptime }}</td>
                 <td>{{ database.max_uptime }}</td>
                 <td>{{ database.min_uptime }}</td>
-                <td>{{ database.last_crash }}</td>
-                <td>{{ database.last_start }}</td>
+
                 <td>{{ database.last_stop }}</td>
                 <td>{{ database.crash_avg1 }}</td>
                 <td>{{ database.crash_avg10 }}</td>

@@ -3,6 +3,7 @@ import socket
 from django.conf import settings
 from django.http import Http404
 import monetdb.control
+import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,13 @@ def monetdb_list(host, port, passphrase):
         status['status'] = status_map[status['state']]
         status['type'] = 'monetdb'
 
+        # convert to datetime objects
+        for field in ['last_crash', 'last_start']:
+            if status[field] > 0:
+                status[field] = datetime.datetime.fromtimestamp(status[field])
+            else:
+                status[field] = ""
+
     return statuses
 
 
@@ -45,6 +53,7 @@ def list():
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
             databases.append({'name': dbname, 'type': 'postgresql'})
+
     return databases
 
 
