@@ -10,13 +10,26 @@
 
 {% if database_list %}
 
-<div class="row">
-        <div class="span12 text-center">
-            <img src="{{ STATIC_URL }}logo.png" width="200" height="200" style="margin-bottom:30px;">
-        </div>
+<div class="row-fluid">
+    <div class="span4 offset2 text-center">
+        <img src="{{ STATIC_URL }}logo.png" width="200" height="200" style="margin-bottom:30px;">
+    </div>
+    <div class="span4">
+         <dl class="dl-horizontal">
+                <dt>Branch name</dt>
+                <dd><p class="text-info">{{ branch_name }}</p></dd>
+
+                <dt>Last commit</dt>
+                <dd><p class="text-info">{{ log_message }}</p></dd>
+
+                <dt>Timestamp</dt>
+                <dd><p class="text-info">{{ log_timestamp }}</p></dd>
+         </dl>
+    </div>
 </div>
-<div>
-        <div class="span12">
+
+<div class="row">
+    <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
             <thead>
             <tr>
@@ -70,11 +83,12 @@
             {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p>No databases are available.</p>
-        {% endif %}
+    {% else %}
+    <p>No databases are available.</p>
+    {% endif %}
     </div>
 </div>
+
 
 {% endblock content %}
 
