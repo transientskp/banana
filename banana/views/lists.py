@@ -6,14 +6,16 @@ from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.models import Dataset, Image, Transient, Extractedsource, \
     Runningcatalog, Monitoringlist
-from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, SortListMixin, DatasetMixin
-
+from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
+    SortListMixin, DatasetMixin
+from banana.vcs import repo_info
 
 class DatabaseList(TemplateView):
     template_name = "banana/database_list.html"
 
     def get_context_data(self, *args, **kwargs):
         context = super(DatabaseList, self).get_context_data(*args, **kwargs)
+        context.update(repo_info())
         context['database_list'] = banana.db.list()
         return context
 
