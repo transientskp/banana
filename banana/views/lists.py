@@ -5,10 +5,26 @@ from django.db.models import Count
 from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.models import Dataset, Image, Transient, Extractedsource, \
-    Runningcatalog, Monitoringlist
+    Runningcatalog, Monitoringlist, Version
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
     SortListMixin, DatasetMixin
 from banana.vcs import repo_info
+
+
+def schema_version(database_name):
+    """
+    Gets schema version from database. Will return error if it can't connect.
+
+    For now we use that in the template to check if we can actually connect to
+    the database. Also banana.db would be a better place for this function,
+    but that is used during Django init. No DB queries can be performed during
+    that phase.
+    """
+    try:
+        return Version.objects.using(database_name).get().value
+    except Exception as e:
+        return "error"
+
 
 class DatabaseList(TemplateView):
     template_name = "banana/database_list.html"
@@ -16,7 +32,10 @@ class DatabaseList(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(DatabaseList, self).get_context_data(*args, **kwargs)
         context.update(repo_info())
-        context['database_list'] = banana.db.list()
+        database_list = banana.db.list()
+        for database in database_list:
+            database['version'] = schema_version(database['name'])
+        context['database_list'] = database_list
         return context
 
 
