@@ -2,6 +2,9 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+schema_version = 14
+
+
 class Assoccatsource(models.Model):
     xtrsrc = models.ForeignKey('Extractedsource', primary_key=True,
                                db_column='xtrsrc',

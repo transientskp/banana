@@ -5,6 +5,7 @@ from django.http import Http404
 import monetdb.control
 import datetime
 
+
 logger = logging.getLogger(__name__)
 
 status_map = {
@@ -35,7 +36,6 @@ def monetdb_list(host, port, passphrase):
                 status[field] = datetime.datetime.fromtimestamp(status[field])
             else:
                 status[field] = ""
-
     return statuses
 
 
@@ -49,14 +49,30 @@ def list():
     else:
         databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
                                  settings.MONETDB_PASSPHRASE)
-
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
             databases.append({'name': dbname, 'type': 'postgresql'})
-
     return databases
 
 
 def check_database(db_name):
+    """
+    check if db_name is in the Django database configuration.
+    """
     if db_name not in settings.DATABASES:
         raise Http404
+
+
+def db_schema_version(database_name):
+    """
+    Gets schema version from database. Will return error if it can't connect.
+
+    WARNING: don't use this function in the settings file. We can't use the
+    Django ORM during Django initialisation. That is also why we import the
+    Version here.
+    """
+    from banana.models import Version
+    try:
+        return Version.objects.using(database_name).get().value
+    except Exception as e:
+        return "error"
