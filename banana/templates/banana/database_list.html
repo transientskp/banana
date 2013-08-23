@@ -66,7 +66,7 @@
             </thead>
             <tbody>
             {% for database in database_list %}
-            <tr{% if database.locked or database.version == 'error' %} class="error"{% endif %}>
+            <tr{% if database.locked or database.version == 'error' %} class="error"{% endif %}{% if database.version == schema_version %} class="success"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
                 <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
                 <td>{{ database.type }}</td>
