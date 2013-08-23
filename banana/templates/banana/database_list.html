@@ -10,20 +10,24 @@
 
 {% if database_list %}
 
+
 <div class="row-fluid">
     <div class="span4 offset2 text-center">
         <img src="{{ STATIC_URL }}logo.png" width="200" height="200" style="margin-bottom:30px;">
     </div>
-    <div class="span4">
+    <div class="span6">
          <dl class="dl-horizontal">
-                <dt>Branch name</dt>
-                <dd><p class="text-info">{{ branch_name }}</p></dd>
+                <dt>Branch</dt>
+                <dd><p class="text-info">{{ branch }}</p></dd>
 
-                <dt>Last commit</dt>
-                <dd><p class="text-info">{{ log_message }}</p></dd>
+                <dt>SHA</dt>
+                <dd><p class="text-info">{{ hexsha }}</p></dd>
 
-                <dt>Timestamp</dt>
-                <dd><p class="text-info">{{ log_timestamp }}</p></dd>
+                <dt>Commit Timestamp</dt>
+                <dd><p class="text-info">{{ timestamp }}</p></dd>
+
+                <dt>Commit summary</dt>
+                <dd><p class="text-info">{{ summary }}</p></dd>
          </dl>
     </div>
 </div>
@@ -56,7 +60,7 @@
                 <th>crash_avg30</th>
                 {% endcomment %}
             </tr>
-            </thead> 
+            </thead>
             <tbody>
             {% for database in database_list %}
             <tr{% if database.locked or database.version == 'error' %} class="error"{% endif %}>
