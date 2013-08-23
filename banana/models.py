@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-schema_version = 13
+schema_version = 12
 
 
 class Assoccatsource(models.Model):
