@@ -85,29 +85,29 @@ class ViewTest(TestCase):
     def test_extractedsource_plot(self):
          response = self.client.get(reverse('extractedsource_plot',
                                             kwargs={'db': test_db,
-                                                    'extractedsource_id': 1}))
+                                                    'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
     def test_image_plot(self):
          response = self.client.get(reverse('image_plot',
                                             kwargs={'db': test_db,
-                                                    'image_id': 1}))
+                                                    'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
     def test_transient_plot(self):
          response = self.client.get(reverse('transient_plot',
                                             kwargs={'db': test_db,
-                                                    'transient_id': 1}))
+                                                    'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
-    def test_lightcurve_plot(self):
-         response = self.client.get(reverse('lightcurve_plot',
+    def test_runningcatalog_plot(self):
+         response = self.client.get(reverse('runningcatalog_plot',
                                             kwargs={'db': test_db,
-                                                    'runningcatalog_id': 1}))
+                                                    'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
     def test_scatter_plot(self):
          response = self.client.get(reverse('scatter_plot',
                                             kwargs={'db': test_db,
-                                                    'dataset_id': 1}))
+                                                    'pk': 1}))
          self.assertEqual(response.status_code, 200)

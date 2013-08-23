@@ -5,6 +5,24 @@ from django.db import models
 schema_version = 14
 
 
+scatterplot_query = """\
+SELECT
+  x.id
+  ,3600 * (x.ra - r.wm_ra) as ra_dist_arcsec
+  ,3600 * (x.decl - r.wm_decl) as decl_dist_arcsec
+  ,x.ra_err
+  ,x.decl_err
+FROM assocxtrsource a
+  ,extractedsource x
+  ,runningcatalog r
+  ,image im1
+WHERE a.runcat = r.id
+AND a.xtrsrc = x.id
+AND x.image = im1.id
+AND im1.dataset = %s
+"""
+
+
 class Assoccatsource(models.Model):
     id = models.IntegerField(primary_key=True)
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
@@ -142,10 +160,9 @@ class Dataset(models.Model):
         return Extractedsource.objects.using(self._state.db).filter(
             image__dataset=self)
 
-    # TODO: check if this can be removed, already avaiable with back ref
-    #def runningcatalogs(self):
-    #    return Runningcatalog.objects.using(self._state.db).filter(
-    #        dataset=self)
+    def scatterplot(self):
+        return Extractedsource.objects.raw(scatterplot_query,
+                                           params=[self.id]).using(self._state.db)
 
 
 class Extractedsource(models.Model):
@@ -329,6 +346,13 @@ class Runningcatalog(models.Model):
         related = ['image', 'image__band']
         return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs).prefetch_related(*related)
 
+    def lightcurve(self):
+        assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
+        runcats = [a.runcat for a in assocs]
+        related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+        return Assocxtrsource.objects.using(self._state.db).filter(
+                            runcat__in=runcats).prefetch_related(*related)
+
 
 class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -446,9 +470,10 @@ class Transient(models.Model):
     def lightcurve(self):
         assocs = Assocxtrsource.objects.using(self._state.db).filter(
                     xtrsrc=self.trigger_xtrsrc)
+        runcats = [a.runcat for a in assocs]
         related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
         return Assocxtrsource.objects.using(self._state.db).filter(
-                        runcat__in=assocs).prefetch_related(*related)
+                        runcat__in=runcats).prefetch_related(*related)
 
 
 class Version(models.Model):
