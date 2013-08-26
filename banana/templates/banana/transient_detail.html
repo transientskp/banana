@@ -66,17 +66,19 @@
             <th>Frequency (Hz)</th>
             <th>Flux (Jy)</th>
             <th>Flux error (Jy)</th>
+            <th>Extract type</th>
             <th>Thumbnail</th>
         </thead>
         <tbody>
             {% for point in lightcurve %}
             <tr class="{% cycle 'odd' 'even' %}">
-                <td><a href="{% url 'extractedsource' db_name point.xtrsrc.id %}">{{ point.xtrsrc_id }}</a></td>
+                <td><a href="{% url 'extractedsource' db_name point.xtrsrc.id %}">{{ point.xtrsrc.id }}</a></td>
                 <td>{{ point.xtrsrc.image.taustart_ts|date:"c" }}</td>
                 <td>{{ point.xtrsrc.image.tau_time|scientific }}</td>
                 <td>{{ point.xtrsrc.image.band.freq_central|scientific }}</td>
                 <td>{{ point.xtrsrc.f_int|scientific }}</td>
                 <td>{{ point.xtrsrc.f_int_err|scientific }}</td>
+                <td>{{ point.xtrsrc.extract_type }}</td>
                 <td><img src="{% url 'extractedsource_plot' db_name point.xtrsrc.id %}?size=1"></td>
             </tr>
             {% endfor %}
@@ -96,6 +98,7 @@
             "f_int": {{ assocxtrsource.xtrsrc.f_int }},
             "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err }},
             "tau_time": {{ assocxtrsource.xtrsrc.image.tau_time }},
+            "extract_type": {{ assocxtrsource.xtrsrc.extract_type }},
         }{% if not forloop.last %}, {% endif %}
         {% endfor %}
     ];
@@ -104,20 +107,30 @@
 
     // group per band
     var lightcurve_per_band = {};
+     var symbols = {0: 'square', 1: 'triangle-down'};
     lightcurve.forEach(function(entry) {
         var band = entry["band"];
-        var datapoint = [entry['taustart_ts'], entry['f_int']];
+        var data = {'x': entry['taustart_ts'],
+                    'y': entry['f_int'],
+                    'extract_type': entry['extract_type'],
+                    'marker': {
+                        'symbol': symbols[entry['extract_type']]
+                    }
+        };
         if (band in lightcurve_per_band) {
-            lightcurve_per_band[band].push(datapoint);
+            lightcurve_per_band[band].push(data);
         } else {
-            lightcurve_per_band[band] = [datapoint];
+            lightcurve_per_band[band] = [data];
         }
     });
 
     // convert to highchart series
-    series = [];
+    var series = [];
     for(key in lightcurve_per_band) {
-        series.push({'name': key, data: lightcurve_per_band[key]});
+        series.push({'name': key, 'data': lightcurve_per_band[key],
+                    'marker': { 'symbol': 'square'}});
+
+
     }
 
     $(function () {
@@ -126,12 +139,23 @@
                 type: 'scatter',
                 zoomType: 'xy'
             },
+
+            tooltip: {
+              formatter: function () {
+                return '<b></B>Time: </b>' + Highcharts.dateFormat('%Y %b %e %H:%M', this.point.x) +
+                       '<br><b>flux (jY): </b>' + this.point.y +
+                       '<br><b>extract_type: </b>' + this.point.extract_type;
+              }
+            },
+
             title: {
                 text: title
             },
+
             subtitle: {
                 text: subtitle
             },
+
             xAxis: {
                 type: 'datetime',
                 title: {
