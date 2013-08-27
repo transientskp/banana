@@ -36,8 +36,7 @@
                 {% tableheader 'num_images' 'Number of Images' %}
                 {% tableheader 'process_ts' 'End time' %}
                 {% tableheader 'num_transients' 'Number of Transients' %}
-
-
+                <!--  {% tableheader 'num_transients' 'Number of Transients' %} -->
             </tr>
             </thead>
             <tbody>
@@ -48,7 +47,7 @@
                 <td>{{ dataset.rerun }}</td>
                 <td>{{ dataset.num_images }}</td>
                 <td>{{ dataset.process_ts }}</td>
-                <td>{{ dataset.num_transients }}</td>
+                <!-- <td>{{ dataset.num_transients }}</td> -->
             </tr>
             </a>
             {% endfor %}
