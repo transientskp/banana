@@ -77,7 +77,7 @@
                 <td>{{ point.xtrsrc.f_int|scientific }}</td>
                 <td>{{ point.xtrsrc.f_int_err|scientific }}</td>
                 <td>{{ point.xtrsrc.extract_type }}</td>
-                <td><!-- <img src="{% url 'extractedsource_plot' db_name point.xtrsrc.id %}?size=1">--></td>
+                <td><img src="{% url 'extractedsource_plot' db_name point.xtrsrc.id %}?size=1"></td>
             </tr>
             {% endfor %}
             </tbody>
