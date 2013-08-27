@@ -36,11 +36,7 @@ lightcurve.forEach(function(entry) {
         f_int_err: entry['f_int_err'],
         low: entry['f_int'] - entry['f_int_err'],
         high: entry['f_int'] + entry['f_int_err'],
-        tau_time: entry['tau_time'],
-        marker: {
-            lineWidth: 1000
-        }
-
+        tau_time: entry['tau_time']
     };
 
     if (band in lightcurve_per_band) {
@@ -88,15 +84,7 @@ for(key in lightcurve_per_band) {
            name: key + ' Error',
            type: 'errorbar',
            color: '#999',
-           data: error_data,
-           states: {
-               marker: {
-                   hover: {
-                       lineWidth: 100
-                   }
-
-               }
-           }
+           data: error_data
        }
     );
 }
