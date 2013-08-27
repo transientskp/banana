@@ -54,3 +54,11 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'servername.nl',
 ]
+
+## to enable memcached, install memcached, python-memcached and python-pylibmc.
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+#        'LOCATION': '127.0.0.1:11211',
+#    }
+#}

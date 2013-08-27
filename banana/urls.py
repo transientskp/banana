@@ -1,7 +1,10 @@
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import cache_page
 from banana.views import images, lists, details
 from banana.views.etc import extracted_sources_pixel
 
+# maximum cache time...
+cache_time = 60*60*24*30
 
 urlpatterns = patterns('',
     url(r'^$',
@@ -53,12 +56,12 @@ urlpatterns = patterns('',
         name='extracted_sources_pixel'),
 
     url(r'^(?P<db>\w+)/extractedsourceplot/(?P<pk>\d+)/$',
-        images.ExtractedSourcePlot.as_view(),
+        cache_page(cache_time)(images.ExtractedSourcePlot.as_view()),
         name='extractedsource_plot'),
     url(r'^(?P<db>\w+)/imageplot/(?P<pk>\d+)/$',
-        images.ImagePlot.as_view(),
+        cache_page(cache_time)(images.ImagePlot.as_view()),
         name='image_plot'),
     url(r'^(?P<db>\w+)/scatterplot/(?P<pk>\d+)/$',
-        images.ScatterPlot.as_view(),
+        cache_page(cache_time)(images.ScatterPlot.as_view()),
         name='scatter_plot'),
 )
