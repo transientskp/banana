@@ -86,7 +86,7 @@ class RunningcatalogDetail(MultiDbMixin, HybridTemplateMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
         context['runningcatalog'] = self.object
-        context['extractedsources'] = self.object.extractedsources()
+        context['lightcurve'] = self.object.lightcurve()
         return context
 
 

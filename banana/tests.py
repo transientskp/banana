@@ -94,18 +94,7 @@ class ViewTest(TestCase):
                                                     'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
-    def test_transient_plot(self):
-         response = self.client.get(reverse('transient_plot',
-                                            kwargs={'db': test_db,
-                                                    'pk': 1}))
-         self.assertEqual(response.status_code, 200)
-
-    def test_runningcatalog_plot(self):
-         response = self.client.get(reverse('runningcatalog_plot',
-                                            kwargs={'db': test_db,
-                                                    'pk': 1}))
-         self.assertEqual(response.status_code, 200)
-
+ 
     def test_scatter_plot(self):
          response = self.client.get(reverse('scatter_plot',
                                             kwargs={'db': test_db,

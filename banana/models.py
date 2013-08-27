@@ -341,17 +341,10 @@ class Runningcatalog(models.Model):
     def __unicode__(self):
         return "%s" % (self.id)
 
-    def extractedsources(self):
+    def lightcurve(self):
         assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
         related = ['image', 'image__band']
         return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs).prefetch_related(*related)
-
-    def lightcurve(self):
-        assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
-        runcats = [a.runcat for a in assocs]
-        related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
-        return Assocxtrsource.objects.using(self._state.db).filter(
-                            runcat__in=runcats).prefetch_related(*related)
 
 
 class RunningcatalogFlux(models.Model):
@@ -471,9 +464,9 @@ class Transient(models.Model):
         assocs = Assocxtrsource.objects.using(self._state.db).filter(
                     xtrsrc=self.trigger_xtrsrc)
         runcats = [a.runcat for a in assocs]
-        related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
-        return Assocxtrsource.objects.using(self._state.db).filter(
-                        runcat__in=runcats).prefetch_related(*related)
+        assocs2 = Assocxtrsource.objects.using(self._state.db).filter(runcat__in=runcats)
+        related = ['image', 'image__band']
+        return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs2).prefetch_related(*related)
 
 
 class Version(models.Model):
