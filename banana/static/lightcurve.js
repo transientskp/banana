@@ -56,7 +56,7 @@ lightcurve.forEach(function(entry) {
             {
                 from: entry['taustart_ts'],
                 to: entry['taustart_ts'] + entry['tau_time'] * 1000,
-                color: 'rgba(68, 170, 213, .1)'
+                color: 'rgba(68, 170, 213, .4)'
             }
         );
     }
