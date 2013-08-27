@@ -32,10 +32,10 @@ class DatasetList(SortListMixin, MultiDbMixin, HybridTemplateMixin, ListView):
 
     def get_queryset(self):
         qs = super(DatasetList, self).get_queryset()
-        return qs.annotate(num_images=Count('images', distinct=True),
-                           num_transients=Count('runningcatalogs__transients',
-                                                distinct=True)
-                           )
+        return qs.annotate(num_images=Count('images'))
+                # TODO: multiple annotations don't work
+                #  num_transients=Count('runningcatalogs__transients')
+
 
 class ImageList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
                 DatasetMixin, ListView):
