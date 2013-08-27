@@ -22,12 +22,11 @@
 
 {% block content %}
 
-<h1>Running Catalog #{{ runningcatalog.id }}</h1>
-
-<h2>Properties</h2>
 
 <div class="row">
-    <div class="span6">
+    <div class="span5">
+        <h2>Running Catalog #{{ runningcatalog.id }}</h2>
+
         <dl class="dl-horizontal">
             <dt>Position</dt>
             <dd>({{ runningcatalog.wm_ra|stringformat:".3f" }}&deg;, {{ runningcatalog.wm_decl|stringformat:".3f" }}&deg;) &pm; ({{ runningcatalog.wm_ra_err|stringformat:".3f" }}&Prime;, {{ runningcatalog.wm_decl_err|stringformat:".3f" }}&Prime;)</dd>
@@ -41,13 +40,13 @@
         </div>
     </div>
 
-    <div class="span6">
-        <img src="{% url 'runningcatalog_plot' db_name runningcatalog.id %}" />
+    <div class="span7">
+        <div id='lightcurve'></div>
     </div>
 </div>
 
 
-<h2>Extracted Sources</h2>
+<h2>Lightcurve</h2>
 
 <div class="row">
     <div class="span12 text-center">
@@ -65,20 +64,43 @@
                 <th>Flux error (Jy)</th>
             </thead>
             <tbody>
-                {% for extractedsource in extractedsources %}
+                {% for point in lightcurve %}
                 <tr class="{% cycle 'odd' 'even' %}">
-                    <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
-                    <td>{{ extractedsource.image.taustart_ts|date:"c" }}</td>
-                    <td>{{ extractedsource.image.tau_time|scientific }}</td>
-                    <td>{{ extractedsource.image.band.freq_central|scientific }}</td>
-                    <td>{{ extractedsource.f_int|scientific }}</td>
-                    <td>{{ extractedsource.f_int_err|scientific }}</td>
+                    <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
+                    <td>{{ point.image.taustart_ts|date:"c" }}</td>
+                    <td>{{ point.image.tau_time|scientific }}</td>
+                    <td>{{ point.image.band.freq_central|scientific }}</td>
+                    <td>{{ point.f_int|scientific }}</td>
+                    <td>{{ point.f_int_err|scientific }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+
+
+<script>
+    // get data from django template
+    var lightcurve = [
+        {% for point in lightcurve %}{
+            "band": '{{ point.image.band }}',
+            "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
+            "f_int": {{ point.f_int }},
+            "f_int_err": {{ point.f_int_err }},
+            "tau_time": {{ point.image.tau_time }},
+            "extract_type": {{ point.extract_type }},
+        }{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    ];
+
+    var title = 'Lightcurve for Running Catalog #{{ runningcatalog.id }}';
+    var subtitle = '';
+</script>
+
+<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>
+<script src="{{ STATIC_URL }}lightcurve.js"></script>
 
 {% endblock content %}
 

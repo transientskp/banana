@@ -24,36 +24,6 @@ class ScatterPlot(MultiDbMixin, DetailView):
         return response
 
 
-class TransientPlot(MultiDbMixin, DetailView):
-    model = Transient
-
-    def get_context_data(self, **kwargs):
-        context = super(TransientPlot, self).get_context_data(**kwargs)
-        context['lightcurve'] = self.object.lightcurve()
-        return context
-
-    def render_to_response(self, context, **kwargs):
-        response = HttpResponse(mimetype="image/png")
-        canvas = banana.image.transient_plot(context['lightcurve'])
-        canvas.print_figure(response, format='png')
-        return response
-
-
-class RunningcatalogPlot(MultiDbMixin, DetailView):
-    model = Runningcatalog
-
-    def get_context_data(self, **kwargs):
-        context = super(RunningcatalogPlot, self).get_context_data(**kwargs)
-        context['lightcurve'] = self.object.lightcurve()
-        return context
-
-    def render_to_response(self, context, **kwargs):
-        response = HttpResponse(mimetype="image/png")
-        canvas = banana.image.transient_plot(context['lightcurve'])
-        canvas.print_figure(response, format='png')
-        return response
-
-
 class ImagePlot(MultiDbMixin, DetailView):
     model = Image
 
