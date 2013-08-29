@@ -35,6 +35,9 @@ class HybridTemplateMixin(object):
         else:
             extension = 'html'
 
+        if self.template_name and self.template_name.endswith('html'):
+            return self.template_name[:-4] + extension
+
         if hasattr(self, 'object') and \
                 isinstance(self.object, models.Model) and \
                 hasattr(self.object, 'model'):
