@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
 {% load units %}
+{% load paginator %}
+{% load tableheader %}
+
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">Dataset {{ transient.runcat.dataset_id }}</a></li>{% endblock %}
-{% block navdeep %}<li><a href="{% url 'transients' db_name %}?dataset={{ transient.runcat.dataset_id }}">Transients</a></li>{% endblock %}
-{% block navdeper %}<li class="active"><a href="{% url 'transient' db_name transient.id %}">Transient {{ transient.id }}</a></li>{% endblock %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'transients' db_name %}?dataset={{ object.runcat.dataset_id }}">Transients</a></li>{% endblock %}
+{% block navdeper %}<li class="active"><a href="{% url 'transient' db_name object.id %}">Transient {{ object.id }}</a></li>{% endblock %}
 
-{% block title %}Transient {{ transient.id }} · Banana{% endblock title %}
+{% block title %}Transient {{ object.id }} · Banana{% endblock title %}
 
 {% block content %}
 
@@ -16,34 +19,34 @@
 
 <div class="row">
     <div class="span5">
-        <h2>Transient #{{ transient.id }}</h2>
+        <h2>Transient #{{ object.id }}</h2>
         <dl class="dl-horizontal">
             <dt>Position</dt>
-            <dd>({{ transient.runcat.wm_ra|stringformat:".3f" }}&deg;,
-                {{ transient.runcat.wm_decl|stringformat:".3f" }}&deg;) &pm;
-                ({{ transient.runcatwm_ra_err|stringformat:".3f" }}&Prime;,
-                {{ transientruncat.wm_decl_err|stringformat:".3f" }}&Prime;)</dd>
+            <dd>({{ object.runcat.wm_ra|stringformat:".3f" }}&deg;,
+                {{ object.runcat.wm_decl|stringformat:".3f" }}&deg;) &pm;
+                ({{ object.runcatwm_ra_err|stringformat:".3f" }}&Prime;,
+                {{ object.runcat.wm_decl_err|stringformat:".3f" }}&Prime;)</dd>
             <dt>Frequency band</dt>
-            <dd>{{ transient.band }}</dd>
+            <dd>{{ object.band }}</dd>
             <dt>Effective frequency</dt>
-            <dd>{{ transient.freq_eff }} ?</dd>
+            <dd>{{ object.freq_eff }} ?</dd>
             <dt>Significance level</dt>
-            <dd>{{ transient.siglevel }}</dd>
+            <dd>{{ object.siglevel }}</dd>
             <dt>&eta;<sub>&nu;</sub></dt>
-            <dd>{{ transient.eta_int|scientific }}</dd>
+            <dd>{{ object.eta_int|scientific }}</dd>
             <dt>V<sub>&nu;</sub></dt>
-            <dd>{{ transient.v_int|scientific }}</dd>
+            <dd>{{ object.v_int|scientific }}</dd>
             <dt>Start date</dt>
-            <dd>{% if transient.t_start %}{{ transient.t_start|date:"c" }}{% else %} Unknown {% endif %}</dd>
+            <dd>{% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}</dd>
             <dt># of datapoints</dt>
-            <dd>{{ transient.runcat.datapoints }}</dd>
+            <dd>{{ object.runcat.datapoints }}</dd>
             <dt>Running cat #</dt>
-            <dd><a href="{% url 'runningcatalog' db_name transient.runcat %}">{{ transient.runcat }}</a></dd>
+            <dd><a href="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></dd>
             <dt>Dataset</dt>
-            <dd><a href="{% url 'dataset' db_name transient.runcat.dataset_id %}">{{ transient.runcat.dataset.id }}</a></dd>
+            <dd><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">{{ object.runcat.dataset.id }}</a></dd>
         </dl>
         <div class="text-center">
-          <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ transient.runcat.wm_ra }}d{{ transient.runcat.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
+          <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.runcat.wm_ra }}d{{ object.runcat.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
         </div>
     </div>
 
@@ -51,24 +54,32 @@
         <div id='lightcurve'></div>
     </div>
 
-{% if lightcurve %}
+{% if object_list %}
 <h3>Lightcurve</h3>
 
 <div class="row">
+        <div class="span12 text-center">
+            <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
+        </div>
+
+        <div class="span12 text-center">
+            {% paginatorizer %}
+        </div>
     <div class="span12">
+
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
         <thead>
-            <th>ID</th>
-            <th>Date (UTC)</th>
-            <th>Integration time (s)</th>
-            <th>Frequency (Hz)</th>
-            <th>Flux (Jy)</th>
-            <th>Flux error (Jy)</th>
-            <th>Extract type</th>
-            <th>Thumbnail</th>
+            {% tableheader 'id' %}
+            {% tableheader 'image__taustart_ts' 'Date (UTC)' %}
+            {% tableheader 'image__tau_time' 'Integration time (s)' %}
+            {% tableheader 'image__band__freq_central' 'Frequency (Hz)' %}
+            {% tableheader 'f_int' 'Flux (Jy)' %}
+            {% tableheader 'f_int_err' 'Flux error (Jy)' %}
+            {% tableheader 'extract_type' 'xtract type' %}
+            {% tableheader 'thumbnail' %}
         </thead>
         <tbody>
-            {% for point in lightcurve %}
+            {% for point in object_list %}
             <tr class="{% cycle 'odd' 'even' %}">
                 <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
                 <td>{{ point.image.taustart_ts|date:"c" }}</td>
@@ -90,7 +101,7 @@
 <script>
     // get data from django template
     var lightcurve = [
-        {% for point in lightcurve %}{
+        {% for point in paginator.object_list %}{
             "band": '{{ point.image.band }}',
             "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
             "f_int": {{ point.f_int }},
@@ -100,8 +111,8 @@
         }{% if not forloop.last %}, {% endif %}
         {% endfor %}
     ];
-    var title = 'Lightcurve for transient #{{transient.id}}';
-    var subtitle = 'start date {% if transient.t_start %}{{ transient.t_start|date:"c" }}{% else %} Unknown {% endif %}';
+    var title = 'Lightcurve for transient #{{object.id}}';
+    var subtitle = 'start date {% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}';
 </script>
 
 <script src="{{ STATIC_URL }}lightcurve.js"></script>

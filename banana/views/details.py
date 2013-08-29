@@ -3,11 +3,12 @@ All views that visualise a model object (banana.models)
 """
 from django.db.models import Count
 from django.views.generic import DetailView
-
+from django.views.generic import ListView
+from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
     Runningcatalog, Transient
-from banana.views.mixins import MultiDbMixin, HybridTemplateMixin
+from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, DatasetMixin, SortListMixin
 
 
 class ImageDetail(MultiDbMixin, DetailView):
@@ -99,10 +100,18 @@ class ExtractedSourceDetail(MultiDbMixin, DetailView):
         return context
 
 
-class TransientDetail(MultiDbMixin, HybridTemplateMixin, DetailView):
+class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+                      HybridTemplateMixin, ListView):
     model = Transient
+    paginate_by = 10
+    template_name = "banana/transient_detail.html"
+
+    def get_queryset(self):
+        qs = super(TransientDetail, self).get_queryset()
+        self.transient = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.transient.lightcurve().order_by(self.get_order())
 
     def get_context_data(self, **kwargs):
         context = super(TransientDetail, self).get_context_data(**kwargs)
-        context['lightcurve'] = self.object.lightcurve()
+        context['object'] = self.transient
         return context

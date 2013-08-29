@@ -1,11 +1,11 @@
 [
- {% for point in lightcurve %}
+ {% for point in object_list %}
   {
-   "band": {{ point.xtrsrc.image.band }},
-   "taustart_ts": {{ point.xtrsrc.image.taustart_ts }},
-   "f_int": {{ point.xtrsrc.f_int }},
-   "f_int_err": {{ point.xtrsrc.f_int_err }},
-   "tau_time": {{ point.xtrsrc.image.tau_time }},
+   band: "{{ point.image.band }}",
+   taustart_ts: "{{ point.image.taustart_ts }}",
+   f_int: {{ point.f_int }},
+   f_int_err: {{ point.f_int_err }},
+   tau_time: {{ point.image.tau_time }},
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
 ]
