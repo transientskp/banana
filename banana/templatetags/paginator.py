@@ -16,6 +16,9 @@ def paginatorizer(context, adjacent_pages=5):
             context['show_end_dots'] = True
         if len(page_numbers) > 1:
             context['show_end'] = True
+    else:
+        if len(page_numbers) == 1:
+            context['show_end'] = True
     return context
 
 register.inclusion_tag('paginator.html', takes_context=True)(paginatorizer)
