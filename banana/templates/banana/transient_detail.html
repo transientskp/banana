@@ -58,15 +58,16 @@
 <h3>Lightcurve</h3>
 
 <div class="row">
-        <div class="span12 text-center">
-            <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-        </div>
+    <div class="span12 text-center">
+        <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
+        <a href="javascript:showThumbnails()"><button class="btn" type="button">show thumbnails</button></a>
+    </div>
 
-        <div class="span12 text-center">
-            {% paginatorizer %}
-        </div>
+    <div class="span12 text-center">
+        {% paginatorizer %}
+    </div>
+
     <div class="span12">
-
         <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
         <thead>
             {% tableheader 'id' %}
@@ -88,13 +89,33 @@
                 <td>{{ point.f_int|scientific }}</td>
                 <td>{{ point.f_int_err|scientific }}</td>
                 <td>{{ point.extract_type }}</td>
-                <td><img src="{% url 'extractedsource_plot' db_name point.id %}?size=1"></td>
+                <td><div id="thumbnail{{ point.id }}"></div></td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <div class="span12 text-center">
+        {% paginatorizer %}
+    </div>
+
 </div>
+
+<script>
+imgs = {
+    {% for point in object_list %}{{point.id}}: '{% url 'extractedsource_plot' db_name point.id %}?size=1'{% if not forloop.last %},{% endif %}
+    {% endfor %}
+};
+
+function showThumbnails() {
+    for (key in imgs) {
+        var elem = document.createElement("img");
+        elem.src = imgs[key];
+        document.getElementById("thumbnail" + key).appendChild(elem);
+    }
+}
+</script>
 {% endif %}
 
 
