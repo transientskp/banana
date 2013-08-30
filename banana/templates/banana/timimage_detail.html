@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Image {{ object.id }} · Banana{% endblock title %}
+
+{% load tableheader %}
+{% load paginator %}
+
+{% block morehead %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
+<script type="text/javascript">$(function() {
+    $('.map').maphilight();
+});</script>
+
+{% endblock %}
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset_id %}">Dataset {{ object.dataset_id }}</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ object.dataset_id }}">Images</a></li>{% endblock %}
+{% block navdeeper %}<li class="active"><a href="{% url 'image' db_name object.id %}">Image {{ object.id }}</a></li>{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span6">
+
+        <a href="{% url 'bigimage' db_name object.id %}" class="btn">detailed view</a>
+
+        <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
+
+         <dl class="dl-horizontal">
+            <dt>Image ID</dt>
+            <dd>{{ object.id }}</dd>
+
+            <dt>Dataset</dt>
+            <dd>{{ object.dataset }}</dd>
+
+            <dt>Centre</dt>
+            <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
+
+            <dt>start date (UT)</dt>
+            <dd>{{ object.taustart_ts }}</dd>
+
+            <dt>Integration time</dt>
+            <dd>{{ object.tau_time|floatformat:3 }}</dd>
+
+            <dt>Frequency <small>Hz</small></dt>
+            <dd>{{ object.freq_eff|floatformat:3  }}</dd>
+
+            <dt>Bandwidth <small>Hz</small></dt>
+            <dd>{{ object.freq_bw|floatformat:3  }}</dd>
+
+            <dt>Rejections</dt>
+            <dd>{{ object.rejections.all|yesno }} </dd>
+
+            <dt>Number of sources</dt>
+            <dd>{{ object.extractedsources.count }}</dd>
+
+            <dt>Filename</dt>
+            <dd>{{ object.filename }}</dd>
+
+            <dt>Stokes</dt>
+            <dd>{{ object.stokes }}</dd>
+
+            <dt>Tau</dt>
+            <dd>{{ object.tau }}</dd>
+
+            <dt>Band</dt>
+            <dd>{{ object.band }}</dd>
+
+            <dt>rb_smaj</dt>
+            <dd>{{ object.rb_smaj }}</dd>
+
+            <dt>rb_smin</dt>
+            <dd>{{ object.rb_smin }}</dd>
+
+            <dt>rb_pa</dt>
+            <dd>{{ object.rb_pa }}</dd>
+
+            <dt>Delta X</dt>
+            <dd>{{ object.deltax }}</dd>
+
+            <dt>Delta Y</dt>
+            <dd>{{ object.deltay }}</dd>
+
+            <dt>fwhm_arcsec</dt>
+            <dd>{{ object.fwhm_arcsec }}</dd>
+
+            <dt>fov_degrees</dt>
+            <dd>{{ object.fov_degrees }}</dd>
+
+            <dt>Node</dt>
+            <dd>{{ object.node }}</dd>
+
+            <dt>Nodes</dt>
+            <dd>{{ object.nodes }}</dd>
+        </dl>
+
+    </div>
+    <div class="span6">
+        {% if object.extractedsources.all %}
+
+        <div class="row">
+            <div class="span6 text-center">
+                {% paginatorizer %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6">
+                <table class="table table-bordered table-striped responsive-utilities table-condensed" data-provides="rowlink">
+                    <thead>
+                        <tr>
+                            {% tableheader 'id' %}
+                            {% tableheader 'ra' %}
+                            {% tableheader 'decl' %}
+                            {% tableheader 'ra_err' %}
+                            {% tableheader 'decl_err' %}
+                            {% tableheader 'f_peak' %}
+
+                            {% tableheader 'f_peak_err' %}
+                            {% tableheader 'f_int' %}
+                            {% tableheader 'f_int_err' %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for source in object_list %}
+                    <tr id="row{{ source.id }}">
+                        <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
+                        <td>{{ source.ra|floatformat:3 }}</td>
+                        <td>{{ source.decl|floatformat:3 }}</td>
+                        <td>{{ source.ra_err|floatformat:3 }}</td>
+                        <td>{{ source.decl_err|floatformat:3 }}</td>
+                        <td>{{ source.f_peak|floatformat:3 }}</td>
+                        <td>{{ source.f_peak_err|floatformat:3 }}</td>
+                        <td>{{ source.f_int|floatformat:3 }}</td>
+                        <td>{{ source.f_int_err|floatformat:3 }}</td>
+
+                    </tr>
+                    </a>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No sources.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6 text-center">
+                {% paginatorizer %}
+            </div>
+        </div>
+        
+    </div>
+  </div>
+</div>
+
+<script>
+{% for source in object_list %}
+$('#row{{ source.id }}').mouseover(function(e) {
+    $('#{{ source.id }}').mouseover();
+}).mouseout(function(e) {
+    $('#{{ source.id }}').mouseout();
+}).click(function(e) { e.preventDefault(); });
+{% endfor %}
+</script>
+
+<map name="simple">
+    {% for id, x, y, size in pixels %}
+        <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
+    {% endfor %}
+</map>
+
+
+
+{% endblock content %}
+
+

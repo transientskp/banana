@@ -51,6 +51,10 @@ urlpatterns = patterns('',
         details.BigImageDetail.as_view(),
         name='bigimage'),
 
+    url(r'^(?P<db>\w+)/timimage/(?P<pk>\d+)/$',
+        details.TimImageDetail.as_view(),
+        name='timimage'),
+
     url(r'^(?P<db>\w+)/extractedsourcespx/(?P<image_id>\d+)/$',
         extracted_sources_pixel,
         name='extracted_sources_pixel'),
