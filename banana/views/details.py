@@ -42,9 +42,11 @@ class BigImageDetail(ImageDetail):
     template_name = "banana/bigimage_detail.html"
 
     def get_size(self):
-        size = int(self.request.GET.get("size", 8))  # in inches
-        dpi = 100
-        return size * dpi
+        image_size = 8
+        return image_size
+        #size = int(self.request.GET.get("size", 8))  # in inches
+        #dpi = 100
+        #return size * dpi
 
 
 class MonitoringlistDetail(MultiDbMixin, DetailView):
