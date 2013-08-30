@@ -17,7 +17,7 @@
 
 {% block content %}
 
-<img src="{% url 'image_plot' db_name image.id %}?size={{ size }}" class="map" usemap="#simple">
+<img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
 <map name="simple">
     {% for id, x, y, size in sources %}

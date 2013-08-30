@@ -30,7 +30,10 @@ class ImagePlot(MultiDbMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(ImagePlot, self).get_context_data(**kwargs)
         context['sources'] = self.object.extractedsources.all()
-        context['size'] = int(self.request.GET.get('size', 5))
+        try:
+            context['size'] = int(self.request.GET.get('size', 5))
+        except ValueError:
+             context['size'] = 5
         context['hdu'] = get_hdu(self.object.url)
         return context
 
