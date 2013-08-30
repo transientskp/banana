@@ -115,3 +115,28 @@ class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         context = super(TransientDetail, self).get_context_data(**kwargs)
         context['object'] = self.transient
         return context
+
+
+class TimImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+                      HybridTemplateMixin, ListView):
+    template_name = "banana/timimage_detail.html"
+    model = Image
+    paginate_by = 20
+
+    def get_size(self):
+        image_size = 4  # in inches
+        return image_size
+
+    def get_queryset(self):
+        qs = super(TimImageDetail, self).get_queryset()
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.object.extractedsources.all().order_by(self.get_order())
+
+    def get_context_data(self, **kwargs):
+        context = super(TimImageDetail, self).get_context_data(**kwargs)
+        context['image_size'] = self.get_size()
+        context['pixels'] = banana.image.extracted_sources_pixels(self.object,
+                                                               self.get_size())
+        context['object'] = self.object
+        return context
+
