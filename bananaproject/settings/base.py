@@ -2,13 +2,12 @@ import os
 here = os.path.dirname(__file__)
 
 DEBUG = False
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = []
 
-
 MANAGERS = ADMINS
-
 
 DATABASES = {
     'default': {
@@ -17,44 +16,32 @@ DATABASES = {
     }
 }
 
-
 TIME_ZONE = 'Europe/Amsterdam'
-
 
 LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
-
 USE_I18N = True
-
 
 USE_L10N = True
 
-
 USE_TZ = True
-
 
 MEDIA_ROOT = ''
 
-
 MEDIA_URL = ''
-
 
 STATIC_ROOT = os.path.join(here, '../../static')
 
-
 STATIC_URL = '/static/'
 
-
 STATICFILES_DIRS = ()
-
 
 STATICFILES_FINDERS = (
     #'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -70,23 +57,19 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'bananaproject.urls'
 
-
 WSGI_APPLICATION = 'bananaproject.wsgi.application'
 
-
 TEMPLATE_DIRS = ()
-
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.messages',
     'django.contrib.sessions',
     'banana',
+    # 'sqlconsole',  # don't enable, dangerous :)
 ]
 
-
-INTERNAL_IPS = ['127.0.0.1',]
-
+INTERNAL_IPS = ['127.0.0.1']
 
 LOGGING = {
     'version': 1,
@@ -111,4 +94,3 @@ LOGGING = {
         },
     }
 }
-
