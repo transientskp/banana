@@ -18,7 +18,7 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row-fluid">
     <div class="span6">
         <dl class="dl-horizontal">
             <dt>Image ID</dt>
@@ -102,7 +102,7 @@
 
 </div>
 
-<div class="row">
+<div class="row-fluid">
     <div class="span12">
         <a href="{% url 'bigimage' db_name image.id %}" class="btn">detailed view</a>
     </div>
@@ -115,7 +115,7 @@
 </map>
 
 
-<div class="row">
+<div class="row-fluid">
     <div class="span12">
         <h2>List of extracted sources in this image</h2>
         {% if image.extractedsources.all %}

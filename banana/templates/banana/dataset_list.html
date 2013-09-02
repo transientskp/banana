@@ -8,7 +8,7 @@
 {% block navdatabase %}<li class="active"><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
 {% block content %}
-<div class="row">
+<div class="row-fluid">
 {% if not dataset_list %}
     <div class="span12 text-center">
         No datasets are available.
