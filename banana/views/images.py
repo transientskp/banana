@@ -3,7 +3,7 @@ All views that generate images
 """
 from django.http import HttpResponse
 import banana.image
-from banana.models import Extractedsource, Transient, Image, Runningcatalog, Dataset
+from banana.models import Extractedsource, Image, Dataset
 from banana.mongo import get_hdu
 from banana.views.mixins import MultiDbMixin
 from django.views.generic import DetailView
