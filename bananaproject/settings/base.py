@@ -53,6 +53,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware'
 ]
 
 ROOT_URLCONF = 'bananaproject.urls'
@@ -63,10 +64,13 @@ TEMPLATE_DIRS = ()
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
+    'django.contrib.admin',
     'django.contrib.messages',
     'django.contrib.sessions',
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
     'banana',
-    # 'sqlconsole',  # don't enable, dangerous :)
+    'sqlconsole',
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
