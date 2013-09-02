@@ -33,7 +33,7 @@ DATABASES['postgres_you'] = {
         'USER': 'you',
         'PASSWORD': 'you',
         'HOST': 'localhost',
-}
+}  # add 'CONSOLE': True if you want to be able to perform sqlconsole queries
 
 ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
 

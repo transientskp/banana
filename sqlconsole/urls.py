@@ -3,5 +3,5 @@ from sqlconsole.views import SQLConsoleView
 
 
 urlpatterns = patterns('',
-    url(r'^$', SQLConsoleView.as_view(), name='sqlconsole'),
+    url(r'^(?P<db>\w+)/$', SQLConsoleView.as_view(), name='sqlconsole'),
 )
