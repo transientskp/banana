@@ -42,7 +42,7 @@ class SQLConsoleView(View):
                     messages.error(request, "too many rows (>1000), please LIMIT your query")
                 else:
                     data = cursor.fetchall()
-                    description = cursor.description
+                    description = [d[0] for d in cursor.description]
             except connection.connection.InternalError as e:
                 messages.error(request, str(e))
 
