@@ -24,7 +24,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
 
-            <a class="brand"><img src="{{ STATIC_URL }}logo.png" width=20 height=20></a>
+        <a class="brand"><img src="{{ STATIC_URL }}logo.png" width=20 height=20></a>
         <ul class="nav">
             {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
             {% block navdatabase %}{% endblock navdatabase %}
@@ -32,6 +32,18 @@
             {% block navdeep %}{% endblock %}
             {% block navdeeper %}{% endblock %}
             {% block navdepest %}{% endblock %}
+        </ul>
+
+
+
+        <ul class="nav pull-right">
+            {% if user.is_authenticated %}
+                <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+
         </ul>
     </div>
 </div>
