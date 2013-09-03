@@ -38,7 +38,7 @@ Testing
 
 To run the banana test suite run::
 
-    $ ./manage.py test --settings=bananaproject.settings.testing
+    $ ./manage.py test --settings=testing.settings
 
 
 
