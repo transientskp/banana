@@ -13,3 +13,5 @@ DATABASES = {
 INSTALLED_APPS += [
     'testing',
 ]
+
+LOGIN_REDIRECT_URL = '/'
