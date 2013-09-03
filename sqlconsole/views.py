@@ -5,14 +5,15 @@ from django.shortcuts import render
 from sqlconsole.forms import SQLConsoleForm
 from sqlconsole.db import check_database
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 class SQLConsoleView(View):
     form_class = SQLConsoleForm
     initial = {'key': 'value'}
     template_name = 'sqlconsole.html'
 
-    @method_decorator(login_required)
+    @method_decorator(staff_member_required)
     def dispatch(self, *args, **kwargs):
         return super(SQLConsoleView, self).dispatch(*args, **kwargs)
 
