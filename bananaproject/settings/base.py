@@ -60,7 +60,11 @@ ROOT_URLCONF = 'bananaproject.urls'
 
 WSGI_APPLICATION = 'bananaproject.wsgi.application'
 
-TEMPLATE_DIRS = ()
+TEMPLATE_DIRS = (
+    os.path.join(here, '../templates')
+)
+
+LOGIN_REDIRECT_URL = 'databases'
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
