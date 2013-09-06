@@ -137,7 +137,10 @@ $(function () {
         plotOptions: {
             areaspline: {
                 fillOpacity: 0.5
-            }
+            },
+	        series: {
+	            animation: false
+	        },
         }
     });
 });
