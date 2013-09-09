@@ -12,3 +12,8 @@ script:
 branches:
   only:
     - master
+notifications: 
+  hipchat: 
+    rooms: 
+      secure: GXQo2vgPmAY1WRuPDcASUz8uFWgVOH9sUX6Zo2OH24c1wYKFq6J3jDprbbjjowQSzOYbNHJ3knBq7kiPd0tBpc0JxC3IIykNynTGra80kJhuE2OuYgd65K7uRtXQ58NVN1kRuYiPziq/Kb8XIkrzFWHBWgEF4gUtttWKyVxCsYQ=
+
