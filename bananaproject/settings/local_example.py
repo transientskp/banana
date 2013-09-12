@@ -1,6 +1,6 @@
 
 from base import *
-from banana.db import monetdb_list
+from banana.db import monetdb_list, postgres_list
 
 DEBUG = True
 
@@ -16,6 +16,19 @@ MONETDB_HOST = 'localhost'
 MONETDB_PORT = 50000
 MONETDB_PASSPHRASE = 'blablabla'
 
+POSTGRES_HOST = 'localhost'
+POSTGRES_USERNAME = 'gijs'
+POSTGRES_PASSWORD = POSTGRES_USERNAME
+
+for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
+    DATABASES["postgres_" + name] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': name,
+        'USER': name,
+        'PASSWORD': name,
+        'CONSOLE': False,  # True if you you want sqlconsole queries
+    }
+
 for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
     name = monetdb['name']
     DATABASES[name] = {
@@ -26,14 +39,6 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'HOST': MONETDB_HOST,
         'PORT': MONETDB_PORT,
     }
-
-DATABASES['postgres_you'] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'you',
-        'USER': 'you',
-        'PASSWORD': 'you',
-        'HOST': 'localhost',
-}  # add 'CONSOLE': True if you want to be able to perform sqlconsole queries
 
 ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
 

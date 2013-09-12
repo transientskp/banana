@@ -39,6 +39,18 @@ def monetdb_list(host, port, passphrase):
     return statuses
 
 
+def postgres_list(host, user, password, port=5432):
+    import psycopg2
+    con = psycopg2.connect(host=host, port=port, user=user, password=password,
+                           dbname='postgres')
+    cur = con.cursor()
+    cur.execute("select datname from pg_database")
+    names = [n[0] for n in cur.fetchall()]
+    system = ["template1", "template0", "postgres"]
+    names = [n for n in names if n not in system]
+    return names
+
+
 def list():
     """
     :return: a list of all configured databases
