@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Image {{ image.id }} · Banana{% endblock title %}
+{% block title %}Image {{ object.id }} · Banana{% endblock title %}
+
+{% load tableheader %}
+{% load paginator %}
 
 {% block morehead %}
 <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
@@ -11,192 +14,167 @@
 {% endblock %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
-{% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ image.dataset_id }}">Images</a></li>{% endblock %}
-{% block navdeeper %}<li class="active"><a href="{% url 'image' db_name image.id %}">Image {{ image.id }}</a></li>{% endblock %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset_id %}">Dataset {{ object.dataset_id }}</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ object.dataset_id }}">Images</a></li>{% endblock %}
+{% block navdeeper %}<li class="active"><a href="{% url 'image' db_name object.id %}">Image {{ object.id }}</a></li>{% endblock %}
 
 
 {% block content %}
 
-<div class="row-fluid">
-    <div class="span6">
-        <dl class="dl-horizontal">
-            <dt>Image ID</dt>
-            <dd>{{ image.id }}</dd>
 
-            <dt>Dataset</dt>
-            <dd>{{ image.dataset }}</dd>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span5">
 
-            <dt>Centre</dt>
-            <dd>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</dd>
+          <a href="{% url 'bigimage' db_name object.id %}" class="btn">detailed view</a>
 
-            <dt>start date (UT)</dt>
-            <dd>{{ image.taustart_ts }}</dd>
+            <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
-            <dt>Integration time</dt>
-            <dd>{{ image.tau_time|floatformat:3 }}</dd>
+             <dl class="dl-horizontal">
+                <dt>Image ID</dt>
+                <dd>{{ object.id }}</dd>
 
-            <dt>Frequency <small>Hz</small></dt>
-            <dd>{{ image.freq_eff|floatformat:3  }}</dd>
+                <dt>Dataset</dt>
+                <dd>{{ object.dataset }}</dd>
 
-            <dt>Bandwidth <small>Hz</small></dt>
-            <dd>{{ image.freq_bw|floatformat:3  }}</dd>
+                <dt>Centre</dt>
+                <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
 
-            <dt>Rejections</dt>
-            <dd>{{ image.rejections.all|yesno }} </dd>
+                <dt>start date (UT)</dt>
+                <dd>{{ object.taustart_ts }}</dd>
 
-            <dt>Number of sources</dt>
-            <dd>{{ image.num_extractedsources }}</dd>
+                <dt>Integration time</dt>
+                <dd>{{ object.tau_time|floatformat:3 }}</dd>
 
-            <dt>Filename</dt>
-            <dd>{{ image.filename }}</dd>
+                <dt>Frequency <small>Hz</small></dt>
+                <dd>{{ object.freq_eff|floatformat:3  }}</dd>
 
-            <dt>Stokes</dt>
-            <dd>{{ image.stokes }}</dd>
+                <dt>Bandwidth <small>Hz</small></dt>
+                <dd>{{ object.freq_bw|floatformat:3  }}</dd>
 
-            <dt>Tau</dt>
-            <dd>{{ image.tau }}</dd>
+                <dt>Rejections</dt>
+                <dd>{{ object.rejections.all|yesno }} </dd>
 
-            <dt>Band</dt>
-            <dd>{{ image.band }}</dd>
+                <dt>Number of sources</dt>
+                <dd>{{ object.extractedsources.count }}</dd>
 
-            <dt>rb_smaj</dt>
-            <dd>{{ image.rb_smaj }}</dd>
+                <dt>Filename</dt>
+                <dd>{{ object.filename }}</dd>
 
-            <dt>rb_smin</dt>
-            <dd>{{ image.rb_smin }}</dd>
+                <dt>Stokes</dt>
+                <dd>{{ object.stokes }}</dd>
 
-            <dt>rb_pa</dt>
-            <dd>{{ image.rb_pa }}</dd>
+                <dt>Tau</dt>
+                <dd>{{ object.tau }}</dd>
 
-            <dt>Delta X</dt>
-            <dd>{{ image.deltax }}</dd>
+                <dt>Band</dt>
+                <dd>{{ object.band }}</dd>
 
-            <dt>Delta Y</dt>
-            <dd>{{ image.deltay }}</dd>
+                <dt>rb_smaj</dt>
+                <dd>{{ object.rb_smaj }}</dd>
 
-            <dt>fwhm_arcsec</dt>
-            <dd>{{ image.fwhm_arcsec }}</dd>
+                <dt>rb_smin</dt>
+                <dd>{{ object.rb_smin }}</dd>
 
-            <dt>fov_degrees</dt>
-            <dd>{{ image.fov_degrees }}</dd>
+                <dt>rb_pa</dt>
+                <dd>{{ object.rb_pa }}</dd>
 
-            {% comment %}
-            <dt>URL</dt>
-            <dd>{{ image.url }}</dd>
-            {% endcomment %}
+                <dt>Delta X</dt>
+                <dd>{{ object.deltax }}</dd>
 
-            <dt>Node</dt>
-            <dd>{{ image.node }}</dd>
+                <dt>Delta Y</dt>
+                <dd>{{ object.deltay }}</dd>
 
-            <dt>Nodes</dt>
-            <dd>{{ image.nodes }}</dd>
-        </dl>
+                <dt>fwhm_arcsec</dt>
+                <dd>{{ object.fwhm_arcsec }}</dd>
+
+                <dt>fov_degrees</dt>
+                <dd>{{ object.fov_degrees }}</dd>
+
+                <dt>Node</dt>
+                <dd>{{ object.node }}</dd>
+
+                <dt>Nodes</dt>
+                <dd>{{ object.nodes }}</dd>
+            </dl>
+
     </div>
+    <div class="span7">
+        {% if object.extractedsources.all %}
 
+        <div class="row-fluid">
+            <div class="span12 text-center">
+                {% paginatorizer %}
+            </div>
+        </div>
 
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-bordered table-striped responsive-utilities table-condensed" data-provides="rowlink">
+                    <thead>
+                        <tr>
+                            {% tableheader 'id' %}
+                            {% tableheader 'ra' 'Ra(°)'%}
+                            {% tableheader 'decl' 'Decl(°)' %}
+                            {% tableheader 'ra_err' 'Ra err (as)' %}
+                            {% tableheader 'decl_err' 'Decl err (as)' %}
+                            {% tableheader 'f_peak' 'Peak Flux (Jy)' %}
 
-    <div class="span6">
-        <img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
+                            {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
+                            {% tableheader 'f_int' 'Int. flux (Jy)'  %}
+                            {% tableheader 'f_int_err' 'Int. flux err (Jy)' %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for source in object_list %}
+                    <tr id="row{{ source.id }}">
+                        <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
+                        <td>{{ source.ra|floatformat:3 }}</td>
+                        <td>{{ source.decl|floatformat:3 }}</td>
+                        <td>{{ source.ra_err|floatformat:3 }}</td>
+                        <td>{{ source.decl_err|floatformat:3 }}</td>
+                        <td>{{ source.f_peak|floatformat:3 }}</td>
+                        <td>{{ source.f_peak_err|floatformat:3 }}</td>
+                        <td>{{ source.f_int|floatformat:3 }}</td>
+                        <td>{{ source.f_int_err|floatformat:3 }}</td>
+
+                    </tr>
+                    </a>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>No sources.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12 text-center">
+                {% paginatorizer %}
+            </div>
+        </div>
+
     </div>
-
+  </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
-        <a href="{% url 'bigimage' db_name image.id %}" class="btn">detailed view</a>
-    </div>
-</div>
+<script>
+{% for source in object_list %}
+$('#row{{ source.id }}').mouseover(function(e) {
+    $('#{{ source.id }}').mouseover();
+}).mouseout(function(e) {
+    $('#{{ source.id }}').mouseout();
+}).click(function(e) { e.preventDefault(); });
+{% endfor %}
+</script>
 
 <map name="simple">
-    {% for id, x, y, size in sources %}
+    {% for id, x, y, size in pixels %}
         <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
     {% endfor %}
 </map>
 
-
-<div class="row-fluid">
-    <div class="span12">
-        <h2>List of extracted sources in this image</h2>
-        {% if image.extractedsources.all %}
-        <table class="table table-bordered table-striped responsive-utilities table-condensed " data-provides="rowlink">
-            <thead>
-            <tr>
-                <th>Source ID</th>
-                <th>R.A. (°)</th>
-                <th>Decl (°)</th>
-                <th>R.A. Error (as)</th>
-                <th>Decl Error (as)</th>
-                <th>Peak flux (Jy)</th>
-                <th>Peak flux error (Jy)</th>
-                <th>Integrated flux (Jy)</th>
-                <th>Integrated flux error (Jy)</th>
-
-                {% comment %}
-                <th>zone</th>
-                <th>decl_fit_err</th>
-                <th>ra_sys_err</th>
-                <th>decl_sys_err</th>
-                <th>x</th>
-                <th>y</th>
-                <th>z</th>
-                <th>racosdecl</th>
-                <th>margin</th>
-                <th>S/N</th>
-                <th>semimajor</th>
-                <th>semiminor</th>
-                <th>pa</th>
-                <th>extract_type</th>
-                <th>node</th>
-                <th>nodes</th>
-                {% endcomment %}
-
-
-            </tr>
-            </thead>
-            <tbody>
-            {% for source in image.extractedsources.all %}
-            <tr>
-                <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
-                <td>{{ source.ra|floatformat:3 }}</td>
-                <td>{{ source.decl|floatformat:3 }}</td>
-                <td>{{ source.ra_err|floatformat:3 }}</td>
-                <td>{{ source.decl_err|floatformat:3 }}</td>
-                <td>{{ source.f_peak|floatformat:3 }}</td>
-                <td>{{ source.f_peak_err|floatformat:3 }}</td>
-                <td>{{ source.f_int|floatformat:3 }}</td>
-                <td>{{ source.f_int_err|floatformat:3 }}</td>
-
-                {% comment %}
-                <td>{{ source.zone }}</td>
-                <td>{{ source.ra_fit_err }}</td>
-                <td>{{ source.decl_fit_err }}</td>
-                <td>{{ source.ra_sys_err }}</td>
-                <td>{{ source.decl_sys_err }}</td>
-                <td>{{ source.x }}</td>
-                <td>{{ source.y }}</td>
-                <td>{{ source.z }}</td>
-                <td>{{ source.racosdecl }}</td>
-                <td>{{ source.margin }}</td>
-                <td>{{ source.det_sigma }}</td>
-                <td>{{ source.semimajor }}</td>
-                <td>{{ source.semiminor }}</td>
-                <td>{{ source.pa }}</td>
-                <td>{{ source.extract_type }}</td>
-                <td>{{ source.node }}</td>
-                <td>{{ source.nodes }}</td>
-
-                {% endcomment %}
-            </tr>
-            </a>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No sources.</p>
-        {% endif %}
-    </div>
-</div>
 
 
 {% endblock content %}
