@@ -11,31 +11,30 @@ from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, DatasetMixin, SortListMixin
 
 
-class ImageDetail(MultiDbMixin, DetailView):
+class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+                      HybridTemplateMixin, ListView):
     model = Image
+    paginate_by = 20
+    template_name = "banana/image_detail.html"
 
     def get_size(self):
         image_size = 4  # in inches
         return image_size
 
+    def get_queryset(self):
+        qs = super(ImageDetail, self).get_queryset()
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.object.extractedsources.all().order_by(self.get_order())
+
     def get_context_data(self, **kwargs):
         context = super(ImageDetail, self).get_context_data(**kwargs)
         context['image_size'] = self.get_size()
-        context['sources'] = banana.image.extracted_sources_pixels(self.object,
+        context['pixels'] = banana.image.extracted_sources_pixels(self.object,
                                                                self.get_size())
-        context['image'] = self.object
+        context['object'] = self.object
         return context
 
-    def get_queryset(self):
-        """ Anotate the image a bit
-        """
-        qs = super(ImageDetail, self).get_queryset()
 
-        related = ['skyrgn', 'dataset', 'band', 'rejections']
-        return qs.prefetch_related(*related).using(
-            self.db_name).annotate(
-            num_extractedsources=Count('extractedsources')
-        )
 
 
 class BigImageDetail(ImageDetail):
@@ -118,27 +117,4 @@ class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         context['object'] = self.transient
         return context
 
-
-class TimImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
-                      HybridTemplateMixin, ListView):
-    template_name = "banana/timimage_detail.html"
-    model = Image
-    paginate_by = 20
-
-    def get_size(self):
-        image_size = 4  # in inches
-        return image_size
-
-    def get_queryset(self):
-        qs = super(TimImageDetail, self).get_queryset()
-        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
-        return self.object.extractedsources.all().order_by(self.get_order())
-
-    def get_context_data(self, **kwargs):
-        context = super(TimImageDetail, self).get_context_data(**kwargs)
-        context['image_size'] = self.get_size()
-        context['pixels'] = banana.image.extracted_sources_pixels(self.object,
-                                                               self.get_size())
-        context['object'] = self.object
-        return context
 
