@@ -35,17 +35,17 @@ class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         return context
 
 
-
-
-class BigImageDetail(ImageDetail):
+class BigImageDetail(MultiDbMixin, DatasetMixin, DetailView):
     template_name = "banana/bigimage_detail.html"
+    model = Image
+    image_size = 8
 
-    def get_size(self):
-        image_size = 8
-        return image_size
-        #size = int(self.request.GET.get("size", 8))  # in inches
-        #dpi = 100
-        #return size * dpi
+    def get_context_data(self, **kwargs):
+        context = super(BigImageDetail, self).get_context_data(**kwargs)
+        context['image_size'] = self.image_size
+        context['sources'] = banana.image.extracted_sources_pixels(self.object,
+                                                               self.image_size)
+        return context
 
 
 class MonitoringlistDetail(MultiDbMixin, DetailView):
