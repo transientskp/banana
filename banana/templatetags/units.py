@@ -75,7 +75,7 @@ def format_angle(value, format_type="time"):
 
 @register.filter
 def format_ra_error(value, decl):
-    return float(value) / 15 * math.cos(decl)
+    return float(value) / (15 * math.cos(float(decl)))
 
 
 def sexagesimal(context, ra, decl, ra_err, decl_err):
