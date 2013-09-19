@@ -9,6 +9,9 @@ ASEC_IN_DEGREE = 60**2
 
 
 def deg_to_hms(deg):
+    """
+    convert degrees to sexagesimal hours, minutes, seconds
+    """
     rad = deg * (math.pi/180)
     rad %= RADIANS_IN_CIRCLE
     seconds = SECONDS_IN_DAY * rad / RADIANS_IN_CIRCLE
@@ -18,8 +21,11 @@ def deg_to_hms(deg):
 
 
 def deg_to_dms(deg):
+    """
+    convert degrees to sexagesimal  degrees, arecmin and arcsec
+    """
     rad = deg * (math.pi/180)
-    sign = "+" if rad >= 0 else "-" 
+    sign = "+" if rad >= 0 else "-"
     rad = abs(rad)
     seconds = math.degrees(rad) * ASEC_IN_DEGREE
     degrees, seconds = divmod(seconds, ASEC_IN_DEGREE)

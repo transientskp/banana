@@ -4,6 +4,7 @@
 
 {% load tableheader %}
 {% load paginator %}
+{% load units %}
 
 {% block morehead %}
 <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
@@ -118,8 +119,8 @@
                             {% tableheader 'decl' 'Decl(°)' %}
                             {% tableheader 'ra_err' 'Ra err (as)' %}
                             {% tableheader 'decl_err' 'Decl err (as)' %}
+                            {% tableheader 'ra' 'Sexagesimal' %}
                             {% tableheader 'f_peak' 'Peak Flux (Jy)' %}
-
                             {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
                             {% tableheader 'f_int' 'Int. flux (Jy)'  %}
                             {% tableheader 'f_int_err' 'Int. flux err (Jy)' %}
@@ -133,6 +134,7 @@
                         <td>{{ source.decl|floatformat:3 }}</td>
                         <td>{{ source.ra_err|floatformat:3 }}</td>
                         <td>{{ source.decl_err|floatformat:3 }}</td>
+                        <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
                         <td>{{ source.f_peak|floatformat:3 }}</td>
                         <td>{{ source.f_peak_err|floatformat:3 }}</td>
                         <td>{{ source.f_int|floatformat:3 }}</td>

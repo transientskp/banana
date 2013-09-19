@@ -40,6 +40,7 @@
                 {% tableheader 'ra_err' %}
                 {% tableheader 'decl' %}
                 {% tableheader 'decl_err' %}
+                {% tableheader 'ra' 'Sexagesimal' %}
                 {% tableheader 'det_sigma' %}
                 {% tableheader 'f_peak' %}
                 {% tableheader 'f_peak_err' %}
@@ -57,6 +58,7 @@
                 <td>{{ extractedsource.ra_err|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.decl|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.decl_err|stringformat:".3f" }}</td>
+                <td>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</td>
                 <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.f_peak|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.f_peak_err|stringformat:".3f" }}</td>
