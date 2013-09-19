@@ -33,11 +33,11 @@
             <dt>runcat</dt>
             <dd><a href="{% url 'runningcatalog' db_name monitoringlist.runcat%}">{{ monitoringlist.runcat }}</a></dd>
 
-            <dt>ra</dt>
-            <dd>{{ monitoringlist.ra|scientific }}</dd>
+            <dt>Position (decimal)</dt>
+            <dd>({{ monitoringlist.ra|stringformat:".3f" }}&deg;, {{ monitoringlist.decl|stringformat:".3f" }}&deg;)</dd>
 
-            <dt>decl</dt>
-            <dd>{{ monitoringlist.decl|scientific }}</dd>
+            <dt>Position (Sexagesimal)</dt>
+            <dd>({{ monitoringlist.ra|format_angle }}, {{ monitoringlist.decl|format_angle:"dms" }})</dd>
 
             <dt>dataset</dt>
             <dd><a href="{% url 'dataset' db_name monitoringlist.dataset.id%}">#{{monitoringlist.dataset.id }}: {{ monitoringlist.dataset.description }}</a></dd>

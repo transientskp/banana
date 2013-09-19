@@ -27,15 +27,11 @@
 <div class="row-fluid">
     <div class="span6">
         <dl class="dl-horizontal">
-            <dt>Position (degrees)</dt>
+            <dt>Position (decimal)</dt>
             <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|stringformat:".3f" }}&Prime;)</dd>
 
-            <dt>Sexagesimal time</dt>
-            <dd>({{ extractedsource.ra|format_angle }}, {{ extractedsource.decl|format_angle }}) &pm; ({{ extractedsource.ra_err|format_angle }}, {{ extractedsource.decl_err|format_angle }} )</dd>
-
-            <dt>Sexagesimal dms</dt>
-            <dd>({{ extractedsource.ra|format_angle:"dms" }}, {{ extractedsource.decl|format_angle:"dms" }}) &pm; ({{ extractedsource.ra_err|format_angle:"dms" }}, {{ extractedsource.decl_err|format_angle:"dms" }} )</dd>
-
+            <dt>Position (Sexagesimal)</dt>
+            <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</dd>
 
             <dt>Signal to noise</dt>
             <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
