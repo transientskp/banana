@@ -39,8 +39,8 @@
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'id' %}-{% endif %}id{% if dataset %}&dataset={{ dataset }}{% endif %}">Running cat. # {% if order == 'id' %}<i class="icon-arrow-down">{% elif order == '-id' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra' %}-{% endif %}wm_ra{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. (&deg;) {% if order == 'wm_ra' %}<i class="icon-arrow-down">{% elif order == '-wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl' %}-{% endif %}wm_decl{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl (&deg;) {% if order == 'wm_decl' %}<i class="icon-arrow-down">{% elif order == '-wm_decl' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra_err' %}-{% endif %}wm_ra_err{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. Error (&Prime;) {% if order == 'wm_ra_err' %}<i class="icon-arrow-down">{% elif order == '-wm_ra_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
-                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl_err' %}-{% endif %}wm_decl_err{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl Error (&Prime;) {% if order == 'wm_decl_err' %}<i class="icon-arrow-down">{% elif order == '-wm_decl_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'avg_ra_err' %}-{% endif %}avg_ra_err{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. Error (&Prime;) {% if order == 'avg_ra_err' %}<i class="icon-arrow-down">{% elif order == '-avg_ra_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
+                <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'avg_decl_err' %}-{% endif %}avg_decl_err{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl Error (&Prime;) {% if order == 'avg_decl_err' %}<i class="icon-arrow-down">{% elif order == '-avg_decl_err' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_ra' %}-{% endif %}wm_ra{% if dataset %}&dataset={{ dataset }}{% endif %}">R.A. (h:m:s.) {% if order == 'wm_ra' %}<i class="icon-arrow-down">{% elif order == '-wm_ra' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'wm_decl' %}-{% endif %}wm_decl{% if dataset %}&dataset={{ dataset }}{% endif %}">Decl (d:m:s.) {% if order == 'wm_decl' %}<i class="icon-arrow-down">{% elif order == '-wm_decl' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
                 <th><a href="?page={{ runningcatalogs.number }}&order={% if order == 'datapoints' %}-{% endif %}datapoints{% if dataset %}&dataset={{ dataset }}{% endif %}"># of data points {% if order == 'datapoints' %}<i class="icon-arrow-down">{% elif order == '-datapoints' %}<i class="icon-arrow-up"></i>{% endif %}</a></th>
@@ -53,8 +53,8 @@
                 <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
                 <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.wm_decl|stringformat:".3f" }}</td>
-                <td>{{ runningcatalog.wm_ra_err|stringformat:".3f" }}</td>
-                <td>{{ runningcatalog.wm_decl_err|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.avg_ra_err|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.avg_decl_err|stringformat:".3f" }}</td>
                 <td> {{runningcatalog.wm_ra|format_angle:"time"}}</td>
                 <td> {{runningcatalog.wm_decl|format_angle:"dms"}}</td>
                 <td>{{ runningcatalog.datapoints }}</td>
