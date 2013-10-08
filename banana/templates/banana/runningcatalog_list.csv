@@ -1,4 +1,4 @@
-#id, wm_ra, wm_ra_err, wm_decl, wm_decl_err, datapoints
-{% for runningcatalog in runningcatalog_list %} {{ runningcatalog.id }}, {{ runningcatalog.wm_ra }}, {{ runningcatalog.wm_ra_err }}, {{ runningcatalog.wm_decl }}, {{ runningcatalog.wm_decl_err }}, {{ runningcatalog.datapoints }}
+#id, wm_ra, avg_ra_err, wm_decl, avg_decl_err, datapoints
+{% for runningcatalog in runningcatalog_list %} {{ runningcatalog.id }}, {{ runningcatalog.wm_ra }}, {{ runningcatalog.avg_ra_err }}, {{ runningcatalog.wm_decl }}, {{ runningcatalog.avg_decl_err }}, {{ runningcatalog.datapoints }}
 {% endfor %}
 

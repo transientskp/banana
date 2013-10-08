@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-schema_version = 14
+schema_version = 16
 
 
 scatterplot_query = """\
@@ -172,12 +172,14 @@ class Extractedsource(models.Model):
     zone = models.IntegerField()
     ra = models.FloatField()
     decl = models.FloatField()
+    uncertainty_ew = models.FloatField()
+    uncertainty_ns = models.FloatField()
     ra_err = models.FloatField()
     decl_err = models.FloatField()
     ra_fit_err = models.FloatField()
     decl_fit_err = models.FloatField()
-    ra_sys_err = models.FloatField()
-    decl_sys_err = models.FloatField()
+    ew_sys_err = models.FloatField()
+    ns_sys_err = models.FloatField()
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
@@ -231,7 +233,6 @@ class Image(models.Model):
     tau_time = models.FloatField(null=True)
     freq_eff = models.FloatField()
     freq_bw = models.FloatField()
-    taustart_ts = models.DateTimeField()
     taustart_ts = models.DateTimeField()
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='images')
@@ -322,8 +323,10 @@ class Runningcatalog(models.Model):
     zone = models.IntegerField()
     wm_ra = models.FloatField()
     wm_decl = models.FloatField()
-    wm_ra_err = models.FloatField()
-    wm_decl_err = models.FloatField()
+    wm_uncertainty_ew = models.FloatField()
+    wm_uncertainty_ns = models.FloatField()
+    avg_ra_err = models.FloatField()
+    avg_decl_err = models.FloatField()
     avg_wra = models.FloatField()
     avg_wdecl = models.FloatField()
     avg_weight_ra = models.FloatField()
@@ -406,8 +409,10 @@ class Temprunningcatalog(models.Model):
     zone = models.IntegerField()
     wm_ra = models.FloatField()
     wm_decl = models.FloatField()
-    wm_ra_err = models.FloatField()
-    wm_decl_err = models.FloatField()
+    wm_uncertainty_ew = models.FloatField()
+    wm_uncertainty_ns = models.FloatField()
+    avg_ra_err = models.FloatField()
+    avg_decl_err = models.FloatField()
     avg_wra = models.FloatField()
     avg_wdecl = models.FloatField()
     avg_weight_ra = models.FloatField()

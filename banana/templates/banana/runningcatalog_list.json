@@ -3,9 +3,9 @@
     {
         "id": {{ runningcatalog.id }},
         "wm_ra": {{ runningcatalog.wm_ra }},
-        "wm_decl": {{ runningcatalog.wm_ra_err }},
+        "avg_ra_err": {{ runningcatalog.avg_ra_err }},
         "wm_decl": {{ runningcatalog.wm_decl }},
-        "wm_decl_err": {{ runningcatalog.wm_decl_err }},
+        "avg_decl_err": {{ runningcatalog.avg_decl_err }},
         "datapoints": {{ runningcatalog.datapoints }}
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
