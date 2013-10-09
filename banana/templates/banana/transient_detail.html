@@ -24,8 +24,8 @@
             <dt>Position</dt>
             <dd>({{ object.runcat.wm_ra|stringformat:".3f" }}&deg;,
                 {{ object.runcat.wm_decl|stringformat:".3f" }}&deg;) &pm;
-                ({{ object.runcat.avg_ra_err|stringformat:".3f" }}&Prime;,
-                {{ object.runcat.avg_decl_err|stringformat:".3f" }}&Prime;)</dd>
+                ({{ object.runcat.ra_err_asec|stringformat:".3f" }}&Prime;,
+                {{ object.runcat.decl_err_asec|stringformat:".3f" }}&Prime;)</dd>
             <dt>Frequency band</dt>
             <dd>{{ object.band }}</dd>
             <dt>Effective frequency</dt>

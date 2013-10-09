@@ -31,3 +31,25 @@ def deg_to_dms(deg):
     degrees, seconds = divmod(seconds, ASEC_IN_DEGREE)
     minutes, seconds = divmod(seconds, ASEC_IN_AMIN)
     return sign, degrees, minutes, seconds
+
+def alpha(theta, dec):
+    """
+    Compute the RA expansion of an east-west angle theta for declination dec.
+    http://research.microsoft.com/apps/pubs/default.aspx?id=64524 section 2.1.
+
+    theta, dec in degrees.
+    """
+    if abs(dec) + theta > 89.9:
+        return 180
+    else:
+        return math.degrees(
+            abs(
+                math.atan(
+                    math.sin(math.radians(theta)) /
+                    math.sqrt(abs(
+                        math.cos(math.radians(dec - theta)) *
+                        math.cos(math.radians(dec + theta))
+                    ))
+                )
+            )
+        )

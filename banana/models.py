@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
+from convert import ASEC_IN_DEGREE
+from convert import alpha
 
 
 schema_version = 16
@@ -10,8 +12,8 @@ SELECT
   x.id
   ,3600 * (x.ra - r.wm_ra) as ra_dist_arcsec
   ,3600 * (x.decl - r.wm_decl) as decl_dist_arcsec
-  ,x.ra_err
-  ,x.decl_err
+  ,3600 * x.ra_err
+  ,3600 * x.decl_err
 FROM assocxtrsource a
   ,extractedsource x
   ,runningcatalog r
@@ -204,6 +206,14 @@ class Extractedsource(models.Model):
     def __unicode__(self):
         return str(self.id)
 
+    @property
+    def ra_err_asec(self):
+        return self.ra_err * ASEC_IN_DEGREE
+
+    @property
+    def decl_err_asec(self):
+        return self.decl_err * ASEC_IN_DEGREE
+
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -348,6 +358,22 @@ class Runningcatalog(models.Model):
         assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
         related = ['image', 'image__band']
         return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs).prefetch_related(*related)
+
+    @property
+    def ra_err(self):
+        return alpha(self.wm_uncertainty_ew, self.wm_decl)
+
+    @property
+    def ra_err_asec(self):
+        return self.ra_err * ASEC_IN_DEGREE
+
+    @property
+    def decl_err(self):
+        return self.wm_uncertainty_ns
+
+    @property
+    def decl_err_asec(self):
+        return self.decl_err * ASEC_IN_DEGREE
 
 
 class RunningcatalogFlux(models.Model):

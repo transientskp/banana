@@ -28,10 +28,10 @@
     <div class="span6">
         <dl class="dl-horizontal">
             <dt>Position (decimal)</dt>
-            <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|stringformat:".3f" }}&Prime;)</dd>
+            <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err_asec|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err_asec|stringformat:".3f" }}&Prime;)</dd>
 
             <dt>Position (Sexagesimal)</dt>
-            <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</dd>
+            <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err_asec extractedsource.decl_err_asec %}</dd>
 
             <dt>Signal to noise</dt>
             <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
