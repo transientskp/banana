@@ -2,8 +2,7 @@
 
 from django import template
 from django.utils.safestring import mark_safe
-from banana.convert import deg_to_dms, deg_to_hms
-import math
+from banana.convert import deg_to_dms, deg_to_hms, deg_to_asec
 
 register = template.Library()
 
@@ -79,11 +78,17 @@ def format_ra_error(value):
 
 
 def sexagesimal(context, ra, decl, ra_err, decl_err):
+    """
+    units in degrees
+    """
     context['ra'] = ra
     context['decl'] = decl
     context['ra_err'] = ra_err
     context['decl_err'] = decl_err
     return context
-
-
 register.inclusion_tag('sexagesimal.html', takes_context=True)(sexagesimal)
+
+
+@register.filter
+def deg2asec(deg):
+    return deg_to_asec(deg)

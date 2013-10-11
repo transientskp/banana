@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
-from convert import ASEC_IN_DEGREE
+from convert import deg_to_asec
 from convert import alpha
 
 
@@ -206,14 +206,6 @@ class Extractedsource(models.Model):
     def __unicode__(self):
         return str(self.id)
 
-    @property
-    def ra_err_asec(self):
-        return self.ra_err * ASEC_IN_DEGREE
-
-    @property
-    def decl_err_asec(self):
-        return self.decl_err * ASEC_IN_DEGREE
-
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -363,6 +355,7 @@ class Runningcatalog(models.Model):
     def ra_err(self):
         return alpha(self.wm_uncertainty_ew, self.wm_decl)
 
+    """
     @property
     def ra_err_asec(self):
         return self.ra_err * ASEC_IN_DEGREE
@@ -374,7 +367,7 @@ class Runningcatalog(models.Model):
     @property
     def decl_err_asec(self):
         return self.decl_err * ASEC_IN_DEGREE
-
+    """
 
 class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)

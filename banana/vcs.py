@@ -1,5 +1,6 @@
+from datetime import datetime
+import time
 import git
-import datetime
 
 
 def repo_info():
@@ -7,10 +8,11 @@ def repo_info():
     returns: (branch_name, last commit time, last commit message)
     """
     repo = git.Repo(__file__)
-    commit = repo.rev_parse('HEAD')
-    lastlog = commit.summary
-    hexsha, branch = commit.name_rev.split()
-    timestamp = datetime.datetime.fromtimestamp(commit.committed_date)
+    last_commit = repo.commits()[0]
+    branch = repo.active_branch
+    lastlog = last_commit.summary
+    timestamp = datetime.fromtimestamp(time.mktime(last_commit.committed_date))
+    hexsha = last_commit.id
 
     return {
         'branch': branch,

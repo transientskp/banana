@@ -32,6 +32,7 @@ def deg_to_dms(deg):
     minutes, seconds = divmod(seconds, ASEC_IN_AMIN)
     return sign, degrees, minutes, seconds
 
+
 def alpha(theta, dec):
     """
     Compute the RA expansion of an east-west angle theta for declination dec.
@@ -53,3 +54,7 @@ def alpha(theta, dec):
                 )
             )
         )
+
+
+def deg_to_asec(deg):
+    return deg * ASEC_IN_DEGREE
