@@ -10,4 +10,4 @@ matplotlib
 pywcs
 python-dateutil
 psycopg2
-gitpython
+gitpython==0.3.2.RC1
