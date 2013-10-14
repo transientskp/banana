@@ -39,10 +39,10 @@
             <thead>
             <tr>
                 {% tableheader 'id' 'Run. cat.' %}
-                {% tableheader 'wm_ra' 'Ra(″)' %}
-                {% tableheader 'wm_decl' 'Decl(″)' %}
-                <th>Ra Error(&deg;)</th>
-                {% tableheader 'wm_uncertainty_ns' 'wm_uncertainty_ns(&deg;)' %}
+                {% tableheader 'wm_ra' 'Ra(°)' %}
+                {% tableheader 'wm_decl' 'Decl(°)' %}
+                <th>Ra Error(″)</th>
+                <th>Decl Error(″)</th>
                 {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
                 {% tableheader 'wm_decl' 'Decl(d:m:s)' %}
                 {% tableheader 'datapoints' '# datapoints' %}
@@ -53,10 +53,10 @@
             {% for runningcatalog in runningcatalog_list %}
             <tr>
                 <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
-                <td>{{ runningcatalog.wm_ra|deg2asec|stringformat:".3f" }}</td>
-                <td>{{ runningcatalog.wm_decl|deg2asec|stringformat:".3f" }}</td>
-                <td>{{ runningcatalog.ra_err|stringformat:".3f" }}</td>
-                <td>{{ runningcatalog.wm_uncertainty_ns|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_decl|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.ra_err|deg2asec|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
                 <td> {{runningcatalog.wm_ra|format_angle:"time"}}</td>
                 <td> {{runningcatalog.wm_decl|format_angle:"dms"}}</td>
                 <td>{{ runningcatalog.datapoints }}</td>
