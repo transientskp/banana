@@ -363,19 +363,6 @@ class Runningcatalog(models.Model):
     def ra_err(self):
         return alpha(self.wm_uncertainty_ew, self.wm_decl)
 
-    """
-    @property
-    def ra_err_asec(self):
-        return self.ra_err * ASEC_IN_DEGREE
-
-    @property
-    def decl_err(self):
-        return self.wm_uncertainty_ns
-
-    @property
-    def decl_err_asec(self):
-        return self.decl_err * ASEC_IN_DEGREE
-    """
 
 class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)
