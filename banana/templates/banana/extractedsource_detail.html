@@ -50,7 +50,7 @@
 
             <dt>Running Catalogs</dt>
             <dd>
-            {% for runcat in extractedsource.runningcatalogs.all %}
+            {% for runcat in extractedsource.runningcatalogs %}
             <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
             {% empty %}
                 None
