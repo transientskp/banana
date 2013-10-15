@@ -36,10 +36,10 @@
             <thead>
             <tr>
                 {% tableheader 'id' %}
-                {% tableheader 'ra' %}
-                <th>R.A. Error (&Prime;)</th>
-                {% tableheader 'decl' %}
-                <th>Decl. Error (&Prime;)</th>
+                {% tableheader 'ra' 'Ra(°)' %}
+                {% tableheader 'ra_err' 'Ra Error(″)' %}
+                {% tableheader 'decl' 'Dec(°)'  %}
+                {% tableheader 'decl_err' 'Dec Error(″)' %}
                 {% tableheader 'ra' 'Sexagesimal' %}
                 {% tableheader 'det_sigma' %}
                 {% tableheader 'f_peak' %}
@@ -55,9 +55,9 @@
             <tr>
                 <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
                 <td>{{ extractedsource.ra|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.ra_err_asec|stringformat:".3f" }}</td>
+                <td>{{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.decl|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.decl_err_asec|stringformat:".3f" }}</td>
+                <td>{{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}</td>
                 <td>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</td>
                 <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.f_peak|stringformat:".3f" }}</td>

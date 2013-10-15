@@ -1,11 +1,12 @@
+{% load units %}
 [
 {% for extractedsource in extractedsource_list %}
     {
         "id": {{ extractedsource.id }},
         "ra": {{ extractedsource.ra }},
-        "ra_err_asec": {{ extractedsource.ra_err_asec }},
+        "ra_err": {{ extractedsource.ra_err|deg2asec }},
         "decl": {{ extractedsource.decl }},
-        "decl_err_asec": {{ extractedsource.decl_err_asec }},
+        "decl_err": {{ extractedsource.decl_err|deg2asec }},
         "det_sigma": {{ extractedsource.det_sigma }},
         "f_peak": {{ extractedsource.f_peak }},
         "f_peak_err": {{ extractedsource.f_peak_err }},

@@ -1,4 +1,3 @@
-#id, wm_ra, ra_err_asec, wm_decl, decl_err_asec, datapoints
-{% for runningcatalog in runningcatalog_list %} {{ runningcatalog.id }}, {{ runningcatalog.wm_ra }}, {{ runningcatalog.ra_err_asec }}, {{ runningcatalog.wm_decl }}, {{ runningcatalog.decl_err_asec }}, {{ runningcatalog.datapoints }}
+{% load units %}#id, wm_ra (deg), ra_err (arcsec), wm_decl (deg), wm_uncertainty_ns (arcsec), datapoints
+{% for runningcatalog in runningcatalog_list %} {{ runningcatalog.id }}, {{ runningcatalog.wm_ra }}, {{ runningcatalog.ra_err|deg2asec }}, {{ runningcatalog.wm_decl }}, {{ runningcatalog.wm_uncertainty_ns|deg2asec }}, {{ runningcatalog.datapoints }}
 {% endfor %}
-

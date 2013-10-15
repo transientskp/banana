@@ -116,9 +116,9 @@
                         <tr>
                             {% tableheader 'id' %}
                             {% tableheader 'ra' 'Ra(°)'%}
-                            {% tableheader 'decl' 'Decl(°)' %}
-                            <th>R.A. Error (&Prime;)</th>
-                            <th>Decl. Error (&Prime;)</th>
+                            {% tableheader 'decl' 'Dec(°)' %}
+                            {% tableheader 'ra_err' 'Ra Error(″)'%}
+                            {% tableheader 'decl_err' 'Dec Error(″)' %}
                             {% tableheader 'ra' 'Sexagesimal' %}
                             {% tableheader 'f_peak' 'Peak Flux (Jy)' %}
                             {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
@@ -132,9 +132,9 @@
                         <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
                         <td>{{ source.ra|floatformat:3 }}</td>
                         <td>{{ source.decl|floatformat:3 }}</td>
-                        <td>{{ source.ra_err_asec|floatformat:3 }}</td>
-                        <td>{{ source.decl_err_asec|floatformat:3 }}</td>
-                        <td>{% sexagesimal source.ra source.decl source.ra_err_asec source.decl_err_asec %}</td>
+                        <td>{{ source.ra_err|deg2asec|floatformat:3 }}</td>
+                        <td>{{ source.decl_err|deg2asec|floatformat:3 }}</td>
+                        <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
                         <td>{{ source.f_peak|floatformat:3 }}</td>
                         <td>{{ source.f_peak_err|floatformat:3 }}</td>
                         <td>{{ source.f_int|floatformat:3 }}</td>
