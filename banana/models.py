@@ -153,12 +153,12 @@ class Dataset(models.Model):
         return self.description
 
     def transients(self):
-        return Transient.objects.using(self._state.db).filter(
-            trigger_xtrsrc__runningcatalogs__dataset=self)
+        return Transient.objects.using(self._state.db).\
+            filter(runcat__dataset=self)
 
     def extractedsources(self):
-        return Extractedsource.objects.using(self._state.db).filter(
-            image__dataset=self)
+        return Extractedsource.objects.using(self._state.db).\
+            filter(image__dataset=self)
 
     def scatterplot(self):
         return Extractedsource.objects.raw(scatterplot_query,
