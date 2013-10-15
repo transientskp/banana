@@ -466,12 +466,11 @@ class Transient(models.Model):
         return str(self.id)
 
     def lightcurve(self):
-        assocs = Assocxtrsource.objects.using(self._state.db).filter(
-                    xtrsrc=self.trigger_xtrsrc)
-        runcats = [a.runcat for a in assocs]
-        assocs2 = Assocxtrsource.objects.using(self._state.db).filter(runcat__in=runcats)
+        assocs = Assocxtrsource.objects.using(self._state.db).\
+            filter(runcat=self.runcat)
         related = ['image', 'image__band']
-        return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs2).prefetch_related(*related)
+        return Extractedsource.objects.using(self._state.db).\
+            filter(asocxtrsources__in=assocs).prefetch_related(*related)
 
 
 class Version(models.Model):
