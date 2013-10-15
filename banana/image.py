@@ -1,12 +1,8 @@
 import numpy
 import aplpy
-import time
-import datetime
-from matplotlib.patches import Rectangle
-from matplotlib.collections import PatchCollection
-from matplotlib.ticker import MaxNLocator
-from  matplotlib import pyplot
+from matplotlib import pyplot
 from banana.mongo import get_hdu
+from banana.convert import deg_to_asec
 
 
 def image_plot(pyfits_hdu, size=5, sources=[]):
@@ -56,8 +52,8 @@ def scatter_plot(extractedsources, size=5):
     for source in extractedsources:
         ra_dist_arcsec.append(source.ra_dist_arcsec)
         decl_dist_arcsec.append(source.decl_dist_arcsec)
-        ra_err.append(source.ra_err / 2)
-        decl_err.append(source.decl_err / 2)
+        ra_err.append(deg_to_asec(source.ra_err) / 2)
+        decl_err.append(deg_to_asec(source.decl_err) / 2)
 
     axes = figure.add_subplot(1, 1, 1)
     axes.errorbar(ra_dist_arcsec, decl_dist_arcsec, xerr=ra_err, yerr=decl_err,

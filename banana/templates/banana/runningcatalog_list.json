@@ -1,11 +1,12 @@
+{% load units %}
 [
 {% for runningcatalog in runningcatalog_list %}
     {
         "id": {{ runningcatalog.id }},
         "wm_ra": {{ runningcatalog.wm_ra }},
-        "avg_ra_err": {{ runningcatalog.avg_ra_err }},
+        "ra_err": {{ runningcatalog.ra_err|deg2asec }},
         "wm_decl": {{ runningcatalog.wm_decl }},
-        "avg_decl_err": {{ runningcatalog.avg_decl_err }},
+        "wm_uncertainty_ns": {{ runningcatalog.wm_uncertainty_ns|deg2asec }},
         "datapoints": {{ runningcatalog.datapoints }}
     }{% if not forloop.last %},{% endif %}
  {% endfor %}

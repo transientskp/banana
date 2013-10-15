@@ -29,7 +29,10 @@
 
         <dl class="dl-horizontal">
             <dt>Position</dt>
-            <dd>({{ runningcatalog.wm_ra|stringformat:".3f" }}&deg;, {{ runningcatalog.wm_decl|stringformat:".3f" }}&deg;) &pm; ({{ runningcatalog.avg_ra_err|stringformat:".3f" }}&Prime;, {{ runningcatalog.avg_decl_err|stringformat:".3f" }}&Prime;)</dd>
+            <dd>({{ runningcatalog.wm_ra|stringformat:".3f" }}°,
+                {{ runningcatalog.wm_decl|stringformat:".3f" }}°) &pm;
+                ({{ runningcatalog.ra_err|deg2asec|stringformat:".3f" }}″,
+                {{ runningcatalog.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
             <dt># of datapoints</dt>
             <dd>{{ runningcatalog.datapoints }}</dd>
             <dt>Dataset</dt>

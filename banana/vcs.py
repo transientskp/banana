@@ -1,5 +1,5 @@
+from datetime import datetime
 import git
-import datetime
 
 
 def repo_info():
@@ -10,7 +10,7 @@ def repo_info():
     commit = repo.rev_parse('HEAD')
     lastlog = commit.summary
     hexsha, branch = commit.name_rev.split()
-    timestamp = datetime.datetime.fromtimestamp(commit.committed_date)
+    timestamp = datetime.fromtimestamp(commit.committed_date)
 
     return {
         'branch': branch,
