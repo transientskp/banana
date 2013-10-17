@@ -1,6 +1,7 @@
 import json
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from banana.models import Extractedsource
 
 test_db = 'default'
 
@@ -44,6 +45,7 @@ class ViewTest(TestCase):
                                                kwargs={'db': test_db}) +
                                        "?format=csv")
             self.assertEqual(response.status_code, 200)
+            self.assertEqual(response['content-type'], 'text/csv')
             for row in response.content.split():
                 columns = row.split(',')
 
@@ -55,6 +57,7 @@ class ViewTest(TestCase):
                                                kwargs={'db': test_db}) +
                                        "?format=json")
             self.assertEqual(response.status_code, 200)
+            self.assertEqual(response['content-type'], 'application/json')
             try:
                 json.loads(response.content)
             except ValueError as e:
@@ -100,3 +103,18 @@ class ViewTest(TestCase):
                                             kwargs={'db': test_db,
                                                     'pk': 1}))
          self.assertEqual(response.status_code, 200)
+
+    def test_csv_extractedsources_num(self):
+        response = self.client.get(reverse('extractedsources',
+                                           kwargs={'db': test_db}) +
+                                   "?format=csv")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['content-type'], 'text/csv')
+
+        returned_ids = []
+        for line in response.content.split('\n'):
+            line = line.strip()
+            if line and not line.startswith('#'):
+                returned_ids.append(line.split(',')[0])
+        db_ids = Extractedsource.objects.using(test_db).all().values('id')
+        self.assertEqual(len(returned_ids), len(db_ids))
