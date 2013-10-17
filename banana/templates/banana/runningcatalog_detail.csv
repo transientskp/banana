@@ -2,7 +2,7 @@
 {% spaceless %}
 {% for extractedsource in extractedsources %}
     {{ extractedsource.id }},
-    {{ extractedsource.image.taustart_ts|date:"Y/m/d H:i:s.u O" }},
+    {{ extractedsource.image.taustart_ts|date:"c" }},
     {{ extractedsource.image.tau_time }},
     {{ extractedsource.image.band.freq_central }},
     {{ extractedsource.f_int }},

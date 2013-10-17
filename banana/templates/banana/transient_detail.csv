@@ -1,4 +1,4 @@
 #band, taustart_ts, f_int, f_int_err, tau_time
-{% for point in paginator.object_list %}"{{ point.image.band }}", "{{ point.image.taustart_ts|date:"Y/m/d H:i:s.u O" }}", {{ point.f_int }}, {{ point.f_int_err }}, {{ point.image.tau_time }}
+{% for point in paginator.object_list %}"{{ point.image.band }}", "{{ point.image.taustart_ts|date:"c" }}", {{ point.f_int }}, {{ point.f_int_err }}, {{ point.image.tau_time }}
 {% endfor %}
 
