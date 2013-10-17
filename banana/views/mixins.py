@@ -24,19 +24,15 @@ class HybridTemplateMixin(object):
     Checks the request for a format variable. If it is json or csv, will
     set the content_type and template accordingly.
     """
-    def get_template_names(self):
-        format = self.request.GET.get('format', 'html')
-        if format == 'json':
-            self.content_type = 'application/json'
-            extension = format
-        elif format == 'csv':
-            self.content_type = 'text/csv'
-            extension = format
-        else:
-            extension = 'html'
+    def dispatch(self, *args, **kwargs):
+        self.extension = self.request.GET.get('format', 'html')
+        assert(self.extension in ('html', 'csv', 'json'))
+        return super(HybridTemplateMixin, self).dispatch(*args, **kwargs)
 
+    def get_template_names(self):
+        # override manual set template name to match content type
         if self.template_name and self.template_name.endswith('html'):
-            return self.template_name[:-4] + extension
+            return self.template_name[:-4] + self.extension
 
         if hasattr(self, 'object') and \
                 isinstance(self.object, models.Model) and \
@@ -51,13 +47,17 @@ class HybridTemplateMixin(object):
         return ["%s/%s%s.%s" % (opts.app_label,
                                 opts.object_name.lower(),
                                 self.template_name_suffix,
-                                extension)]
+                                self.extension)]
+
+    def get_paginate_by(self, *args, **kwargs):
+        if self.extension in ('csv', 'json'):
+            return False
+        return super(HybridTemplateMixin, self).get_paginate_by(*args, **kwargs)
 
     def render_to_response(self, context, **response_kwargs):
-        format = self.request.GET.get('format', 'html')
-        if format == 'json':
+        if self.extension == 'json':
             response_kwargs['content_type'] = 'application/json'
-        elif format == 'csv':
+        elif self.extension == 'csv':
             response_kwargs['content_type'] = 'text/csv'
         return super(HybridTemplateMixin,
                      self).render_to_response(context, **response_kwargs)
