@@ -39,8 +39,11 @@
             <dt>detected transients</dt>
             <dd><a href="{% url 'transients' db_name%}?dataset={{ dataset.id }}">{{ dataset.transients.all.count }}</a></dd>
 
-            <dt>available images</dt>
+            <dt>Total image count</dt>
             <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
+
+            <dt>Rejected image count</dt>
+            <dd>{{ dataset.rejected_images.count }}</dd>
 
             <dt>running catalogs</dt>
             <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>

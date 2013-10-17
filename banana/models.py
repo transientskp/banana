@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 from django.db import models
 from convert import deg_to_asec
 from convert import alpha
+from django.db.models import Count
 
 
 schema_version = 16
@@ -164,7 +165,13 @@ class Dataset(models.Model):
 
     def scatterplot(self):
         return Extractedsource.objects.raw(scatterplot_query,
-                                           params=[self.id]).using(self._state.db)
+                                           params=[self.id]).\
+                                                  using(self._state.db)
+
+    def rejected_images(self):
+        return Image.objects.using(self._state.db).\
+            annotate(num_rejections=Count('rejections')).\
+            filter(num_rejections__gt=0)
 
 
 class Extractedsource(models.Model):
