@@ -169,7 +169,7 @@ class Dataset(models.Model):
                                                   using(self._state.db)
 
     def rejected_images(self):
-        return Image.objects.using(self._state.db).\
+        return Image.objects.using(self._state.db).filter(dataset=self).\
             annotate(num_rejections=Count('rejections')).\
             filter(num_rejections__gt=0)
 
