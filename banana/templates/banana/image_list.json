@@ -4,7 +4,7 @@
         "id": {{ image.id }},
         "skyrgn.centre_ra": {{ image.skyrgn.centre_ra }},
         "skyrgn.centre_decl": {{ image.skyrgn.centre_decl }},
-        "taustart_ts": "{{ image.taustart_ts }}",
+        "taustart_ts": "{{ image.taustart_ts|date:"c" }}",
         "tau_time": {{ image.tau_time }},
         "freq_eff": {{ image.freq_eff }},
         "freq_bw": {{ image.freq_bw }},

@@ -2,7 +2,7 @@
  {% for point in object_list %}
   {
    band: "{{ point.image.band }}",
-   taustart_ts: "{{ point.image.taustart_ts }}",
+   taustart_ts: "{{ point.image.taustart_ts|date:"c" }}",
    f_int: {{ point.f_int }},
    f_int_err: {{ point.f_int_err }},
    tau_time: {{ point.image.tau_time }},

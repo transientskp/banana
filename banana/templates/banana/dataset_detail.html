@@ -31,7 +31,7 @@
             <dd>{{ dataset.rerun }}</dd>
 
             <dt>Processing Finished</dt>
-            <dd>{{ dataset.process_ts }}</dd>
+            <dd>{{ dataset.process_ts|date:"c" }}</dd>
 
             <dt>detected transients</dt>
             <dd><a href="{% url 'transients' db_name%}?dataset={{ dataset.id }}">{{ dataset.transients.all.count }}</a></dd>

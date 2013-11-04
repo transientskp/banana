@@ -42,7 +42,7 @@
                 <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
 
                 <dt>start date (UT)</dt>
-                <dd>{{ object.taustart_ts }}</dd>
+                <dd>{{ object.taustart_ts|date:"c" }}</dd>
 
                 <dt>Integration time</dt>
                 <dd>{{ object.tau_time|floatformat:3 }}</dd>

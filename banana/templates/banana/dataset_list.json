@@ -5,7 +5,7 @@
         "description": "{{ dataset.description }}",
         "rerun": {{ dataset.rerun }},
         "num_images": {{ dataset.num_images }},
-        "process_ts": "{{ dataset.process_ts }}"
+        "process_ts": "{{ dataset.process_ts|date:"c" }}"
         {% comment %}"num_transients": {{ dataset.num_transients }}{% endcomment %}
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
