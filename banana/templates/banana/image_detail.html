@@ -29,7 +29,13 @@
 
           <a href="{% url 'bigimage' db_name object.id %}" class="btn">detailed view</a>
 
-            <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
+          {% with object.get_next_by_taustart_ts_only as next %}
+          {% if next %}
+                <a href="{% url 'image' db_name next.id %}" class="btn">Next image (by time)</a>
+          {% endif %}
+          {% endwith %}
+
+          <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
              <dl class="dl-horizontal">
                 <dt>Image ID</dt>

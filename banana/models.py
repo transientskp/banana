@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 from django.db import models
-from convert import deg_to_asec
 from convert import alpha
 from django.db.models import Count
+from django.core.exceptions import ObjectDoesNotExist
 
 
 schema_version = 16
@@ -267,6 +267,25 @@ class Image(models.Model):
 
     def filename(self):
         return self.url.split('/')[-1]
+
+    def get_next_by_taustart_ts_only(self):
+        """
+        returns next image, limited by dataset, stokes and frequency,
+        sorted by time.
+        """
+        qs = Image.objects.using(self._state.db).\
+            filter(dataset=self.dataset,
+                   stokes=self.stokes,
+                   freq_eff=self.freq_eff,
+                   skyrgn=self.skyrgn).\
+            order_by("taustart_ts")
+        l = list(qs.values_list('id', flat=True))
+        index = l.index(self.id)
+        try:
+            id = l[index+1]
+        except IndexError:
+            raise ObjectDoesNotExist
+        return Image.objects.using(self._state.db).get(id=id)
 
 
 class Monitoringlist(models.Model):
