@@ -1,6 +1,7 @@
 
 from base import *
-from banana.db import monetdb_list, postgres_list
+from database import update_config
+
 
 DEBUG = True
 
@@ -12,6 +13,10 @@ INSTALLED_APPS += ['debug_toolbar']
 
 SECRET_KEY = 'changeme!@'
 
+# Set this to True if you want to automatically configure all reachable DB's
+# You need to set the MONETDB_* and POSTGRES_ settings below also.
+DATABASE_AUTOCONFIG = True
+
 MONETDB_HOST = 'localhost'
 MONETDB_PORT = 50000
 MONETDB_PASSPHRASE = 'blablabla'
@@ -20,25 +25,7 @@ POSTGRES_HOST = 'localhost'
 POSTGRES_USERNAME = 'gijs'
 POSTGRES_PASSWORD = POSTGRES_USERNAME
 
-for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
-    DATABASES["postgres_" + name] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': name,
-        'USER': name,
-        'PASSWORD': name,
-        'CONSOLE': False,  # True if you you want sqlconsole queries
-    }
-
-for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
-    name = monetdb['name']
-    DATABASES[name] = {
-        'ENGINE': 'djonet',
-        'NAME': name,
-        'USER': name,
-        'PASSWORD': name,
-        'HOST': MONETDB_HOST,
-        'PORT': MONETDB_PORT,
-    }
+update_config()
 
 ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
 
