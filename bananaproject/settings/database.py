@@ -47,7 +47,8 @@ def update_config():
     """
     # we need to import this here since this module is used in the settings
     from django.conf import settings
-    if not settings.DATABASE_AUTOCONFIG:
+    if not hasattr(settings, 'DATABASE_AUTOCONFIG') \
+           or not settings.DATABASE_AUTOCONFIG:
         return
     settings.DATABASES.update(monetdb_db_config(settings.MONETDB_HOST,
                                                 settings.MONETDB_PORT,
