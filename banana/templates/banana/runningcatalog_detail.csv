@@ -1,12 +1,3 @@
 #id, taustart_ts, tau_time, freq_central, f_int, fint_err
-{% spaceless %}
-{% for extractedsource in extractedsources %}
-    {{ extractedsource.id }},
-    {{ extractedsource.image.taustart_ts|date:"c" }},
-    {{ extractedsource.image.tau_time }},
-    {{ extractedsource.image.band.freq_central }},
-    {{ extractedsource.f_int }},
-    {{ extractedsource.f_int_err }}
+{% for point in lightcurve %}{{ point.id }}, "{{ point.image.taustart_ts|date:"c" }}", {{ point.image.tau_time }}, {{ point.image.band.freq_central }}, {{ point.f_int }}, {{ point.f_int_err }}
 {% endfor %}
-{% endspaceless %}
-
