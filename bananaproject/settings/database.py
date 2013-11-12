@@ -22,7 +22,7 @@ def monetdb_db_config(host, port, passphrase, console=True):
     return databases
 
 
-def postgresql_db_config(host, username, password):
+def postgresql_db_config(host, username, password, port=5432, console=True):
     """
     generates a Django DATABASE configuration dict containing all
     postgresql databases.
@@ -31,10 +31,12 @@ def postgresql_db_config(host, username, password):
     for name in postgres_list(host, username, password):
         databases["postgres_" + name] = {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'HOST': host,
+            'PORT': port,
             'NAME': name,
             'USER': name,
             'PASSWORD': name,
-            'CONSOLE': True,
+            'CONSOLE': console,
         }
     return databases
 
