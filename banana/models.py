@@ -273,11 +273,12 @@ class Image(models.Model):
         returns next image, limited by dataset, stokes and frequency,
         sorted by time.
         """
+
         qs = Image.objects.using(self._state.db).\
             filter(dataset=self.dataset,
                    stokes=self.stokes,
-                   freq_eff=self.freq_eff,
                    skyrgn=self.skyrgn).\
+            extra(where=['CAST(freq_eff AS INT) = ' + str(int(self.freq_eff))]).\
             order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
