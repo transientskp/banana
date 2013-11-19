@@ -23,7 +23,14 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     plot.ticks.hide()
 
     if sources:
-       ra = [source.ra for source in sources]
+       # If the image has a reference declination pointing to the north
+       # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
+       # with an RA 180 degrees wrong. We rotate them back here. See Trap
+       # issue #4599 for (much) more discussion.
+       if "CRVAL2" in pyfits_hdu[0].header and pyfits_hdu[0].header["CRVAL2"] == 90:
+           ra = [(source.ra + 180) % 360 for source in sources]
+       else:
+           ra = [source.ra for source in sources]
        dec = [source.decl for source in sources]
        semimajor = [source.semimajor / 900 for source in sources]
        semiminor = [source.semiminor / 900 for source in sources]
@@ -92,7 +99,14 @@ def extracted_sources_pixels(image, size):
     # get source info from database
     sources = image.extractedsources.all()
     ids = [source.id for source in sources]
-    x_world = numpy.array([source.ra for source in sources])
+    # If the image has a reference declination pointing to the north
+    # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
+    # with an RA 180 degrees wrong. We rotate them back here. See Trap
+    # issue #4599 for (much) more discussion.
+    if "CRVAL2" in hdu[0].header and hdu[0].header["CRVAL2"] == 90:
+        x_world = [(source.ra + 180) % 360 for source in sources]
+    else:
+        x_world = [source.ra for source in sources]
     y_world = numpy.array([source.decl for source in sources])
     w_world = numpy.array([source.semimajor / 900 for source in sources])
     h_world = numpy.array([source.semiminor / 900 for source in sources])
