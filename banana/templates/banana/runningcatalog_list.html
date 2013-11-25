@@ -39,6 +39,7 @@
             <thead>
             <tr>
                 {% tableheader 'id' 'Run. cat.' %}
+                {% tableheader 'distance' 'Distance' %}
                 {% tableheader 'wm_ra' 'Ra(°)' %}
                 {% tableheader 'wm_decl' 'Dec(°)' %}
                 <th>Ra Error(″)</th>
@@ -53,6 +54,7 @@
             {% for runningcatalog in runningcatalog_list %}
             <tr>
                 <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
+                <td>{{ runningcatalog.distance|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.wm_decl|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.ra_err|deg2asec|stringformat:".3f" }}</td>

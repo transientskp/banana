@@ -3,7 +3,7 @@ from django.db import models
 from convert import alpha
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
-
+from banana.managers import RunningcatalogManager
 
 schema_version = 16
 
@@ -375,6 +375,8 @@ class Runningcatalog(models.Model):
     z = models.FloatField()
     margin = models.BooleanField()
     inactive = models.BooleanField()
+
+    objects = RunningcatalogManager()
 
     class Meta:
         managed = False

@@ -3,15 +3,15 @@ All views that generate lists of model objects
 """
 from django.db.models import Count
 from django.views.generic import ListView, TemplateView
-from django.conf import settings
 import banana.db
-from banana.db import db_schema_version
+from banana.db import db_schema_version, check_database
 from banana.models import Dataset, Image, Transient, Extractedsource, \
     Runningcatalog, Monitoringlist, schema_version
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
     SortListMixin, DatasetMixin
 from banana.vcs import repo_info
 from bananaproject.settings.database import update_config
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 class DatabaseList(TemplateView):
@@ -89,11 +89,28 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
     paginate_by = 100
 
     def get_queryset(self):
-        qs = super(RunningcatalogList, self).get_queryset()
         dataset_id = self.get_dataset_id()
+        area = self.get_area()
+        self.db_name = self.kwargs.get('db', 'default')
+        check_database(self.db_name)
+        if area:
+            ra, decl, distance = area
+            queryset = self.model._default_manager.near_position(ra, decl,
+                                                                 distance)
+        else:
+            queryset = self.model._default_manager.all()
+        queryset = queryset.using(self.db_name)
         if dataset_id:
-            qs = qs.filter(dataset=dataset_id)
-        return qs
+            queryset = queryset.filter(dataset=dataset_id)
+        return queryset
+
+    def get_area(self):
+        try:
+            return [float(self.request.GET[x]) for x in ('ra', 'decl',
+                                                       'distance')]
+        except MultiValueDictKeyError:
+            return False
+
 
 
 class MonitoringlistList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
