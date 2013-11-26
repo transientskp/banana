@@ -53,7 +53,8 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware'
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'profiler.middleware.ProfilerMiddleware',
 ]
 
 ROOT_URLCONF = 'bananaproject.urls'
@@ -75,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'banana',
     'sqlconsole',
+    'profiler',
 ]
 
 INTERNAL_IPS = ['127.0.0.1']
