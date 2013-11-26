@@ -39,22 +39,3 @@ def postgresql_db_config(host, username, password, port=5432, console=True):
             'CONSOLE': console,
         }
     return databases
-
-
-def update_config():
-    """
-    This will autoconfigure the django database configuration. It will
-    enable all MonetDB and PostgreSQL databases reachable with the credentials
-    set in the Django settings.
-    """
-    # we need to import this here since this module is used in the settings
-    from django.conf import settings
-    if not hasattr(settings, 'DATABASE_AUTOCONFIG') \
-           or not settings.DATABASE_AUTOCONFIG:
-        return
-    settings.DATABASES.update(monetdb_db_config(settings.MONETDB_HOST,
-                                                settings.MONETDB_PORT,
-                                                settings.MONETDB_PASSPHRASE))
-    settings.DATABASES.update(postgresql_db_config(settings.POSTGRES_HOST,
-                                                   settings.POSTGRES_USERNAME,
-                                                   settings.POSTGRES_PASSWORD))
