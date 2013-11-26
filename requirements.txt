@@ -1,4 +1,4 @@
-django
+django==1.5.5
 djonet
 python-monetdb
 aplpy==0.9.8
@@ -11,3 +11,7 @@ pywcs
 python-dateutil
 psycopg2
 gitpython==0.3.2.RC1
+
+## for caching:
+#python-memcached
+#python-pylibmc
