@@ -10,7 +10,6 @@ from banana.models import Dataset, Image, Transient, Extractedsource, \
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
     SortListMixin, DatasetMixin
 from banana.vcs import repo_info
-from bananaproject.settings.database import update_config
 from django.utils.datastructures import MultiValueDictKeyError
 
 
@@ -19,7 +18,6 @@ class DatabaseList(TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DatabaseList, self).get_context_data(*args, **kwargs)
-        update_config()
         context.update(repo_info())
         database_list = banana.db.list()
         for database in database_list:
