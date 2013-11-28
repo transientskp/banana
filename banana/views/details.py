@@ -82,16 +82,6 @@ class DatasetDetail(MultiDbMixin, DetailView):
         return context
 
 
-class RunningcatalogDetail(MultiDbMixin, HybridTemplateMixin, DetailView):
-    model = Runningcatalog
-
-    def get_context_data(self, **kwargs):
-        context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
-        context['runningcatalog'] = self.object
-        context['lightcurve'] = self.object.lightcurve()
-        return context
-
-
 class ExtractedSourceDetail(MultiDbMixin, DetailView):
     model = Extractedsource
 
@@ -118,3 +108,18 @@ class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         return context
 
 
+class RunningcatalogDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+                           HybridTemplateMixin, ListView):
+    model = Runningcatalog
+    paginate_by = 10
+    template_name = "banana/runningcatalog_detail.html"
+
+    def get_queryset(self):
+        qs = super(RunningcatalogDetail, self).get_queryset()
+        self.runningcatalog = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.runningcatalog.lightcurve().order_by(self.get_order())
+
+    def get_context_data(self, **kwargs):
+        context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
+        context['object'] = self.runningcatalog
+        return context
