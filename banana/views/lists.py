@@ -88,16 +88,16 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
 
     def get_queryset(self):
         dataset_id = self.get_dataset_id()
-        area = self.get_area()
+        self.area = self.get_area()
         self.db_name = self.kwargs.get('db', 'default')
         check_database(self.db_name)
-        if area:
-            ra, decl, distance = area
+        if self.area:
+            ra, decl, distance = self.area
             queryset = self.model._default_manager.near_position(ra, decl,
                                                                  distance)
         else:
             queryset = self.model._default_manager.all()
-        queryset = queryset.using(self.db_name)
+        queryset = queryset.using(self.db_name).order_by(self.get_order())
         if dataset_id:
             queryset = queryset.filter(dataset=dataset_id)
         return queryset
@@ -105,9 +105,15 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
     def get_area(self):
         try:
             return [float(self.request.GET[x]) for x in ('ra', 'decl',
-                                                       'distance')]
-        except MultiValueDictKeyError:
+                                                         'distance')]
+        except (MultiValueDictKeyError, ValueError):
             return False
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(RunningcatalogList, self).get_context_data(*args,
+                                                                   **kwargs)
+        context['area'] = self.area
+        return context
 
 
 

@@ -23,14 +23,27 @@
 
 {% block content %}
 
-{% if runningcatalog_list %}
 <div class="row-fluid">
-    <div class="span12 text-center">
+    <div class="span8 text-center">
+        <form class="form-inline" action="" method="GET">
+          <label class="control-label" for="inputRa">Ra (°)</label>
+          <input type="text" name="ra" id="inputRa" class="input-mini" value="{{ area.0 }}" placeholder="Ra (°)">
+          <label class="control-label" for="inputDecl">Decl (°)</label>
+          <input type="text" name="decl" id="inputDecl" class="input-mini" value="{{ area.1 }}" placeholder="Decl (°)">
+          <label class="control-label" for="inputDistance">Distance (°)</label>
+          <input type="text" name="distance" id="inputDistance" class="input-small" value="{{ area.2 }}" placeholder="Distance (°)">
+          <button type="submit" class="btn">Filter</button>
+          <a href="{% url 'runningcatalogs' db_name %}" class="btn">Reset</a>
+        </form>
+    </div>
+
+    <div class="span4 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
-    <div class="span12 text-center">
+    {% if runningcatalog_list %}
 
+    <div class="span12 text-center">
         {% paginatorizer %}
     </div>
 
@@ -39,7 +52,9 @@
             <thead>
             <tr>
                 {% tableheader 'id' 'Run. cat.' %}
-                {% tableheader 'distance' 'Distance' %}
+                {% if area %}
+                {% tableheader 'distance' 'Distance (°)' %}
+                {% endif %}
                 {% tableheader 'wm_ra' 'Ra(°)' %}
                 {% tableheader 'wm_decl' 'Dec(°)' %}
                 <th>Ra Error(″)</th>
@@ -54,7 +69,9 @@
             {% for runningcatalog in runningcatalog_list %}
             <tr>
                 <td><a href="{% url 'runningcatalog' db_name runningcatalog.id %}">{{ runningcatalog.id }}</a></td>
+                {% if area %}
                 <td>{{ runningcatalog.distance|stringformat:".3f" }}</td>
+                {% endif %}
                 <td>{{ runningcatalog.wm_ra|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.wm_decl|stringformat:".3f" }}</td>
                 <td>{{ runningcatalog.ra_err|deg2asec|stringformat:".3f" }}</td>
@@ -72,11 +89,11 @@
         {% paginatorizer %}
     </div>
 
-
+    {% else %}
+    <p>No Running Catalogs.</p>
+    {% endif %}
 </div>
-{% else %}
-<p>No Running Catalogs.</p>
-{% endif %}
+
 
 
 {% endblock content %}
