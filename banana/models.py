@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from banana.managers import RunningcatalogManager
 
-schema_version = 16
+schema_version = 17
 
 
 scatterplot_query = """\
