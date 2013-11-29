@@ -6,6 +6,9 @@
 
 {% block navdataset %}<li class="active"><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset }}</a></li>{% endblock navdataset %}
 
+<!-- required for error bars -->
+{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
 {% block content %}
 
 <div class="row-fluid">
@@ -61,12 +64,34 @@
 
 
 <div class="row-fluid">
-    <div class="span12 text-center">
-        <img src="{% url 'scatter_plot' db_name dataset.id %}">
+    <div class="span8 offset2 text-center">
+        <div id='heatmap'></div>
+        <!-- <img src="{% url 'scatter_plot' db_name dataset.id %}"> -->
     </div>
 </div>
 
 
+<script>
+$(function () {
+    $('#heatmap').highcharts({
+	    chart: {
+	        type: 'bubble',
+	        zoomType: 'xy'
+	    },
+
+	    title: {
+	    	text: 'this will replace the scatterplot'
+	    },
+        series: [{
+            data: [
+                {% for ra, decl, count in dataset.heatmap %}
+                    [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ]
+        }]
+    });
+});
+</script>
 
 
 <script>
@@ -90,7 +115,7 @@
                 },
                 min: 0
             },
-plotOptions: {
+            plotOptions: {
 				series: {
 			        animation: false
 			    },
