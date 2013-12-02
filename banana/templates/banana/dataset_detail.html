@@ -66,7 +66,6 @@
 <div class="row-fluid">
     <div class="span8 offset2 text-center">
         <div id='heatmap'></div>
-        <!-- <img src="{% url 'scatter_plot' db_name dataset.id %}"> -->
     </div>
 </div>
 
@@ -78,11 +77,21 @@ $(function () {
 	        type: 'bubble',
 	        zoomType: 'xy'
 	    },
-
+        yAxis: {
+            title: {
+                text: 'DEC (arcsec)'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'RA (arcsec)'
+            }
+        },
 	    title: {
-	    	text: 'this will replace the scatterplot'
+	    	text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
 	    },
         series: [{
+            name: 'distances',
             data: [
                 {% for ra, decl, count in dataset.heatmap %}
                     [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
