@@ -90,8 +90,15 @@ $(function () {
 	    title: {
 	    	text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
 	    },
+        tooltip: {
+          formatter: function () {
+            return '<b>ra:</b> ' + this.point.x.toFixed(3) +
+                   '<br><b>decl:</b> ' + this.point.y.toFixed(3) +
+                   '<br><b>count:</b> ' + this.point.z;
+          }
+        },
         series: [{
-            name: 'distances',
+            name: 'distance',
             data: [
                 {% for ra, decl, count in dataset.heatmap %}
                     [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
