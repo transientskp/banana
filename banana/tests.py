@@ -97,13 +97,6 @@ class ViewTest(TestCase):
                                                     'pk': 1}))
          self.assertEqual(response.status_code, 200)
 
- 
-    def test_scatter_plot(self):
-         response = self.client.get(reverse('scatter_plot',
-                                            kwargs={'db': test_db,
-                                                    'pk': 1}))
-         self.assertEqual(response.status_code, 200)
-
     def test_csv_extractedsources_num(self):
         response = self.client.get(reverse('extractedsources',
                                            kwargs={'db': test_db}) +

@@ -3,18 +3,17 @@ from django.db import models
 from convert import alpha
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import connections
 from banana.managers import RunningcatalogManager
 
 schema_version = 17
 
 
-scatterplot_query = """\
-SELECT
-  x.id
-  ,3600 * (x.ra - r.wm_ra) as ra_dist_arcsec
-  ,3600 * (x.decl - r.wm_decl) as decl_dist_arcsec
-  ,3600 * x.ra_err
-  ,3600 * x.decl_err
+minmax_query = """\
+SELECT min(x.ra - r.wm_ra)
+  ,max(x.ra - r.wm_ra)
+  ,min(x.decl - r.wm_decl)
+  ,max(x.decl - r.wm_decl)
 FROM assocxtrsource a
   ,extractedsource x
   ,runningcatalog r
@@ -23,6 +22,29 @@ WHERE a.runcat = r.id
 AND a.xtrsrc = x.id
 AND x.image = im1.id
 AND im1.dataset = %s
+"""
+
+scaled_query = """\
+SELECT ((sub.scaled_ra / (CAST(%(N_bins)s AS FLOAT) / (%(ra_max)s - %(ra_min)s))) + %(ra_min)s) * 3600
+  ,((sub.scaled_decl  / (CAST(%(N_bins)s AS FLOAT) / (%(decl_max)s - %(decl_min)s))) + %(decl_min)s) * 3600
+  ,count(sub.id)
+FROM
+  (SELECT r.id
+    ,CAST((((x.ra - r.wm_ra) - %(decl_min)s ) * (CAST(%(N_bins)s AS FLOAT) / (%(ra_max)s - %(ra_min)s))
+    ) AS INTEGER) AS scaled_ra
+    ,CAST((((x.decl - r.wm_decl) - %(decl_min)s ) * (CAST(%(N_bins)s AS FLOAT) / (%(decl_max)s - %(decl_min)s))
+    ) AS INTEGER) AS scaled_decl
+  FROM assocxtrsource a
+    ,extractedsource x
+    ,runningcatalog r
+    ,image im1
+  WHERE a.runcat = r.id
+  AND a.xtrsrc = x.id
+  AND x.image = im1.id
+  AND x.extract_type = 1
+  AND im1.dataset = %(dataset)s
+  ) AS sub
+GROUP BY scaled_ra, scaled_decl
 """
 
 
@@ -163,10 +185,20 @@ class Dataset(models.Model):
         return Extractedsource.objects.using(self._state.db).\
             filter(image__dataset=self)
 
-    def scatterplot(self):
-        return Extractedsource.objects.raw(scatterplot_query,
-                                           params=[self.id]).\
-                                                  using(self._state.db)
+    def heatmap(self, N_bins=21):
+        """
+        :param N_bins: the number of bins for each axes in the 2d histogram
+        """
+        cursor = connections[self._state.db].cursor()
+        cursor.execute(minmax_query, [self.id])
+        ra_min, ra_max, decl_min, decl_max = cursor.fetchall()[0]
+        # TODO: potential SQL injection here, but SQLite can't handle dict args
+        cursor.execute(scaled_query % {'dataset': self.id, 'ra_min': ra_min,
+                                      'ra_max': ra_max, 'decl_min': decl_min,
+                                      'decl_max': decl_max,
+                                      'N_bins': N_bins})
+        return cursor.fetchall()
+
 
     def rejected_images(self):
         return Image.objects.using(self._state.db).filter(dataset=self).\

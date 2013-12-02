@@ -61,7 +61,4 @@ urlpatterns = patterns('',
     url(r'^(?P<db>\w+)/imageplot/(?P<pk>\d+)/$',
         cache_page(cache_time)(images.ImagePlot.as_view()),
         name='image_plot'),
-    url(r'^(?P<db>\w+)/scatterplot/(?P<pk>\d+)/$',
-        cache_page(cache_time)(images.ScatterPlot.as_view()),
-        name='scatter_plot'),
 )

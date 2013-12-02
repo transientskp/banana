@@ -9,21 +9,6 @@ from banana.views.mixins import MultiDbMixin
 from django.views.generic import DetailView
 
 
-class ScatterPlot(MultiDbMixin, DetailView):
-    model = Dataset
-
-    def get_context_data(self, **kwargs):
-        context = super(ScatterPlot, self).get_context_data(**kwargs)
-        context['sources'] = self.object.scatterplot()
-        return context
-
-    def render_to_response(self, context, **kwargs):
-        response = HttpResponse(mimetype="image/png")
-        canvas = banana.image.scatter_plot(context['sources'])
-        canvas.print_figure(response, format='png')
-        return response
-
-
 class ImagePlot(MultiDbMixin, DetailView):
     model = Image
 

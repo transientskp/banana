@@ -6,6 +6,9 @@
 
 {% block navdataset %}<li class="active"><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset }}</a></li>{% endblock navdataset %}
 
+<!-- required for error bars -->
+{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
 {% block content %}
 
 <div class="row-fluid">
@@ -61,12 +64,50 @@
 
 
 <div class="row-fluid">
-    <div class="span12 text-center">
-        <img src="{% url 'scatter_plot' db_name dataset.id %}">
+    <div class="span8 offset2 text-center">
+        <div id='heatmap'></div>
     </div>
 </div>
 
 
+<script>
+$(function () {
+    $('#heatmap').highcharts({
+	    chart: {
+	        type: 'bubble',
+	        zoomType: 'xy'
+	    },
+        yAxis: {
+            title: {
+                text: 'DEC (arcsec)'
+            }
+        },
+        xAxis: {
+            title: {
+                text: 'RA (arcsec)'
+            }
+        },
+	    title: {
+	    	text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
+	    },
+        tooltip: {
+          formatter: function () {
+            return '<b>ra:</b> ' + this.point.x.toFixed(3) +
+                   '<br><b>decl:</b> ' + this.point.y.toFixed(3) +
+                   '<br><b>count:</b> ' + this.point.z;
+          }
+        },
+        series: [{
+            name: 'distance',
+            data: [
+                {% for ra, decl, count in dataset.heatmap %}
+                    [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            ]
+        }]
+    });
+});
+</script>
 
 
 <script>
@@ -90,7 +131,7 @@
                 },
                 min: 0
             },
-plotOptions: {
+            plotOptions: {
 				series: {
 			        animation: false
 			    },
