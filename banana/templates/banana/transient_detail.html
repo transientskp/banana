@@ -47,7 +47,7 @@
             <dd><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">{{ object.runcat.dataset.id }}</a></dd>
         </dl>
         <div class="text-center">
-          <a href="{% url 'runningcatalogs' db_name %}?ra={{ object.runcat.wm_ra }}&decl={{ object.runcat.wm_decl }}&distance=0.03&order=distance" class="btn">Possible Associations</a>
+          <a href="{% url 'runningcatalogs' db_name %}?ra={{ object.runcat.wm_ra }}&decl={{ object.runcat.wm_decl }}&distance=0.03&order=distance&dataset={{ object.runcat.dataset_id }}" class="btn">Possible Associations</a>
           <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.runcat.wm_ra }}d{{ object.runcat.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
         </div>
     </div>
