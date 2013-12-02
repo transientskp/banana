@@ -45,6 +45,8 @@
             <dd><a href="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></dd>
             <dt>Dataset</dt>
             <dd><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">{{ object.runcat.dataset.id }}</a></dd>
+            <dt>Trigger</dt>
+            <dd><a href="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></dd>
         </dl>
         <div class="text-center">
           <a href="{% url 'runningcatalogs' db_name %}?ra={{ object.runcat.wm_ra }}&decl={{ object.runcat.wm_decl }}&distance=0.03&order=distance&dataset={{ object.runcat.dataset_id }}" class="btn">Possible Associations</a>
@@ -138,6 +140,12 @@ function showThumbnails() {
     ];
     var title = 'Lightcurve for transient #{{object.id}}';
     var subtitle = 'start date {% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}';
+
+    var trigger_f_int = {{ object.trigger_xtrsrc.f_int }};
+    var trigger_taustart_ts = {{ object.trigger_xtrsrc.image.taustart_ts|datetime2miliseconds }};
+    var trigger_f_int_err = {{ object.trigger_xtrsrc.f_int_err }};
+    var trigger_extract_type = {{ object.trigger_xtrsrc.extract_type }};
+    var trigger_tau_time = {{ object.trigger_xtrsrc.image.tau_time }};
 </script>
 
 <script src="{{ STATIC_URL }}lightcurve.js"></script>

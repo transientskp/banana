@@ -89,6 +89,25 @@ for(key in lightcurve_per_band) {
     );
 }
 
+if (!(typeof trigger_f_int === 'undefined')) {
+   series.push({
+        name: 'trigger',
+        data: [{
+            y: trigger_f_int,
+            x: trigger_taustart_ts,
+            f_int: trigger_f_int,
+            f_int_err: trigger_f_int_err,
+            extract_type: trigger_extract_type,
+            tau_time: trigger_tau_time,
+            marker: {
+                        symbol: 'circle',
+                        radius: 5
+                    }
+        }]
+    });
+}
+
+
 $(function () {
     $('#lightcurve').highcharts({
         chart: {
