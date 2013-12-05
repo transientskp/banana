@@ -20,8 +20,8 @@ def sec2hms(seconds):
 
 @register.filter
 def engineering(value, precision=3):
-    if type(value) is str and not value.isdigit():
-        return
+    try: value = float(value)
+    except: return
     for symbol, power in units:
         if value > 10.0 ** power:
             format = "%%.%sf%%s" % precision
@@ -31,8 +31,8 @@ def engineering(value, precision=3):
 
 @register.filter
 def scientific(value, precision=3):
-    if type(value) is str and not value.isdigit():
-        return
+    try: value = float(value)
+    except: return
     if 0.0001 < abs(value) < 1000 or value == 0:
         format = "%%.%sf" % precision
     else:
@@ -42,8 +42,8 @@ def scientific(value, precision=3):
 
 @register.filter
 def mega(value, precision=3):
-    if type(value) is str and not value.isdigit():
-        return
+    try: value = float(value)
+    except: return
     format = "%%.%sf" % precision
     return format % (value / (10.0 ** 6))
 
