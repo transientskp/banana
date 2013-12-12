@@ -425,6 +425,9 @@ class Runningcatalog(models.Model):
     @property
     def ra_err(self):
         return alpha(self.wm_uncertainty_ew, self.wm_decl)
+    @property
+    def decl_err(self):
+        return self.wm_uncertainty_ns
 
 
 class RunningcatalogFlux(models.Model):
