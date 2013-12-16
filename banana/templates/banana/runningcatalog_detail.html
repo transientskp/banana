@@ -113,7 +113,7 @@ function showThumbnails() {
 <script>
     // get data from django template
     var lightcurve = [
-        {% for point in object_list %}{
+        {% for point in paginator.object_list %}{
             "band": '{{ point.image.band }}',
             "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
             "f_int": {{ point.f_int }},
