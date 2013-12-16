@@ -89,6 +89,8 @@ for(key in lightcurve_per_band) {
     );
 }
 
+// if trigger_f_int is defined we assume we want to show the datapoint that
+// triggered the transient.
 if (!(typeof trigger_f_int === 'undefined')) {
    series.push({
         name: 'trigger',
@@ -100,7 +102,7 @@ if (!(typeof trigger_f_int === 'undefined')) {
             extract_type: trigger_extract_type,
             tau_time: trigger_tau_time,
             marker: {
-                        symbol: 'circle',
+                        symbol: trigger_symbol,
                         radius: 5
                     }
         }]
