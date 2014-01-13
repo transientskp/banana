@@ -192,6 +192,11 @@ class Dataset(models.Model):
         cursor = connections[self._state.db].cursor()
         cursor.execute(minmax_query, [self.id])
         ra_min, ra_max, decl_min, decl_max = cursor.fetchall()[0]
+
+        # handle the case where returned values are None
+        if not (ra_min and ra_max and decl_min and decl_max):
+            return []
+
         # TODO: potential SQL injection here, but SQLite can't handle dict args
         cursor.execute(scaled_query % {'dataset': self.id, 'ra_min': ra_min,
                                       'ra_max': ra_max, 'decl_min': decl_min,
