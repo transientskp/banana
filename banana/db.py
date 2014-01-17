@@ -55,15 +55,22 @@ def list():
     """
     :return: a list of all configured databases
     """
-    if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
+    databases = []
+    engine_to_dbtype_map = {
+        'djonet' : 'monetdb',
+        'django.db.backends.postgresql_psycopg2': 'postgresql'
+    }
+    # if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
+        #     pass
         # no monetdb database configureds
-        databases = []
-    else:
-        databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
-                                 settings.MONETDB_PASSPHRASE)
+        # else:
+    # databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
+    #                          settings.MONETDB_PASSPHRASE)
     for dbname, dbparams in settings.DATABASES.items():
-        if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
-            databases.append({'name': dbname, 'type': 'postgresql'})
+        if dbname != 'default':
+            databases.append({'name': dbname,
+                              'type': engine_to_dbtype_map[dbparams['ENGINE']]
+                            })
     return databases
 
 
