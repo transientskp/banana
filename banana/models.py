@@ -310,9 +310,6 @@ class Image(models.Model):
         returns next image, limited by dataset, stokes and frequency,
         sorted by time.
         """
-
-        # we do the cast since postgres can't handle floats in a where clause
-        # in a pretty way
         qs = Image.objects.using(self._state.db).\
             filter(dataset=self.dataset,
                    band=self.band,
