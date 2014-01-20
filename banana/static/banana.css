@@ -1,4 +1,5 @@
 td a {
+    /* For hyperlinks in tables, make entire cell clickable */
     display: block;
     width: 100%;
     height: 100%;
