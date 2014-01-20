@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from banana.managers import RunningcatalogManager
 
-schema_version = 17
+schema_version = 18
 
 
 minmax_query = """\
@@ -310,14 +310,12 @@ class Image(models.Model):
         returns next image, limited by dataset, stokes and frequency,
         sorted by time.
         """
-
-        # we do the cast since postgres can't handle floats in a where clause
-        # in a pretty way
         qs = Image.objects.using(self._state.db).\
             filter(dataset=self.dataset,
+                   band=self.band,
                    stokes=self.stokes,
-                   skyrgn=self.skyrgn).\
-            extra(where=['CAST(freq_eff AS INT) = ' + str(int(self.freq_eff))]).\
+                   skyrgn=self.skyrgn
+                   ).\
             order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
