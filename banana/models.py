@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from banana.managers import RunningcatalogManager
 
-schema_version = 17
+schema_version = 18
 
 
 minmax_query = """\
