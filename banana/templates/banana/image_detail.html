@@ -141,10 +141,10 @@
                         <td>{{ source.ra_err|deg2asec|floatformat:3 }}</td>
                         <td>{{ source.decl_err|deg2asec|floatformat:3 }}</td>
                         <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
-                        <td>{{ source.f_peak|floatformat:3 }}</td>
-                        <td>{{ source.f_peak_err|floatformat:3 }}</td>
-                        <td>{{ source.f_int|floatformat:3 }}</td>
-                        <td>{{ source.f_int_err|floatformat:3 }}</td>
+                        <td>{{ source.f_peak|scientific }}</td>
+                        <td>{{ source.f_peak_err|scientific }}</td>
+                        <td>{{ source.f_int|scientific }}</td>
+                        <td>{{ source.f_int_err|scientific }}</td>
 
                     </tr>
                     </a>

@@ -33,8 +33,8 @@ def engineering(value, precision=3):
 def scientific(value, precision=3):
     try: value = float(value)
     except: return
-    if 0.0001 < abs(value) < 1000 or value == 0:
-        format = "%%.%sf" % precision
+    if 0.001 < abs(value) < 1000 or value == 0:
+        format = "%%.%sf" % (precision+1)
     else:
         format = "%%.%se" % precision
     return format % value
