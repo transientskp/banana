@@ -117,7 +117,7 @@
 
         <div class="row-fluid">
             <div class="span12">
-                <table class="table table-bordered table-striped responsive-utilities table-condensed" data-provides="rowlink">
+                <table class="table table-bordered table-striped responsive-utilities table-condensed" >
                     <thead>
                         <tr>
                             {% tableheader 'id' %}
@@ -173,7 +173,7 @@ $('#row{{ source.id }}').mouseover(function(e) {
     $('#{{ source.id }}').mouseover();
 }).mouseout(function(e) {
     $('#{{ source.id }}').mouseout();
-}).click(function(e) { e.preventDefault(); });
+});
 {% endfor %}
 </script>
 
