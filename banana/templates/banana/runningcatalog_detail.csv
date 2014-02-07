@@ -1,3 +1,3 @@
 #id, taustart_ts, tau_time, freq_central, f_int, fint_err
-{% for point in lightcurve %}{{ point.id }}, "{{ point.image.taustart_ts|date:"c" }}", {{ point.image.tau_time }}, {{ point.image.band.freq_central }}, {{ point.f_int }}, {{ point.f_int_err }}
+{% for point in object_list %}{{ point.id }}, "{{ point.image.taustart_ts|date:"c" }}", {{ point.image.tau_time }}, {{ point.image.band.freq_central }}, {{ point.f_int }}, {{ point.f_int_err }}
 {% endfor %}
