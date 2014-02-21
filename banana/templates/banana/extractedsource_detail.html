@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% load units %}
@@ -57,17 +56,20 @@
             {% endfor %}
             </dd>
 
-            <dt>semimajor</dt>
+            <dt>Semi-major axis (arcsec)</dt>
             <dd>{{ extractedsource.semimajor|scientific }}</dd>
+
+            <dt>Semi-minor axis (arcsec)</dt>
+            <dd>{{ extractedsource.semiminor|scientific }}</dd>
+
+            <dt>Position angle (deg)</dt>
+            <dd>{{ extractedsource.pa|scientific }}</dd>
 
             <dt>extract_type</dt>
             <dd>{{ extractedsource.extract_type }}</dd>
 
             <dt>zone</dt>
             <dd>{{ extractedsource.zone }}</dd>
-
-            <dt>pa</dt>
-            <dd>{{ extractedsource.pa|scientific }}</dd>
 
             <dt>x</dt>
             <dd>{{ extractedsource.x|scientific }}</dd>
@@ -81,8 +83,6 @@
             <dt>Margin</dt>
             <dd>{{ extractedsource.margin }}</dd>
 
-            <dt>semiminor</dt>
-            <dd>{{ extractedsource.semiminor|scientific }}</dd>
         </dl>
     </div>
 
