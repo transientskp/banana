@@ -1,4 +1,3 @@
-
 /* to use this code, include it and set:
 
  * lightcurve: a list with source info dicts
@@ -121,9 +120,9 @@ $(function () {
           formatter: function () {
             return '<b></B>Time: </b>' + Highcharts.dateFormat('%Y %b %e %H:%M', this.point.x) +
                    '<br><b>flux (Jy): </b>' + this.point.f_int +
+                   '<br><b>Integrated Flux Error (Jy): </b>' + this.point.f_int_err +
                    '<br><b>extract_type: </b>' + this.point.extract_type +
-                    '<br><b>Integrated Flux Error: </b>' + this.point.f_int_err +
-                    '<br><b>Integration Time: </b>' + this.point.tau_time;
+                   '<br><b>Integration Time (s): </b>' + this.point.tau_time;
           }
         },
 
@@ -149,7 +148,7 @@ $(function () {
 
         yAxis: {
             title: {
-                text: 'Flux (jY)'
+                text: 'Flux (Jy)'
             }
         },
 
