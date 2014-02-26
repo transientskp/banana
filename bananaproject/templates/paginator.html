@@ -1,19 +1,22 @@
+{% load query_replace %}
 <div class="pagination pagination-centered pagination-mini">
     <ul>
         {% if page_obj.has_previous %}
-        <li><a href="?page={{ page_obj.previous_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">&laquo;</a></li>
+        <li><a href="?{% query_replace 'page' page_obj.previous_page_number%}">&laquo;</a></li>
         {% else %}
         <li class="disabled"><a>&laquo;</a></li>
         {% endif %}
 
-        <li{% if page_obj.number == 1 %} class="active"{% endif %}><a href="?page=1{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">1</a></li>
+        <li{% if page_obj.number == 1 %} class="active"{% endif %}><a href="?{% query_replace 'page' 1 %}">1</a></li>
 
         {% if show_begin_dots %}
             <li class="disabled"><a>...</a></li>
         {% endif %}
 
         {% for page_num in page_numbers %}
-        <li{% if page_obj.number == page_num %} class="active"{% endif %}><a href="?page={{ page_num }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">{{ page_num }}</a></li>
+        <li{% if page_obj.number == page_num %} class="active"{% endif %}>
+            <a href="?{% query_replace 'page' page_num %}">{{ page_num }}</a>
+        </li>
         {% endfor %}
 
         {% if show_end_dots %}
@@ -21,11 +24,13 @@
         {% endif %}
 
         {% if show_end %}
-        <li{% if page_obj.number == page_obj.paginator.num_pages %} class="active"{% endif %}><a href="?page={{ page_obj.paginator.num_pages }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">{{ page_obj.paginator.num_pages }}</a></li>
+        <li{% if page_obj.number == page_obj.paginator.num_pages %} class="active"{% endif %}>
+            <a href="?{% query_replace 'page' page_obj.paginator.num_pages %}">{{page_obj.paginator.num_pages }}</a>
+        </li>
         {% endif %}
 
         {% if page_obj.has_next %}
-        <li><a href="?page={{ page_obj.next_page_number }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if order %}&order={{ order }}{% endif %}">&raquo;</a></li>
+        <li><a href="?{% query_replace 'page' page_obj.next_page_number  %}">&raquo;</a></li>
         {% else %}
         <li class="disabled"><a>&raquo;</a></li>
         {% endif %}
