@@ -20,3 +20,16 @@ def query_replace(context, field, value):
     dict_ = context['request'].GET.copy()
     dict_[field] = value
     return dict_.urlencode()
+
+
+@register.simple_tag(takes_context = True)
+def query_invert_bool(context, field):
+    """
+    Gets HttpRequest from context, returns querystring with inverted boolean.
+    """
+    dict_ = context['request'].GET.copy()
+    if dict_.get(field) == '1':
+        dict_[field] = 0
+    else:
+        dict_[field] = 1
+    return dict_.urlencode()

@@ -65,11 +65,7 @@
 <div class="row-fluid">
     <div class="span6">
         <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-        {% if request.GET.thumb == "1"%}
-            <a href="?{% query_replace 'thumb' 0%}"><button class="btn" type="button">Thumbnails</button></a>
-        {% else %}
-            <a href="?{% query_replace 'thumb' 1%}"><button class="btn" type="button">Thumbnails</button></a>
-        {% endif %}
+        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn" type="button">Thumbnails</button></a>
     </div>
 
     <div class="span12 text-center">
