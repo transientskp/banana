@@ -21,6 +21,29 @@
 <div class="row-fluid">
     <div class="span5">
         <h2>Transient #{{ object.id }}</h2>
+
+        <div class="pagination">
+            <ul>
+                {% with object.get_prev_by_id as prev %}
+                  {% if prev %}
+                        <li><a href="{% url 'transient' db_name prev.id %}">Prev</a></li>
+                  {% else %}
+                        <li class="disabled"><a href="#">Prev</a></li>
+                  {% endif %}
+                {% endwith %}
+
+                {% with object.get_next_by_id as next %}
+                  {% if next %}
+                        <li><a href="{% url 'transient' db_name next.id %}">Next</a></li>
+                  {% else %}
+                        <li class="disabled"><a href="#">Next</a></li>
+                  {% endif %}
+                {% endwith %}
+            </ul>
+        </div>
+
+
+
         <dl class="dl-horizontal">
             <dt>Position</dt>
             <dd>({{ object.runcat.wm_ra|stringformat:".3f" }}&deg;,
