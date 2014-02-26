@@ -3,7 +3,7 @@ djonet
 python-monetdb
 aplpy==0.9.8
 numpy
-pyfits
+pyfits==3.1.2
 pymongo
 matplotlib
 pywcs
