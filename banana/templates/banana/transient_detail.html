@@ -3,6 +3,7 @@
 {% load units %}
 {% load paginator %}
 {% load tableheader %}
+{% load query_replace %}
 
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -85,9 +86,9 @@
 <h3>Lightcurve</h3>
 
 <div class="row-fluid">
-    <div class="span12 text-center">
+    <div class="span6">
         <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-        <a href="javascript:showThumbnails()"><button class="btn" type="button">show thumbnails</button></a>
+        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn" type="button">Thumbnails</button></a>
     </div>
 
     <div class="span12 text-center">
@@ -106,7 +107,10 @@
                 {% tableheader 'f_peak' 'Peak flux (Jy)' %}
                 {% tableheader 'f_peak_err' 'Peak flux err (Jy)' %}
                 {% tableheader 'extract_type' 'xtract type' %}
-                {% tableheader 'thumbnail' %}
+                {% if request.GET.thumb == "1" %}
+                    {% tableheader 'thumbnail' %}
+                {% endif %}
+
                 {% tableheader 'image' 'Image ID' %}
             </thead>
             <tbody>
@@ -121,7 +125,9 @@
                     <td>{{ point.f_peak|scientific }}</td>
                     <td>{{ point.f_peak_err|scientific }}</td>
                     <td>{{ point.extract_type }}</td>
-                    <td><div id="thumbnail{{ point.id }}"></div></td>
+                    {% if request.GET.thumb == "1" %}
+                        <td><img src="{% url 'extractedsource_plot' db_name point.id %}?size=1"></td>
+                    {% endif %}
                     <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
                 </tr>
                 {% endfor %}
@@ -134,21 +140,6 @@
     </div>
 
 </div>
-
-<script>
-imgs = {
-    {% for point in object_list %}{{point.id}}: '{% url 'extractedsource_plot' db_name point.id %}?size=1'{% if not forloop.last %},{% endif %}
-    {% endfor %}
-};
-
-function showThumbnails() {
-    for (key in imgs) {
-        var elem = document.createElement("img");
-        elem.src = imgs[key];
-        document.getElementById("thumbnail" + key).appendChild(elem);
-    }
-}
-</script>
 {% endif %}
 
 

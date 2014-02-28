@@ -1,5 +1,15 @@
+{% load query_replace %}
+
+{% comment %}
+Encloses column-headers with re-ordering hyperlinks (via http query strings)
+{% endcomment %}
+
 <th>
-    <a href="?page={{ page_obj.number }}&order={% if order == field %}-{% endif %}{{ field }}{% if dataset %}&dataset={{ dataset }}{% endif %}{% if area %}&ra={{ area.0 }}&decl={{ area.1 }}&distance={{ area.2 }}{% endif %}">
+    {% if order == field %}
+         <a href="?{% query_replace 'order' '-'|safe|add:field %}">
+    {% else %}
+         <a href="?{% query_replace 'order' field %}">
+    {% endif %}
         {{ description }}
         {% with "-"|safe|add:field as antifield %}
             {% if order == field %}<i class="icon-arrow-down"></i>

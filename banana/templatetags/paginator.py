@@ -3,6 +3,11 @@ from django import template
 register = template.Library()
 
 def paginatorizer(context, adjacent_pages=5):
+    """
+    Generates context for pagination links.
+
+    e.g. Which numbers to show, whether to insert an ellipsis break.
+    """
     page = context['page_obj']
     num_pages = page.paginator.num_pages
     start_page = max(page.number - adjacent_pages, 2)
