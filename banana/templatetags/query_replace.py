@@ -14,8 +14,8 @@ def query_replace(context, field, value):
     before generating an updated querystring that may be appended to an URL.
 
     Refs:
-    https://docs.djangoproject.com/en/1.6/ref/templates/api/#django-core-context-processors-request
-    https://docs.djangoproject.com/en/1.6/ref/request-response/#querydict-objects
+    https://docs.djangoproject.com/en/1.5/ref/templates/api/#django-core-context-processors-request
+    https://docs.djangoproject.com/en/1.5/ref/request-response/#querydict-objects
     """
     dict_ = context['request'].GET.copy()
     dict_[field] = value
