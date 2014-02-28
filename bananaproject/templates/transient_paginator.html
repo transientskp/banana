@@ -1,0 +1,26 @@
+{% load query_replace %}
+
+{% comment %}
+Creates prev / next paginator between transient detail pages.
+Preserves flux prefix choice.
+{% endcomment %}
+
+<div class="pagination">
+    <ul>
+    {% with object.get_prev_by_id as prev %}
+      {% if prev %}
+        <li><a href="{% url 'transient' db_name prev.id %}?flux_prefix={{ request.GET.flux_prefix}}">Prev</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">Prev</a></li>
+      {% endif %}
+    {% endwith %}
+
+    {% with object.get_next_by_id as next %}
+      {% if next %}
+        <li><a href="{% url 'transient' db_name next.id %}?flux_prefix={{ request.GET.flux_prefix}}">Next</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">Next</a></li>
+      {% endif %}
+    {% endwith %}
+    </ul>
+</div>
