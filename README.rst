@@ -23,14 +23,15 @@ to install banana::
 Notes
 =====
 
-It is possible to run banana in a virtualenv, but matplotlib may
+It is possible (and advisable) to run banana in a virtualenv, but matplotlib may
 complain about not being able to import the ``PyQT4`` or ``sip`` modules.
 The solution to this is to use a non-interactive backend by default.
-Editing **~/.matplotlib/matplotlibrc** to read::
+There is a one-liner matplotlibrc config file included which should be picked
+up, at least when running the django-debug server.
+For reference however, the necessary edit is to set::
 
- backend      : agg
+    backend      : agg
 
-should do the trick.
 
 
 Testing
