@@ -12,6 +12,12 @@ INSTALLED_APPS += ['debug_toolbar']
 
 SECRET_KEY = 'changeme!@'
 
+# Change default flux display prefix / units
+# (Only applies to transients_detail page, currently)
+from banana.templatetags.units import units_map
+units_map[None]= units_map['unity'] #(Default)
+# units_map[None]=units_map['milli']
+
 MONETDB_HOST = 'localhost'
 MONETDB_PORT = 50000
 MONETDB_PASSPHRASE = 'blablabla'
