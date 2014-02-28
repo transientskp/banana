@@ -555,6 +555,22 @@ class Transient(models.Model):
         return Extractedsource.objects.using(self._state.db).\
             filter(asocxtrsources__in=assocs).prefetch_related(*related)
 
+    def index_in_dataset(self):
+        #Memoize this, since it's not going to change
+        # (unless a transient is deleted?)
+        if not hasattr(self, '_index_in_dataset'):
+            qs = Transient.objects.using(self._state.db).\
+                filter(runcat__dataset=self.runcat.dataset,
+                       ).\
+                order_by("id")
+            l = list(qs.values_list('id', flat=True))
+            self._index_in_dataset = l.index(self.id)
+        return self._index_in_dataset
+
+    def number_in_dataset(self):
+        num = Transient.objects.using(self._state.db).\
+            filter(runcat__dataset=self.runcat.dataset).count()
+        return num
 
     def get_next_by_id_offset(self, offset):
         """
