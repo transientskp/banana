@@ -556,6 +556,40 @@ class Transient(models.Model):
             filter(asocxtrsources__in=assocs).prefetch_related(*related)
 
 
+    def get_next_by_id_offset(self, offset):
+        """
+        Returns transient 'offset' places away in list of transients.
+
+        List is limited to parent dataset, sorted by id.
+
+        If 'offset' places the next id outside the list,
+        raises ObjectDoesNotExist error
+
+        """
+        qs = Transient.objects.using(self._state.db).\
+            filter(runcat__dataset=self.runcat.dataset,
+                   ).\
+            order_by("id")
+        l = list(qs.values_list('id', flat=True))
+
+        index = l.index(self.id)
+        offset_idx = index+offset
+
+        if offset_idx<0 or offset_idx>=len(l):
+            #Desired behaviour is to only return linear offsets
+            #i.e. don't loop using -ve index behaviour!
+            raise ObjectDoesNotExist
+
+        id = l[offset_idx]
+        return Transient.objects.using(self._state.db).get(id=id)
+
+    def get_next_by_id(self):
+        return self.get_next_by_id_offset(1)
+    def get_prev_by_id(self):
+        return self.get_next_by_id_offset(-1)
+
+
+
 class Version(models.Model):
     name = models.CharField(max_length=12, primary_key=True)
     value = models.IntegerField()
