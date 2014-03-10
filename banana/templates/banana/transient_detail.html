@@ -21,7 +21,7 @@
 
 <div class="row-fluid">
     <div class="span5">
-        <h2>Transient #{{ object.id }}</h2>
+        <h2>Transient {{object.index_in_dataset|add:1 }} of {{object.number_in_dataset}} (ID {{ object.id }})</h2>
 
         <div class="pagination">
             <ul>
