@@ -4,6 +4,7 @@
 {% load paginator %}
 {% load tableheader %}
 {% load query_replace %}
+{% load flux_units_dropdown %}
 
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -24,27 +25,7 @@
         <h2>Transient #{{ object.id }}</h2>
         <h5>({{object.index_in_dataset|add:1 }} of {{object.number_in_dataset}} in Dataset {{object.runcat.dataset_id}})</h5>
 
-        <div class="pagination">
-            <ul>
-                {% with object.get_prev_by_id as prev %}
-                  {% if prev %}
-                        <li><a href="{% url 'transient' db_name prev.id %}">Prev</a></li>
-                  {% else %}
-                        <li class="disabled"><a href="#">Prev</a></li>
-                  {% endif %}
-                {% endwith %}
-
-                {% with object.get_next_by_id as next %}
-                  {% if next %}
-                        <li><a href="{% url 'transient' db_name next.id %}">Next</a></li>
-                  {% else %}
-                        <li class="disabled"><a href="#">Next</a></li>
-                  {% endif %}
-                {% endwith %}
-            </ul>
-        </div>
-
-
+        {% include "transient_paginator.html" %}
 
         <dl class="dl-horizontal">
             <dt>Position</dt>
@@ -90,6 +71,7 @@
     <div class="span6">
         <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
         <a href="?{% query_invert_bool 'thumb' %}"><button class="btn" type="button">Thumbnails</button></a>
+        {% flux_units_dropdown %}
     </div>
 
     <div class="span12 text-center">
@@ -111,20 +93,20 @@
                 {% if request.GET.thumb == "1" %}
                     {% tableheader 'thumbnail' %}
                 {% endif %}
-
                 {% tableheader 'image' 'Image ID' %}
             </thead>
             <tbody>
+                {% with request.GET.flux_prefix as prefix %}
                 {% for point in object_list %}
                 <tr class="{% cycle 'odd' 'even' %}">
                     <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
                     <td>{{ point.image.taustart_ts|date:"c" }}</td>
                     <td>{{ point.image.tau_time|scientific }}</td>
                     <td>{{ point.image.band.freq_central|scientific }}</td>
-                    <td>{{ point.f_int|scientific }}</td>
-                    <td>{{ point.f_int_err|scientific }}</td>
-                    <td>{{ point.f_peak|scientific }}</td>
-                    <td>{{ point.f_peak_err|scientific }}</td>
+                    <td>{{ point.f_int|flux_unit:prefix|scientific }}</td>
+                    <td>{{ point.f_int_err|flux_unit:prefix|scientific }}</td>
+                    <td>{{ point.f_peak|flux_unit:prefix|scientific }}</td>
+                    <td>{{ point.f_peak_err|flux_unit:prefix|scientific }}</td>
                     <td>{{ point.extract_type }}</td>
                     {% if request.GET.thumb == "1" %}
                         <td><img src="{% url 'extractedsource_plot' db_name point.id %}?size=1"></td>
@@ -132,6 +114,7 @@
                     <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
                 </tr>
                 {% endfor %}
+                {% endwith %}
             </tbody>
         </table>
     </div>

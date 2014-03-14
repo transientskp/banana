@@ -1,33 +1,52 @@
-# -*- coding: UTF-8 -*-
-
 from django import template
 from django.utils.safestring import mark_safe
 from banana.convert import deg_to_dms, deg_to_hms, deg_to_asec
+from collections import OrderedDict
 
 register = template.Library()
 
 
-units = [('T', 12), ('G', 9), ('M', 6), ('k', 3),  ('', 0), ('m', -3),
-         ('µ', -6), ('n', -9)]
+# Handling unicode in an URL string is tricky (damn you, mu!).
+# So we use a map of ascii_key -> ((optionally unicode) prefix , power_of_ten)
+# This also allows us to specify a key for the 'unity' case.
+# NB key of None denotes the default, empty QueryDict case.
+# This can be altered in local_settings!
+units_map = OrderedDict((
+            # ('tera',('T', 12)),
+            # ('giga',('G', 9)),
+            # ('mega',('M', 6)),
+            # ('kilo',('k', 3)),
+            ('unity',('', 0)),
+            ('milli',('m', -3)),
+            ('micro',(u"\u03BC", -6)),
+            # ('nano',('n', -9))
+            ))
+units_map[None]= units_map['unity']
 
+@register.filter
+def flux_unit(value, unit_prefix):
+    """
+    Normalises a flux value according to unit prefix.
+
+    Should be passed a string matching a key in ``units_map``
+    (or the empty string, which is treated equivalent to ``None``)
+    """
+
+    # When getting a QueryDict value in a template,
+    # None is annoyingly converted to empty string
+    if unit_prefix == '':
+        unit_prefix=None
+    if unit_prefix in units_map:
+        power = units_map[unit_prefix][1]
+        return float(value) / (10.0 ** power)
+    else:
+        return value
 
 def sec2hms(seconds):
     """Seconds to hours, minutes, seconds"""
     hours, seconds = divmod(seconds, 60**2)
     minutes, seconds = divmod(seconds, 60)
     return int(hours), int(minutes), seconds
-
-
-@register.filter
-def engineering(value, precision=3):
-    try: value = float(value)
-    except: return
-    for symbol, power in units:
-        if value > 10.0 ** power:
-            format = "%%.%sf%%s" % precision
-            return format % (value / (10.0 ** power), symbol)
-    return value
-
 
 @register.filter
 def scientific(value, precision=3):
@@ -38,14 +57,6 @@ def scientific(value, precision=3):
     else:
         format = "%%.%se" % precision
     return format % value
-
-
-@register.filter
-def mega(value, precision=3):
-    try: value = float(value)
-    except: return
-    format = "%%.%sf" % precision
-    return format % (value / (10.0 ** 6))
 
 
 @register.filter
