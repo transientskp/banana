@@ -26,7 +26,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span5">
-
+        <div data-spy="affix">
           <a href="{% url 'bigimage' db_name object.id %}" class="btn">detailed view</a>
 
           {% with object.get_next_by_taustart_ts_only as next %}
@@ -104,7 +104,7 @@
                 <dt>Nodes</dt>
                 <dd>{{ object.nodes }}</dd>
             </dl>
-
+        </div>
     </div>
     <div class="span7">
         {% if object.extractedsources.all %}
