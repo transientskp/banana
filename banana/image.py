@@ -65,7 +65,7 @@ def extracted_sources_pixels(image, size):
         x_world = [(source.ra + 180) % 360 for source in sources]
     else:
         x_world = [source.ra for source in sources]
-    y_world = numpy.array([source.decl for source in sources])
+    y_world = [source.decl for source in sources]
     w_world = numpy.array([source.semimajor / 900 for source in sources])
     h_world = numpy.array([source.semiminor / 900 for source in sources])
 

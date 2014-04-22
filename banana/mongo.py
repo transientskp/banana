@@ -2,7 +2,7 @@ import os.path
 from django.conf import settings
 from pymongo import Connection
 from gridfs import GridFS, NoFile
-import pyfits
+import astropy.io.fits
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,8 +20,10 @@ def get_hdu(url):
         try:
             mongo_file = fetch(url)
         except NoFile:
+            logging.error("cant find %s on mongo server")
             return None
-        return pyfits.open(mongo_file, mode="readonly")
+        mongo_file.closed = False  # astropy assumes a closed property
+        return astropy.io.fits.open(mongo_file)
     elif os.path.exists(url):
         if os.path.isdir(url):
             # probably a casa table
@@ -29,7 +31,7 @@ def get_hdu(url):
             return None
         else:
             # probably a fits file
-            return pyfits.open(url, readonly=True)
+            return astropy.io.fits.open(url)
     else:
         logger.error("no mongodb in config and file %s doesn't exists" % url)
         return None
