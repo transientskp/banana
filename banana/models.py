@@ -193,8 +193,12 @@ class Dataset(models.Model):
         cursor.execute(minmax_query, [self.id])
         ra_min, ra_max, decl_min, decl_max = cursor.fetchall()[0]
 
-        # handle the case where returned values are None
+        # handle case where returned values are None (no sources)
         if not (ra_min and ra_max and decl_min and decl_max):
+            return []
+
+        # handle case where all distances between extrsrc and runcat are same
+        if ra_min == ra_max or decl_min == decl_max:
             return []
 
         # TODO: potential SQL injection here, but SQLite can't handle dict args
