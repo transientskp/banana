@@ -119,7 +119,7 @@ LOGGING = {
             'propagate': True,
         },
         'banana': {
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console'],
             'level': 'WARNING',
 
         }
