@@ -3,6 +3,9 @@ from django.conf import settings
 from pymongo import Connection
 from gridfs import GridFS, NoFile
 import pyfits
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def fetch(filename):
@@ -22,9 +25,11 @@ def get_hdu(url):
     elif os.path.exists(url):
         if os.path.isdir(url):
             # probably a casa table
+            logger.error("can't open dir %s as FITS" % url)
             return None
         else:
             # probably a fits file
             return pyfits.open(url, readonly=True)
     else:
+        logger.error("no mongodb in config and file %s doesn't exists" % url)
         return None
