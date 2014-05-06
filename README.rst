@@ -13,6 +13,7 @@ Installation
 
 to install banana::
 
+    pip install astropy
     pip install -r requirements.txt
     cp bananaproject/settings/local_example.py bananaproject/settings/local.py
     gedit bananaproject/settings/local.py
