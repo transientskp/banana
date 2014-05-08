@@ -1,9 +1,9 @@
 django==1.5.5
 djonet
 python-monetdb
-aplpy==0.9.8
+astropy
+aplpy==0.9.11
 numpy
-pyfits==3.1.2
 pymongo
 matplotlib
 pywcs
