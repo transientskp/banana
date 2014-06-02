@@ -9,11 +9,16 @@ from banana.managers import RunningcatalogManager
 schema_version = 18
 
 
+# the 2 queries below are used to generate the 2D Histogram of position offset
+# between Running Catalogs and Extracted Sources. The first query finds
+# the minimum and maximum values for RA and DECL. these are used to scale
+# the data. datapoints are grouped into integer groups.
+
 minmax_query = """\
-SELECT min(x.ra - r.wm_ra)
-  ,max(x.ra - r.wm_ra)
-  ,min(x.decl - r.wm_decl)
-  ,max(x.decl - r.wm_decl)
+SELECT min(x.ra - r.wm_ra) as min_ra
+  ,max(x.ra - r.wm_ra) as max_ra
+  ,min(x.decl - r.wm_decl) as min_decl
+  ,max(x.decl - r.wm_decl) as max_decl
 FROM assocxtrsource a
   ,extractedsource x
   ,runningcatalog r
@@ -26,11 +31,11 @@ AND im1.dataset = %s
 
 scaled_query = """\
 SELECT ((sub.scaled_ra / (CAST(%(N_bins)s AS FLOAT) / (%(ra_max)s - %(ra_min)s))) + %(ra_min)s) * 3600
-  ,((sub.scaled_decl  / (CAST(%(N_bins)s AS FLOAT) / (%(decl_max)s - %(decl_min)s))) + %(decl_min)s) * 3600
+  , ((sub.scaled_decl  / (CAST(%(N_bins)s AS FLOAT) / (%(decl_max)s - %(decl_min)s))) + %(decl_min)s) * 3600
   ,count(sub.id)
 FROM
   (SELECT r.id
-    ,CAST((((x.ra - r.wm_ra) - %(decl_min)s ) * (CAST(%(N_bins)s AS FLOAT) / (%(ra_max)s - %(ra_min)s))
+    ,CAST((((x.ra - r.wm_ra) - %(ra_min)s ) * (CAST(%(N_bins)s AS FLOAT) / (%(ra_max)s - %(ra_min)s))
     ) AS INTEGER) AS scaled_ra
     ,CAST((((x.decl - r.wm_decl) - %(decl_min)s ) * (CAST(%(N_bins)s AS FLOAT) / (%(decl_max)s - %(decl_min)s))
     ) AS INTEGER) AS scaled_decl
