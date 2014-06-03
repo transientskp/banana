@@ -4,15 +4,21 @@ from matplotlib import pyplot
 from banana.mongo import get_hdu
 from banana.convert import deg_to_asec
 
+# colors for the extracted types, 0: blind fit, 1: forced fit
+source_colors = ['yellow', 'lightgreen']
 
 def image_plot(pyfits_hdu, size=5, sources=[]):
     """
-    :param pyfits_hdu: a pyfits file object
-    :size: size in inches
-    :sources: a list of Extractedsource ORM models
+    Plot image from fits HDU and draw circles around sources.
 
-    :returns: a matplotlib canvas which can be used to write the image to
-              something (like a django HTTP resonse)
+    args:
+        pyfits_hdu: a pyfits file object
+        size: size in inches
+        sources: a list of Extractedsource ORM models
+
+    Returns:
+        a matplotlib canvas which can be used to write the image to
+        something (like a django HTTP resonse)
     """
     fig = pyplot.figure(figsize=(size, size))
     plot = aplpy.FITSFigure(pyfits_hdu, figure=fig, subplot=[0, 0, 1, 1],
@@ -22,21 +28,27 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     plot.tick_labels.hide()
     plot.ticks.hide()
 
-    if sources:
-       # If the image has a reference declination pointing to the north
-       # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
-       # with an RA 180 degrees wrong. We rotate them back here. See Trap
-       # issue #4599 for (much) more discussion.
-       if "CRVAL2" in pyfits_hdu[0].header and pyfits_hdu[0].header["CRVAL2"] == 90:
-           ra = [(source.ra + 180) % 360 for source in sources]
-       else:
-           ra = [source.ra for source in sources]
-       dec = [source.decl for source in sources]
-       semimajor = [source.semimajor / 900 for source in sources]
-       semiminor = [source.semiminor / 900 for source in sources]
-       pa = [source.pa + 90 for source in sources]
-       plot.show_ellipses(ra, dec, semimajor, semiminor, pa, facecolor='none',
-                          edgecolor='yellow', linewidth=1)
+    if not sources:
+        return fig.canvas
+
+    # If the image has a reference declination pointing to the north
+    # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
+    # with an RA 180 degrees wrong. We rotate them back here. See Trap
+    # issue #4599 for (much) more discussion.
+    if "CRVAL2" in pyfits_hdu[0].header and \
+                   pyfits_hdu[0].header["CRVAL2"] == 90:
+        ra = [(source.ra + 180) % 360 for source in sources]
+    else:
+        ra = [source.ra for source in sources]
+    dec = [source.decl for source in sources]
+    semimajor = [source.semimajor / 900 for source in sources]
+    semiminor = [source.semiminor / 900 for source in sources]
+    pa = [source.pa + 90 for source in sources]
+    color = [source_colors[source.extract_type] for source in sources]
+
+
+    plot.show_ellipses(ra, dec, semimajor, semiminor, pa, facecolor='none',
+                       edgecolor=color, linewidth=1)
     return fig.canvas
 
 
