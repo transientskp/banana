@@ -6,9 +6,9 @@ from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.db import db_schema_version, check_database
 from banana.models import Dataset, Image, Transient, Extractedsource, \
-    Runningcatalog, Monitoringlist, schema_version
+                          Runningcatalog, schema_version
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
-    SortListMixin, DatasetMixin
+                                SortListMixin, DatasetMixin
 from banana.vcs import repo_info
 from django.utils.datastructures import MultiValueDictKeyError
 
@@ -114,19 +114,3 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
                                                                    **kwargs)
         context['area'] = self.area
         return context
-
-
-
-class MonitoringlistList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
-                         DatasetMixin, ListView):
-    model = Monitoringlist
-    paginate_by = 100
-
-    def get_queryset(self):
-        qs = super(MonitoringlistList, self).get_queryset()
-        dataset_id = self.get_dataset_id()
-        if dataset_id:
-            qs = qs.filter(dataset=dataset_id)
-        related = ['runcat', 'dataset']
-        qs = qs.prefetch_related(*related)
-        return qs

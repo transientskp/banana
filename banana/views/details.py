@@ -6,9 +6,10 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
-from banana.models import Image, Monitoringlist, Dataset, Extractedsource,\
-    Runningcatalog, Transient
-from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, DatasetMixin, SortListMixin
+from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
+                          Transient
+from banana.views.mixins import MultiDbMixin, HybridTemplateMixin,\
+                                DatasetMixin, SortListMixin
 
 
 class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
@@ -45,15 +46,6 @@ class BigImageDetail(MultiDbMixin, DatasetMixin, DetailView):
         context['image_size'] = self.image_size
         context['sources'] = banana.image.extracted_sources_pixels(self.object,
                                                                self.image_size)
-        return context
-
-
-class MonitoringlistDetail(MultiDbMixin, DetailView):
-    model = Monitoringlist
-
-    def get_context_data(self, **kwargs):
-        context = super(MonitoringlistDetail, self).get_context_data(**kwargs)
-        context['monitoringlist'] = self.object
         return context
 
 

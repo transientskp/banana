@@ -16,7 +16,6 @@ class ViewTest(TestCase):
         'transients',
         'extractedsources',
         'runningcatalogs',
-        'monitoringlists',
     ]
 
     detail_views = [
@@ -24,7 +23,6 @@ class ViewTest(TestCase):
         'dataset',
         'extractedsource',
         'runningcatalog',
-        'monitoringlist',
         'image',
         'bigimage'
     ]
