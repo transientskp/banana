@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from banana.managers import RunningcatalogManager
 
-schema_version = 18
+schema_version = 21
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -59,10 +59,10 @@ class Assoccatsource(models.Model):
                                related_name='assoccatsources')
     catsrc = models.ForeignKey('Catalogedsource', db_column='catsrc',
                                related_name='assoccatsources')
-    type = models.IntegerField()
-    distance_arcsec = models.FloatField()
-    r = models.FloatField()
-    loglr = models.FloatField()
+    type = models.SmallIntegerField()
+    distance_arcsec = models.FloatField(null=True, blank=True)
+    r = models.FloatField(null=True, blank=True)
+    loglr = models.FloatField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -75,7 +75,7 @@ class Assocskyrgn(models.Model):
                                related_name='assocskyrgns')
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='assocskyrgns')
-    distance_deg = models.FloatField(null=True)
+    distance_deg = models.FloatField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -87,12 +87,14 @@ class Assocxtrsource(models.Model):
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
                                related_name='Assocxtrsources')
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
-                               related_name='asocxtrsources')
-    type = models.IntegerField()
-    distance_arcsec = models.FloatField()
-    r = models.FloatField()
-    loglr = models.FloatField(null=True)
-
+                               related_name='asocxtrsources',
+                               null=True, blank=True)
+    type = models.SmallIntegerField()
+    distance_arcsec = models.FloatField(null=True, blank=True)
+    r = models.FloatField(null=True, blank=True)
+    loglr = models.FloatField(null=True, blank=True)
+    v_int = models.FloatField()
+    eta_int = models.FloatField()
     class Meta:
         managed = False
         db_table = 'assocxtrsource'
@@ -113,11 +115,11 @@ class Catalogedsource(models.Model):
     catalog = models.ForeignKey(Catalog, db_column='catalog',
                                 related_name='catalogedsources')
     orig_catsrcid = models.IntegerField()
-    catsrcname = models.CharField(max_length=120)
-    tau = models.IntegerField()
+    catsrcname = models.CharField(max_length=120, blank=True)
+    tau = models.IntegerField(null=True, blank=True)
     band = models.ForeignKey('Frequencyband', db_column='band',
                              related_name='catalogedsources')
-    stokes = models.IntegerField()
+    stokes = models.SmallIntegerField()
     freq_eff = models.FloatField()
     zone = models.IntegerField()
     ra = models.FloatField()
@@ -129,19 +131,19 @@ class Catalogedsource(models.Model):
     z = models.FloatField()
     margin = models.BooleanField()
     det_sigma = models.FloatField()
-    src_type = models.CharField(max_length=1)
-    fit_probl = models.CharField(max_length=2)
-    pa = models.FloatField()
-    pa_err = models.FloatField()
-    major = models.FloatField()
-    major_err = models.FloatField()
-    minor = models.FloatField()
-    minor_err = models.FloatField()
-    avg_f_peak = models.FloatField()
-    avg_f_peak_err = models.FloatField()
-    avg_f_int = models.FloatField()
-    avg_f_int_err = models.FloatField()
-    frame = models.CharField(max_length=20)
+    src_type = models.CharField(max_length=1, blank=True)
+    fit_probl = models.CharField(max_length=2, blank=True)
+    pa = models.FloatField(null=True, blank=True)
+    pa_err = models.FloatField(null=True, blank=True)
+    major = models.FloatField(null=True, blank=True)
+    major_err = models.FloatField(null=True, blank=True)
+    minor = models.FloatField(null=True, blank=True)
+    minor_err = models.FloatField(null=True, blank=True)
+    avg_f_peak = models.FloatField(null=True, blank=True)
+    avg_f_peak_err = models.FloatField(null=True, blank=True)
+    avg_f_int = models.FloatField(null=True, blank=True)
+    avg_f_int_err = models.FloatField(null=True, blank=True)
+    frame = models.CharField(max_length=20, blank=True)
 
     class Meta:
         managed = False
@@ -151,7 +153,7 @@ class Catalogedsource(models.Model):
 class Classification(models.Model):
     id = models.IntegerField(primary_key=True)
     transient_id = models.IntegerField()
-    classification = models.CharField(max_length=256)
+    classification = models.CharField(max_length=256, blank=True)
     weight = models.FloatField()
 
     class Meta:
@@ -159,21 +161,33 @@ class Classification(models.Model):
         db_table = 'classification'
 
 
+class Config(models.Model):
+    id = models.IntegerField(primary_key=True)
+    dataset = models.ForeignKey('Dataset', db_column='dataset')
+    section = models.CharField(max_length=100, blank=True)
+    key = models.CharField(max_length=100, blank=True)
+    value = models.CharField(max_length=500, blank=True)
+    type = models.CharField(max_length=5, blank=True)
+
+    class Meta:
+        db_table = 'config'
+
+
 class Dataset(models.Model):
     id = models.IntegerField(primary_key=True)
     rerun = models.IntegerField()
-    type = models.IntegerField()
+    type = models.SmallIntegerField()
     process_start_ts = models.DateTimeField()
-    process_end_ts = models.DateTimeField()
-    detection_threshold = models.FloatField(null=True)
-    analysis_threshold = models.FloatField(null=True)
-    assoc_radius = models.FloatField(null=True)
-    backsize_x = models.IntegerField(null=True)
-    backsize_y = models.IntegerField(null=True)
-    margin_width = models.FloatField(null=True)
+    process_end_ts = models.DateTimeField(null=True, blank=True)
+    detection_threshold = models.FloatField(null=True, blank=True)
+    analysis_threshold = models.FloatField(null=True, blank=True)
+    assoc_radius = models.FloatField(null=True, blank=True)
+    backsize_x = models.SmallIntegerField(null=True, blank=True)
+    backsize_y = models.SmallIntegerField(null=True, blank=True)
+    margin_width = models.FloatField(null=True, blank=True)
     description = models.CharField(max_length=100)
-    node = models.IntegerField()
-    nodes = models.IntegerField()
+    node = models.SmallIntegerField()
+    nodes = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -213,7 +227,6 @@ class Dataset(models.Model):
                                       'N_bins': N_bins})
         return cursor.fetchall()
 
-
     def rejected_images(self):
         return Image.objects.using(self._state.db).filter(dataset=self).\
             annotate(num_rejections=Count('rejections')).\
@@ -235,22 +248,23 @@ class Extractedsource(models.Model):
     decl_fit_err = models.FloatField()
     ew_sys_err = models.FloatField()
     ns_sys_err = models.FloatField()
+    error_radius = models.FloatField()
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
     racosdecl = models.FloatField()
     margin = models.BooleanField()
     det_sigma = models.FloatField()
-    semimajor = models.FloatField()
-    semiminor = models.FloatField()
-    pa = models.FloatField()
-    f_peak = models.FloatField()
-    f_peak_err = models.FloatField()
-    f_int = models.FloatField()
-    f_int_err = models.FloatField()
-    extract_type = models.IntegerField()
-    node = models.IntegerField()
-    nodes = models.IntegerField()
+    semimajor = models.FloatField(null=True, blank=True)
+    semiminor = models.FloatField(null=True, blank=True)
+    pa = models.FloatField(null=True, blank=True)
+    f_peak = models.FloatField(null=True, blank=True)
+    f_peak_err = models.FloatField(null=True, blank=True)
+    f_int = models.FloatField(null=True, blank=True)
+    f_int_err = models.FloatField(null=True, blank=True)
+    extract_type = models.SmallIntegerField(null=True, blank=True)
+    node = models.SmallIntegerField()
+    nodes = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -267,9 +281,9 @@ class Extractedsource(models.Model):
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
-    freq_central = models.FloatField(null=True)
-    freq_low = models.FloatField(null=True)
-    freq_high = models.FloatField(null=True)
+    freq_central = models.FloatField(null=True, blank=True)
+    freq_low = models.FloatField(null=True, blank=True)
+    freq_high = models.FloatField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -286,13 +300,13 @@ class Image(models.Model):
     id = models.IntegerField(primary_key=True)
     dataset = models.ForeignKey(Dataset, db_column='dataset',
                                 related_name='images')
-    tau = models.IntegerField(null=True)
+    tau = models.IntegerField(null=True, blank=True)
     band = models.ForeignKey(Frequencyband, db_column='band',
                              related_name='images')
-    stokes = models.IntegerField()
-    tau_time = models.FloatField(null=True)
+    stokes = models.SmallIntegerField()
+    tau_time = models.FloatField(null=True, blank=True)
     freq_eff = models.FloatField()
-    freq_bw = models.FloatField()
+    freq_bw = models.FloatField(null=True, blank=True)
     taustart_ts = models.DateTimeField()
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='images')
@@ -301,11 +315,11 @@ class Image(models.Model):
     rb_pa = models.FloatField()
     deltax = models.FloatField()
     deltay = models.FloatField()
-    fwhm_arcsec = models.FloatField(null=True)
-    fov_degrees = models.FloatField(null=True)
-    url = models.CharField(max_length=1024)
-    node = models.IntegerField()
-    nodes = models.IntegerField()
+    fwhm_arcsec = models.FloatField(null=True, blank=True)
+    fov_degrees = models.FloatField(null=True, blank=True)
+    url = models.CharField(max_length=1024, blank=True)
+    node = models.SmallIntegerField()
+    nodes = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -335,31 +349,16 @@ class Image(models.Model):
         return Image.objects.using(self._state.db).get(id=id)
 
 
-class Monitoringlist(models.Model):
-    id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
-                               related_name='monitoringlists')
-    ra = models.FloatField()
-    decl = models.FloatField()
-    dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='monitoringlists')
-    userentry = models.BooleanField()
-
-    class Meta:
-        managed = False
-        db_table = 'monitoringlist'
-
-
 class Node(models.Model):
     id = models.IntegerField(primary_key=True)
-    node = models.IntegerField()
-    zone = models.IntegerField()
-    zone_min = models.IntegerField()
-    zone_max = models.IntegerField()
-    zone_min_incl = models.BooleanField()
-    zone_max_incl = models.BooleanField()
-    zoneheight = models.FloatField()
-    nodes = models.IntegerField()
+    node = models.SmallIntegerField()
+    zone = models.SmallIntegerField()
+    zone_min = models.SmallIntegerField(null=True, blank=True)
+    zone_max = models.SmallIntegerField(null=True, blank=True)
+    zone_min_incl = models.NullBooleanField(null=True, blank=True)
+    zone_max_incl = models.NullBooleanField(null=True, blank=True)
+    zoneheight = models.FloatField(null=True, blank=True)
+    nodes = models.SmallIntegerField()
 
     class Meta:
         managed = False
@@ -370,8 +369,9 @@ class Rejection(models.Model):
     id = models.IntegerField(primary_key=True)
     image = models.ForeignKey(Image, db_column='image',
                               related_name='rejections')
-    rejectreason = models.ForeignKey('Rejectreason', db_column='rejectreason')
-    comment = models.CharField(max_length=512)
+    rejectreason = models.ForeignKey('Rejectreason', db_column='rejectreason',
+                                     blank=True, null=True)
+    comment = models.CharField(max_length=512, blank=True)
 
     class Meta:
         managed = False
@@ -383,7 +383,7 @@ class Rejection(models.Model):
 
 class Rejectreason(models.Model):
     id = models.IntegerField(primary_key=True)
-    description = models.CharField(max_length=512)
+    description = models.CharField(max_length=512, blank=True)
 
     class Meta:
         managed = False
@@ -417,8 +417,8 @@ class Runningcatalog(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
-    margin = models.BooleanField()
     inactive = models.BooleanField()
+    mon_src = models.BooleanField()
 
     objects = RunningcatalogManager()
 
@@ -446,19 +446,19 @@ class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey(Runningcatalog, db_column='runcat')
     band = models.ForeignKey(Frequencyband, db_column='band')
-    stokes = models.IntegerField()
+    stokes = models.SmallIntegerField()
     f_datapoints = models.IntegerField()
-    resolution = models.FloatField(null=True)
-    avg_f_peak = models.FloatField()
-    avg_f_peak_sq = models.FloatField()
-    avg_f_peak_weight = models.FloatField()
-    avg_weighted_f_peak = models.FloatField()
-    avg_weighted_f_peak_sq = models.FloatField()
-    avg_f_int = models.FloatField()
-    avg_f_int_sq = models.FloatField()
-    avg_f_int_weight = models.FloatField()
-    avg_weighted_f_int = models.FloatField()
-    avg_weighted_f_int_sq = models.FloatField()
+    resolution = models.FloatField(null=True, blank=True)
+    avg_f_peak = models.FloatField(null=True, blank=True)
+    avg_f_peak_sq = models.FloatField(null=True, blank=True)
+    avg_f_peak_weight = models.FloatField(null=True, blank=True)
+    avg_weighted_f_peak = models.FloatField(null=True, blank=True)
+    avg_weighted_f_peak_sq = models.FloatField(null=True, blank=True)
+    avg_f_int = models.FloatField(null=True, blank=True)
+    avg_f_int_sq = models.FloatField(null=True, blank=True)
+    avg_f_int_weight = models.FloatField(null=True, blank=True)
+    avg_weighted_f_int = models.FloatField(null=True, blank=True)
+    avg_weighted_f_int_sq = models.FloatField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -496,7 +496,7 @@ class Temprunningcatalog(models.Model):
                                 related_name='Temprunningcatalogs')
     band = models.ForeignKey(Frequencyband, db_column='band',
                              related_name='Temprunningcatalogs')
-    stokes = models.IntegerField()
+    stokes = models.SmallIntegerField()
     datapoints = models.IntegerField()
     zone = models.IntegerField()
     wm_ra = models.FloatField()
@@ -514,20 +514,20 @@ class Temprunningcatalog(models.Model):
     z = models.FloatField()
     margin = models.BooleanField()
     inactive = models.BooleanField()
-    beam_semimaj = models.FloatField()
-    beam_semimin = models.FloatField()
-    beam_pa = models.FloatField()
-    f_datapoints = models.IntegerField()
-    avg_f_peak = models.FloatField()
-    avg_f_peak_sq = models.FloatField()
-    avg_f_peak_weight = models.FloatField()
-    avg_weighted_f_peak = models.FloatField()
-    avg_weighted_f_peak_sq = models.FloatField()
-    avg_f_int = models.FloatField()
-    avg_f_int_sq = models.FloatField()
-    avg_f_int_weight = models.FloatField()
-    avg_weighted_f_int = models.FloatField()
-    avg_weighted_f_int_sq = models.FloatField()
+    beam_semimaj = models.FloatField(null=True, blank=True)
+    beam_semimin = models.FloatField(null=True, blank=True)
+    beam_pa = models.FloatField(null=True, blank=True)
+    f_datapoints = models.IntegerField(null=True, blank=True)
+    avg_f_peak = models.FloatField(null=True, blank=True)
+    avg_f_peak_sq = models.FloatField(null=True, blank=True)
+    avg_f_peak_weight = models.FloatField(null=True, blank=True)
+    avg_weighted_f_peak = models.FloatField(null=True, blank=True)
+    avg_weighted_f_peak_sq = models.FloatField(null=True, blank=True)
+    avg_f_int = models.FloatField(null=True, blank=True)
+    avg_f_int_sq = models.FloatField(null=True, blank=True)
+    avg_f_int_weight = models.FloatField(null=True, blank=True)
+    avg_weighted_f_int = models.FloatField(null=True, blank=True)
+    avg_weighted_f_int_sq = models.FloatField(null=True, blank=True)
 
     class Meta:
         managed = False
@@ -540,15 +540,15 @@ class Transient(models.Model):
                                related_name='transients')
     band = models.ForeignKey(Frequencyband, db_column='band',
                              related_name='transients')
-    siglevel = models.FloatField()
+    siglevel = models.FloatField(null=True, blank=True)
     v_int = models.FloatField()
     eta_int = models.FloatField()
-    detection_level = models.FloatField()
+    detection_level = models.FloatField(null=True, blank=True)
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc',
                                        related_name='transients')
-    status = models.IntegerField()
-    t_start = models.DateTimeField(null=True)
+    status = models.IntegerField(null=True, blank=True)
+    t_start = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         managed = False
