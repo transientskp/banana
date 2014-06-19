@@ -3,6 +3,7 @@
 {% load paginator %}
 {% load tableheader %}
 {% load units %}
+{% load extract_type %}
 
 {% block title %}Extracted Sources · Banana{% endblock title %}
 
@@ -64,7 +65,7 @@
                 <td>{{ extractedsource.f_peak_err|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.f_int|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.f_int_err|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.extract_type }}</td>
+                <td>{{ extractedsource.extract_type|extract_type }}</td>
             </tr>
             {% endfor %}
             </tbody>

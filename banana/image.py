@@ -4,8 +4,9 @@ from matplotlib import pyplot
 from banana.mongo import get_hdu
 from banana.convert import deg_to_asec
 
-# colors for the extracted types, 0: blind fit, 1: forced fit
-source_colors = ['yellow', 'lightgreen']
+# colors for the extracted types
+#  0: blind fit, 1: forced fit, 2: manual monitoring
+source_colors = ['yellow', 'lightgreen', 'cyan']
 
 def image_plot(pyfits_hdu, size=5, sources=[]):
     """
@@ -45,10 +46,8 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     semiminor = [source.semiminor / 900 for source in sources]
     pa = [source.pa + 90 for source in sources]
     color = [source_colors[source.extract_type] for source in sources]
-
-
     plot.show_ellipses(ra, dec, semimajor, semiminor, pa, facecolor='none',
-                       edgecolor=color, linewidth=1)
+                       edgecolor=color, linewidth=1,)
     return fig.canvas
 
 
