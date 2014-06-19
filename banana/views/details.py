@@ -89,7 +89,8 @@ class ExtractedSourceDetail(MultiDbMixin, DetailView):
 class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Transient
-    paginate_by = 10
+    paginate_by = 100
+    default_order = 'image__taustart_ts'
     template_name = "banana/transient_detail.html"
 
     def get_queryset(self):
@@ -106,7 +107,7 @@ class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
 class RunningcatalogDetail(SortListMixin, MultiDbMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = Runningcatalog
-    paginate_by = 10
+    paginate_by = 100
     default_order = 'image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
 
