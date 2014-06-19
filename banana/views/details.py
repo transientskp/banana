@@ -10,6 +10,7 @@ from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
                           Transient
 from banana.views.mixins import MultiDbMixin, HybridTemplateMixin,\
                                 DatasetMixin, SortListMixin
+from collections import OrderedDict
 
 
 class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
@@ -66,6 +67,8 @@ class DatasetDetail(MultiDbMixin, DetailView):
             label = str(image.band)
             images_per_band.setdefault(label, [])
             images_per_band[label].append(image.num_extractedsources)
+        images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
+                                             key=lambda x: x[0]))
         context['dataset'] = self.object
         context['num_extractedsources'] = Extractedsource.objects.using(
             self.db_name).filter(image__in=images.all()).count()
