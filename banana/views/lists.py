@@ -45,25 +45,20 @@ class ImageList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
 
     def get_queryset(self):
         qs = super(ImageList, self).get_queryset()
-        dataset_id = self.get_dataset_id()
-        if dataset_id:
-            qs = qs.filter(dataset=dataset_id)
         related = ['skyrgn', 'dataset', 'band', 'rejections',
                    'rejections__rejectreason']
-        return qs.prefetch_related(*related).annotate(
-                            num_extractedsources=Count('extractedsources'))
+        return qs.prefetch_related(*related).\
+            annotate(num_extractedsources=Count('extractedsources'))
 
 
 class TransientList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
                     DatasetMixin, ListView):
     model = Transient
     paginate_by = 100
+    dataset_field = 'runcat__dataset'
 
     def get_queryset(self):
         qs = super(TransientList, self).get_queryset()
-        dataset_id = self.get_dataset_id()
-        if dataset_id:
-            qs = qs.filter(runcat__dataset=dataset_id)
         related = ['band', 'runcat']
         return qs.prefetch_related(*related)
 
@@ -72,13 +67,7 @@ class ExtractedsourcesList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
     model = Extractedsource
     paginate_by = 100
-
-    def get_queryset(self):
-        qs = super(ExtractedsourcesList, self).get_queryset()
-        dataset_id = self.get_dataset_id()
-        if dataset_id:
-            qs = qs.filter(image__dataset=dataset_id)
-        return qs
+    dataset_field = 'image__dataset'
 
 
 class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
@@ -87,20 +76,17 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
     paginate_by = 100
 
     def get_queryset(self):
-        dataset_id = self.get_dataset_id()
         self.area = self.get_area()
         self.db_name = self.kwargs.get('db', 'default')
         check_database(self.db_name)
         if self.area:
             ra, decl, distance = self.area
-            queryset = self.model._default_manager.near_position(ra, decl,
-                                                                 distance)
+            qs = self.model._default_manager.near_position(ra, decl, distance)
         else:
-            queryset = self.model._default_manager.all()
-        queryset = queryset.using(self.db_name).order_by(self.get_order())
-        if dataset_id:
-            queryset = queryset.filter(dataset=dataset_id)
-        return queryset
+            qs = self.model._default_manager.all()
+        qs = qs.using(self.db_name).order_by(self.get_order())
+        qs = self.filter_queryset(qs)
+        return qs
 
     def get_area(self):
         try:
@@ -114,3 +100,14 @@ class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
                                                                    **kwargs)
         context['area'] = self.area
         return context
+
+
+class MonposList(RunningcatalogList):
+    """
+    Monitored Position list. This is just a list of runningcatalogs that
+    have extracted sources with extract type 2
+    """
+    def get_queryset(self):
+        qs = super(MonposList, self).get_queryset()
+        qs = qs.filter(assocxtrsources__xtrsrc__extract_type=2).distinct()
+        return qs

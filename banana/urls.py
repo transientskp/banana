@@ -25,6 +25,10 @@ urlpatterns = patterns('',
     url(r'^(?P<db>\w+)/runningcatalogs/$',
         lists.RunningcatalogList.as_view(),
         name='runningcatalogs'),
+    url(r'^(?P<db>\w+)/monposs/$',
+        lists.MonposList.as_view(),
+        name='monposs'),
+
 
     url(r'^(?P<db>\w+)/transient/(?P<pk>\d+)/$',
         details.TransientDetail.as_view(),

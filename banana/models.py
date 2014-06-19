@@ -85,9 +85,9 @@ class Assocskyrgn(models.Model):
 class Assocxtrsource(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
-                               related_name='Assocxtrsources')
+                               related_name='assocxtrsources')
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
-                               related_name='asocxtrsources',
+                               related_name='assocxtrsources',
                                null=True, blank=True)
     type = models.SmallIntegerField()
     distance_arcsec = models.FloatField(null=True, blank=True)
@@ -432,7 +432,7 @@ class Runningcatalog(models.Model):
     def lightcurve(self):
         assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
         related = ['image', 'image__band']
-        return Extractedsource.objects.using(self._state.db).filter(asocxtrsources__in=assocs).prefetch_related(*related)
+        return Extractedsource.objects.using(self._state.db).filter(assocxtrsources__in=assocs).prefetch_related(*related)
 
     @property
     def ra_err(self):
@@ -562,7 +562,7 @@ class Transient(models.Model):
             filter(runcat=self.runcat)
         related = ['image', 'image__band']
         return Extractedsource.objects.using(self._state.db).\
-            filter(asocxtrsources__in=assocs).prefetch_related(*related)
+            filter(assocxtrsources__in=assocs).prefetch_related(*related)
 
     def index_in_dataset(self):
         #Memoize this, since it's not going to change

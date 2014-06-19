@@ -16,6 +16,7 @@ class ViewTest(TestCase):
         'transients',
         'extractedsources',
         'runningcatalogs',
+        'monposs'
     ]
 
     detail_views = [
@@ -47,8 +48,6 @@ class ViewTest(TestCase):
             for row in response.content.split():
                 columns = row.split(',')
 
-
-
     def test_list_json_views(self):
         for list_view in self.list_views:
             response = self.client.get(reverse(list_view,
@@ -61,9 +60,9 @@ class ViewTest(TestCase):
             except ValueError as e:
                 self.fail("can't parse json view %s: %s" % (list_view, e))
 
-
     def test_list_views_with_dataset(self):
         for list_view in self.list_views:
+            print list_view
             response = self.client.get(reverse(list_view,
                                                kwargs={'db': test_db}) +
                                        "?dataset=1")
@@ -77,23 +76,22 @@ class ViewTest(TestCase):
             self.assertEqual(response.status_code, 200)
 
     def test_extracted_sources_pixel(self):
-         response = self.client.get(reverse('extracted_sources_pixel',
-                                            kwargs={'db': test_db,
-                                                    'image_id': 1}))
-         self.assertEqual(response.status_code, 200)
-
+        response = self.client.get(reverse('extracted_sources_pixel',
+                                           kwargs={'db': test_db,
+                                                   'image_id': 1}))
+        self.assertEqual(response.status_code, 200)
 
     def test_extractedsource_plot(self):
-         response = self.client.get(reverse('extractedsource_plot',
-                                            kwargs={'db': test_db,
-                                                    'pk': 1}))
-         self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('extractedsource_plot',
+                                           kwargs={'db': test_db,
+                                                   'pk': 1}))
+        self.assertEqual(response.status_code, 200)
 
     def test_image_plot(self):
-         response = self.client.get(reverse('image_plot',
-                                            kwargs={'db': test_db,
-                                                    'pk': 1}))
-         self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('image_plot',
+                                           kwargs={'db': test_db,
+                                                   'pk': 1}))
+        self.assertEqual(response.status_code, 200)
 
     def test_csv_extractedsources_num(self):
         response = self.client.get(reverse('extractedsources',

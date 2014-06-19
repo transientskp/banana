@@ -9,6 +9,9 @@ class MultiDbMixin(object):
     It requires a db variable in your request.
     """
     def get_queryset(self):
+        return self.get_queryset_using()
+
+    def get_queryset_using(self):
         self.db_name = self.kwargs.get('db', 'default')
         check_database(self.db_name)
         return super(MultiDbMixin, self).get_queryset().using(self.db_name)
@@ -96,6 +99,11 @@ class DatasetMixin(object):
     mixin view that checks for a dataset request variable and adds it to the
     context
     """
+
+    # if the queryset dataset filter has a different name, you should
+    # override this here.
+    dataset_field = 'dataset'
+
     def get_dataset_id(self):
         return self.request.GET.get("dataset", None)
 
@@ -103,3 +111,13 @@ class DatasetMixin(object):
         context = super(DatasetMixin, self).get_context_data(*args, **kwargs)
         context['dataset'] = self.get_dataset_id()
         return context
+
+    def filter_queryset(self, qs):
+        dataset_id = self.get_dataset_id()
+        if dataset_id:
+            qs = qs.filter(**{self.dataset_field: dataset_id})
+        return qs
+
+    def get_queryset(self):
+        qs = super(DatasetMixin, self).get_queryset()
+        return self.filter_queryset(qs)
