@@ -15,15 +15,37 @@
 
 {% block title %}Running Catalog · Banana{% endblock title %}
 
-<!-- required for error bars -->
-{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+{% block morehead %}
+    <!-- required for error bars -->
+    <script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>
+
+    <!-- include Aladin Lite CSS  -->
+    <link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
+{% endblock %}
 
 {% block content %}
 
 
 <div class="row-fluid">
     <div class="span5">
+
         <h2>Running Catalog #{{ object.id }}</h2>
+
+        <div class="text-center">
+            <!-- Aladin Lite viewer  -->
+            <div id="aladin-lite-div" style="width:420px;height:420px;"></div>
+            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+            <script type="text/javascript">
+                var aladin = A.aladin('#aladin-lite-div');
+                aladin.setZoom(0.18);
+                aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
+                aladin.setImageSurvey("P/DSS2/color");
+            </script>
+        </div>
+    </div>
+
+    <div class="span7">
+        <div id='lightcurve'></div>
 
         <dl class="dl-horizontal">
             <dt>Position</dt>
@@ -36,29 +58,29 @@
             <dt>Dataset</dt>
             <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
         </dl>
-        <div class="text-center">
-          <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
-        </div>
-    </div>
 
-    <div class="span7">
-        <div id='lightcurve'></div>
+        <div class="text-center">
+
+        </div>
     </div>
 </div>
 
-
 {% if object_list %}
-<h2>Lightcurve</h2>
-
 <div class="row-fluid">
-    <div class="span12 text-center">
-        <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
+    <div class="row-fluid">
+        <div class="span4">
+            <h2>Lightcurve</h2>
+        </div>
+        <div class="span4">
+            {% paginatorizer %}
+        </div>
+        <div class="span2">
+            <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
+        </div>
+        <div class="span2">
+            <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
+        </div>
     </div>
-
-    <div class="span12 text-center">
-        {% paginatorizer %}
-    </div>
-
     <div class="span12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed ">
             <thead>
