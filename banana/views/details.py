@@ -104,6 +104,7 @@ class RunningcatalogDetail(SortListMixin, MultiDbMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = Runningcatalog
     paginate_by = 10
+    default_order = 'image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
 
     def get_queryset(self):
