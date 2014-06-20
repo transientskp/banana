@@ -13,7 +13,6 @@ urlpatterns = patterns('',
                            name='login'),
                        url(r'^accounts/logout/$',
                            'django.contrib.auth.views.logout', name='logout'),
-                       url(r'^profiler/', include('profiler.urls')),
                        url(r'^', include('banana.urls')),
                        ) + \
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

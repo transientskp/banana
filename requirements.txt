@@ -1,4 +1,4 @@
-django>=1.5,<1.6
+django>=1.6,<1.7
 djonet
 python-monetdb
 astropy
@@ -10,13 +10,11 @@ pywcs
 python-dateutil
 psycopg2
 GitPython==0.3.2.RC1
+pytz
 
 ## for caching:
 #python-memcached
 #pylibmc
-
-## for profiling: django-live-profiler 0.0.9 is not the same as master
-git+https://github.com/InviteBox/django-live-profiler.git@fe1ccfe09077a76aa54189dcd4780c6865031914
 
 # for development
 django-debug-toolbar
