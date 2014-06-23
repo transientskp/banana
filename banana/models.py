@@ -600,7 +600,7 @@ class Transient(models.Model):
         index = l.index(self.id)
         offset_idx = index+offset
 
-        if offset_idx<0 or offset_idx>=len(l):
+        if offset_idx < 0 or offset_idx >= len(l):
             #Desired behaviour is to only return linear offsets
             #i.e. don't loop using -ve index behaviour!
             raise ObjectDoesNotExist
@@ -610,9 +610,37 @@ class Transient(models.Model):
 
     def get_next_by_id(self):
         return self.get_next_by_id_offset(1)
+
     def get_prev_by_id(self):
         return self.get_next_by_id_offset(-1)
 
+    def lightcurve_peak(self):
+        """
+        peak value of the transient lightcurve
+        """
+        from django.db.models import Max
+        lightcurve = self.lightcurve()
+        return lightcurve.aggregate(Max('f_int'))['f_int__max']
+
+    def lightcurve_median(self):
+        """
+        median value of the transient lightcurve
+        """
+        def median(queryset, column):
+            count = queryset.count()
+            qs = queryset.values_list(column, flat=True).order_by(column)
+            return qs[int(round(count/2))]
+        lightcurve = self.lightcurve()
+        return median(lightcurve, 'f_int')
+
+    def lightcurve_mean(self):
+        """
+        Mean value of the transient lightcurve
+        """
+        def mean(queryset, column):
+            return sum(getattr(r, column) for r in queryset)/queryset.count()
+        lightcurve = self.lightcurve()
+        return mean(lightcurve, 'f_int')
 
 
 class Version(models.Model):
