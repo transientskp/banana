@@ -14,9 +14,9 @@ urlpatterns = patterns('',
                        url(r'^accounts/logout/$',
                            'django.contrib.auth.views.logout', name='logout'),
                        url(r'^', include('banana.urls')),
+                       url(r'^', include('rest.urls')),
                        ) + \
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
 
 
 handler500 = 'banana.views.etc.banana_500'

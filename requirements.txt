@@ -19,3 +19,6 @@ pytz
 # for development
 django-debug-toolbar
 
+djangorestframework
+markdown       # Markdown support for the REST browsable API.
+django-filter  # Filtering support for REST browsable API
