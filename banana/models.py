@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from banana.managers import RunningcatalogManager
 
-schema_version = 21
+schema_version = 26
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -53,22 +53,6 @@ GROUP BY scaled_ra, scaled_decl
 """
 
 
-class Assoccatsource(models.Model):
-    id = models.IntegerField(primary_key=True)
-    xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
-                               related_name='assoccatsources')
-    catsrc = models.ForeignKey('Catalogedsource', db_column='catsrc',
-                               related_name='assoccatsources')
-    type = models.SmallIntegerField()
-    distance_arcsec = models.FloatField(null=True, blank=True)
-    r = models.FloatField(null=True, blank=True)
-    loglr = models.FloatField(null=True, blank=True)
-
-    class Meta:
-        managed = False
-        db_table = 'assoccatsource'
-
-
 class Assocskyrgn(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
@@ -100,67 +84,6 @@ class Assocxtrsource(models.Model):
         db_table = 'assocxtrsource'
 
 
-class Catalog(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50)
-    fullname = models.CharField(max_length=250)
-
-    class Meta:
-        managed = False
-        db_table = 'catalog'
-
-
-class Catalogedsource(models.Model):
-    id = models.IntegerField(primary_key=True)
-    catalog = models.ForeignKey(Catalog, db_column='catalog',
-                                related_name='catalogedsources')
-    orig_catsrcid = models.IntegerField()
-    catsrcname = models.CharField(max_length=120, blank=True)
-    tau = models.IntegerField(null=True, blank=True)
-    band = models.ForeignKey('Frequencyband', db_column='band',
-                             related_name='catalogedsources')
-    stokes = models.SmallIntegerField()
-    freq_eff = models.FloatField()
-    zone = models.IntegerField()
-    ra = models.FloatField()
-    decl = models.FloatField()
-    ra_err = models.FloatField()
-    decl_err = models.FloatField()
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
-    margin = models.BooleanField()
-    det_sigma = models.FloatField()
-    src_type = models.CharField(max_length=1, blank=True)
-    fit_probl = models.CharField(max_length=2, blank=True)
-    pa = models.FloatField(null=True, blank=True)
-    pa_err = models.FloatField(null=True, blank=True)
-    major = models.FloatField(null=True, blank=True)
-    major_err = models.FloatField(null=True, blank=True)
-    minor = models.FloatField(null=True, blank=True)
-    minor_err = models.FloatField(null=True, blank=True)
-    avg_f_peak = models.FloatField(null=True, blank=True)
-    avg_f_peak_err = models.FloatField(null=True, blank=True)
-    avg_f_int = models.FloatField(null=True, blank=True)
-    avg_f_int_err = models.FloatField(null=True, blank=True)
-    frame = models.CharField(max_length=20, blank=True)
-
-    class Meta:
-        managed = False
-        db_table = 'catalogedsource'
-
-
-class Classification(models.Model):
-    id = models.IntegerField(primary_key=True)
-    transient_id = models.IntegerField()
-    classification = models.CharField(max_length=256, blank=True)
-    weight = models.FloatField()
-
-    class Meta:
-        managed = False
-        db_table = 'classification'
-
-
 class Config(models.Model):
     id = models.IntegerField(primary_key=True)
     dataset = models.ForeignKey('Dataset', db_column='dataset')
@@ -170,6 +93,7 @@ class Config(models.Model):
     type = models.CharField(max_length=5, blank=True)
 
     class Meta:
+        managed = False
         db_table = 'config'
 
 
@@ -263,6 +187,8 @@ class Extractedsource(models.Model):
     f_int = models.FloatField(null=True, blank=True)
     f_int_err = models.FloatField(null=True, blank=True)
     extract_type = models.SmallIntegerField(null=True, blank=True)
+    ff_runcat = models.ForeignKey('Runningcatalog', db_column='ff_runcat',
+                                  null=True, blank=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
 
@@ -317,6 +243,11 @@ class Image(models.Model):
     deltay = models.FloatField()
     fwhm_arcsec = models.FloatField(null=True, blank=True)
     fov_degrees = models.FloatField(null=True, blank=True)
+    rms_qc = models.FloatField()
+    rms_min = models.FloatField(null=True, blank=True)
+    rms_max = models.FloatField(null=True, blank=True)
+    detection_thresh = models.FloatField(null=True, blank=True)
+    analysis_thresh = models.FloatField(null=True, blank=True)
     url = models.CharField(max_length=1024, blank=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
@@ -547,6 +478,7 @@ class Transient(models.Model):
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc',
                                        related_name='transients')
+    transient_type = models.SmallIntegerField()
     status = models.IntegerField(null=True, blank=True)
     t_start = models.DateTimeField(null=True, blank=True)
 
