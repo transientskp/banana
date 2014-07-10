@@ -73,8 +73,8 @@
             <dd><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">{{ object.runcat.dataset.id }}</a></dd>
             <dt>Trigger</dt>
             <dd><a href="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></dd>
-            <dt>Peak flux</dt>
-            <dd>{{  object.lightcurve_peak|stringformat:".3f" }}</dd>
+            <dt>Max flux</dt>
+            <dd>{{  object.lightcurve_max|stringformat:".3f" }}</dd>
             <dt>Mean flux</dt>
             <dd>{{ object.lightcurve_mean|stringformat:".3f" }}</dd>
             <dt>Median flux</dt>

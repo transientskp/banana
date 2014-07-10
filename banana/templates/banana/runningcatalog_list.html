@@ -62,6 +62,9 @@
                 {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
                 {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
                 {% tableheader 'datapoints' '# datapoints' %}
+                <th>Max flux</th>
+                <th>Mean flux</th>
+                <th>Median flux</th>
             </tr>
             </thead>
 
@@ -79,6 +82,9 @@
                 <td> {{runningcatalog.wm_ra|format_angle:"time"}}</td>
                 <td> {{runningcatalog.wm_decl|format_angle:"dms"}}</td>
                 <td>{{ runningcatalog.datapoints }}</td>
+                <td>{{ runningcatalog.lightcurve_max|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.lightcurve_mean|stringformat:".3f" }}</td>
+                <td>{{ runningcatalog.lightcurve_median|stringformat:".3f" }}</td>
             </tr>
             {% endfor %}
             </tbody>

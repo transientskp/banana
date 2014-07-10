@@ -57,6 +57,12 @@
             <dd>{{ object.datapoints }}</dd>
             <dt>Dataset</dt>
             <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+            <dt>Max flux</dt>
+            <dd>{{  object.lightcurve_max|stringformat:".3f" }}</dd>
+            <dt>Mean flux</dt>
+            <dd>{{ object.lightcurve_mean|stringformat:".3f" }}</dd>
+            <dt>Median flux</dt>
+            <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
         </dl>
 
         <div class="text-center">
@@ -105,6 +111,7 @@
                     <td>{{ point.f_int_err|scientific }}</td>
                     <td>{{ point.extract_type }}</td>
                     <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
+
                 </tr>
                 {% endfor %}
             </tbody>

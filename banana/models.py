@@ -368,9 +368,38 @@ class Runningcatalog(models.Model):
     @property
     def ra_err(self):
         return alpha(self.wm_uncertainty_ew, self.wm_decl)
+
     @property
     def decl_err(self):
         return self.wm_uncertainty_ns
+
+    def lightcurve_max(self):
+        """
+        Max value of the Runningcatalog lightcurve
+        """
+        from django.db.models import Max
+        lightcurve = self.lightcurve()
+        return lightcurve.aggregate(Max('f_int'))['f_int__max']
+
+    def lightcurve_median(self):
+        """
+        median value of the Runningcatalog lightcurve
+        """
+        def median(queryset, column):
+            count = queryset.count()
+            qs = queryset.values_list(column, flat=True).order_by(column)
+            return qs[int(round(count/2))]
+        lightcurve = self.lightcurve()
+        return median(lightcurve, 'f_int')
+
+    def lightcurve_mean(self):
+        """
+        Mean value of the Runningcatalog lightcurve
+        """
+        def mean(queryset, column):
+            return sum(getattr(r, column) for r in queryset)/queryset.count()
+        lightcurve = self.lightcurve()
+        return mean(lightcurve, 'f_int')
 
 
 class RunningcatalogFlux(models.Model):
@@ -546,9 +575,9 @@ class Transient(models.Model):
     def get_prev_by_id(self):
         return self.get_next_by_id_offset(-1)
 
-    def lightcurve_peak(self):
+    def lightcurve_max(self):
         """
-        peak value of the transient lightcurve
+        Max value of the transient lightcurve
         """
         from django.db.models import Max
         lightcurve = self.lightcurve()

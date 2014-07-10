@@ -47,7 +47,7 @@
                 {% tableheader 'v_int' 'Vν' %}
                 {% tableheader 'runcat__datapoints' '# of points' %}
                 {% tableheader 'runcat' 'Run. cat. #' %}
-                <th>Peak flux</th>
+                <th>Max flux</th>
                 <th>Mean flux</th>
                 <th>Median flux</th>
             </tr>
@@ -65,7 +65,7 @@
                 <td>{{ transient.v_int|stringformat:".4f" }}</td>
                 <td>{{ transient.runcat.datapoints }}</td>
                 <td>{{ transient.runcat }}</td>
-                <td>{{ transient.lightcurve_peak|stringformat:".3f" }}</td>
+                <td>{{ transient.lightcurve_max|stringformat:".3f" }}</td>
                 <td>{{ transient.lightcurve_mean|stringformat:".3f" }}</td>
                 <td>{{ transient.lightcurve_median|stringformat:".3f" }}</td>
             </tr>
