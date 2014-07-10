@@ -15,3 +15,5 @@ INSTALLED_APPS += [
 ]
 
 LOGIN_REDIRECT_URL = '/'
+
+USE_TZ = False
