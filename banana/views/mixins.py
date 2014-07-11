@@ -2,26 +2,6 @@ from django.db import models
 from banana.db import check_database
 
 
-class MultiDbMixin(object):
-    """
-    This mxin makes a Django class based views support multiple databases.
-
-    It requires a db variable in your request.
-    """
-    def get_queryset(self):
-        return self.get_queryset_using()
-
-    def get_queryset_using(self):
-        self.db_name = self.kwargs.get('db', 'default')
-        check_database(self.db_name)
-        return super(MultiDbMixin, self).get_queryset().using(self.db_name)
-
-    def get_context_data(self, **kwargs):
-        context = super(MultiDbMixin, self).get_context_data(**kwargs)
-        context['db_name'] = self.db_name
-        return context
-
-
 class HybridTemplateMixin(object):
     """
     Checks the request for a format variable. If it is json or csv, will

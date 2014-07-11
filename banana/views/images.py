@@ -3,13 +3,12 @@ All views that generate images
 """
 from django.http import HttpResponse
 import banana.image
-from banana.models import Extractedsource, Image, Dataset
+from banana.models import Extractedsource, Image
 from banana.mongo import get_hdu
-from banana.views.mixins import MultiDbMixin
 from django.views.generic import DetailView
 
 
-class ImagePlot(MultiDbMixin, DetailView):
+class ImagePlot(DetailView):
     model = Image
 
     def get_context_data(self, **kwargs):
@@ -32,7 +31,7 @@ class ImagePlot(MultiDbMixin, DetailView):
         return response
 
 
-class ExtractedSourcePlot(MultiDbMixin, DetailView):
+class ExtractedSourcePlot(DetailView):
     model = Extractedsource
 
     def get_context_data(self, **kwargs):

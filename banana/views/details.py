@@ -8,12 +8,12 @@ from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
                           Transient
-from banana.views.mixins import MultiDbMixin, HybridTemplateMixin,\
+from banana.views.mixins import HybridTemplateMixin,\
                                 DatasetMixin, SortListMixin
 from collections import OrderedDict
 
 
-class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+class ImageDetail(SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Image
     paginate_by = 20
@@ -37,7 +37,7 @@ class ImageDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         return context
 
 
-class BigImageDetail(MultiDbMixin, DatasetMixin, DetailView):
+class BigImageDetail(DatasetMixin, DetailView):
     template_name = "banana/bigimage_detail.html"
     model = Image
     image_size = 8
@@ -50,7 +50,7 @@ class BigImageDetail(MultiDbMixin, DatasetMixin, DetailView):
         return context
 
 
-class DatasetDetail(MultiDbMixin, DetailView):
+class DatasetDetail(DetailView):
     model = Dataset
 
     def get_context_data(self, **kwargs):
@@ -58,10 +58,11 @@ class DatasetDetail(MultiDbMixin, DetailView):
 
         # annotated images
         related = ['band']
-        images = Image.objects.using(self.db_name).filter(dataset=self.object
-                ).prefetch_related(*related).annotate(
-                    num_extractedsources=Count('extractedsources')
-                ).order_by('taustart_ts')
+        images = Image.objects.using(self.request.SELECTED_DATABASE). \
+            filter(dataset=self.object). \
+            prefetch_related(*related). \
+            annotate(num_extractedsources=Count('extractedsources')). \
+            order_by('taustart_ts')
         images_per_band = {}
         for image in images:
             label = str(image.band)
@@ -70,14 +71,15 @@ class DatasetDetail(MultiDbMixin, DetailView):
         images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
                                              key=lambda x: x[0]))
         context['dataset'] = self.object
-        context['num_extractedsources'] = Extractedsource.objects.using(
-            self.db_name).filter(image__in=images.all()).count()
+        context['num_extractedsources'] = Extractedsource.objects.\
+            using(self.request.SELECTED_DATABASE).\
+            filter(image__in=images.all()).count()
         context['images'] = images
         context['images_per_band'] = images_per_band
         return context
 
 
-class ExtractedSourceDetail(MultiDbMixin, DetailView):
+class ExtractedSourceDetail(DetailView):
     model = Extractedsource
 
     def get_context_data(self, **kwargs):
@@ -86,7 +88,7 @@ class ExtractedSourceDetail(MultiDbMixin, DetailView):
         return context
 
 
-class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+class TransientDetail(SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Transient
     paginate_by = 100
@@ -104,7 +106,7 @@ class TransientDetail(SortListMixin, MultiDbMixin, DatasetMixin,
         return context
 
 
-class RunningcatalogDetail(SortListMixin, MultiDbMixin, DatasetMixin,
+class RunningcatalogDetail(SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = Runningcatalog
     paginate_by = 100

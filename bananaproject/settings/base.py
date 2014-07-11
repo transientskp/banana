@@ -17,6 +17,9 @@ DATABASES = {
     }
 }
 
+DATABASE_ROUTERS = ('bananaproject.multidb.MultiDbRouter',)
+
+
 TIME_ZONE = 'Europe/Amsterdam'
 
 LANGUAGE_CODE = 'en-us'
@@ -49,7 +52,11 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.request',)
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
+    'bananaproject.multidb.multidb_context_processor',
+)
+
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +64,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'bananaproject.multidb.MultiDbRouterMiddleware',
 ]
 
 ROOT_URLCONF = 'bananaproject.urls'

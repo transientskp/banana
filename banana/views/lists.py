@@ -7,7 +7,7 @@ import banana.db
 from banana.db import db_schema_version, check_database
 from banana.models import Dataset, Image, Transient, Extractedsource, \
                           Runningcatalog, schema_version
-from banana.views.mixins import MultiDbMixin, HybridTemplateMixin, \
+from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
 from django.utils.datastructures import MultiValueDictKeyError
@@ -27,7 +27,7 @@ class DatabaseList(TemplateView):
         return context
 
 
-class DatasetList(SortListMixin, MultiDbMixin, HybridTemplateMixin, ListView):
+class DatasetList(SortListMixin, HybridTemplateMixin, ListView):
     model = Dataset
     paginate_by = 100
 
@@ -38,7 +38,7 @@ class DatasetList(SortListMixin, MultiDbMixin, HybridTemplateMixin, ListView):
                 #  num_transients=Count('runningcatalogs__transients')
 
 
-class ImageList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
+class ImageList(SortListMixin, HybridTemplateMixin,
                 DatasetMixin, ListView):
     model = Image
     paginate_by = 100
@@ -51,7 +51,7 @@ class ImageList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
             annotate(num_extractedsources=Count('extractedsources'))
 
 
-class TransientList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
+class TransientList(SortListMixin, HybridTemplateMixin,
                     DatasetMixin, ListView):
     model = Transient
     paginate_by = 100
@@ -63,28 +63,27 @@ class TransientList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
         return qs.prefetch_related(*related)
 
 
-class ExtractedsourcesList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
+class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
     model = Extractedsource
     paginate_by = 100
     dataset_field = 'image__dataset'
 
 
-class RunningcatalogList(SortListMixin, MultiDbMixin, HybridTemplateMixin,
+class RunningcatalogList(SortListMixin, HybridTemplateMixin,
                          DatasetMixin, ListView):
     model = Runningcatalog
     paginate_by = 100
 
     def get_queryset(self):
         self.area = self.get_area()
-        self.db_name = self.kwargs.get('db', 'default')
-        check_database(self.db_name)
         if self.area:
             ra, decl, distance = self.area
             qs = self.model._default_manager.near_position(ra, decl, distance)
         else:
             qs = self.model._default_manager.all()
-        qs = qs.using(self.db_name).order_by(self.get_order())
+        qs = qs.using(self.request.SELECTED_DATABASE).\
+            order_by(self.get_order())
         qs = self.filter_queryset(qs)
         return qs
 
