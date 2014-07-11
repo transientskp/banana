@@ -8,13 +8,14 @@ admin.autodiscover()
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
                        url(r'^sqlconsole/', include('sqlconsole.urls')),
-                       url(r'^accounts/login/$', 'django.contrib.auth.views.login',
-                           {'template_name':'login.html'},
+                       url(r'^accounts/login/$',
+                           'django.contrib.auth.views.login',
+                           {'template_name': 'login.html'},
                            name='login'),
                        url(r'^accounts/logout/$',
                            'django.contrib.auth.views.logout', name='logout'),
                        url(r'^', include('banana.urls')),
-                       url(r'^', include('rest.urls')),
+                       url(r'^rest/', include('rest.urls')),
                        ) + \
     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

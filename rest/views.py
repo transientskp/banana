@@ -1,15 +1,23 @@
-from banana.models import Runningcatalog, Extractedsource, Dataset, Image
+from banana.models import Runningcatalog, Extractedsource, Dataset, Image, Assocxtrsource
 from rest_framework import viewsets
 import django_filters
 from rest.serializers import RunningcatalogSerializer,\
-    ExtractedsourceSerializer, DatasetSerializer, ImageSerializer
+    ExtractedsourceSerializer, DatasetSerializer, ImageSerializer,\
+    AssocxtrsourceSerializer
+
+import rest_framework.filters
 
 
 class RunningcatalogFilter(django_filters.FilterSet):
-    dataset = django_filters.NumberFilter(name='dataset')
+    v_int = django_filters.NumberFilter(name="assocxtrsources__v_int",
+                                        lookup_type='gte')
+    eta_int = django_filters.NumberFilter(name="assocxtrsources__eta_int",
+                                          lookup_type='gte')
+
     class Meta:
         model = Runningcatalog
-        fields = ['dataset', 'id']
+        fields = ['dataset', 'id', 'assocxtrsources__v_int',
+                  'assocxtrsources__eta_int']
 
 
 class RunningcatalogViewSet(viewsets.ReadOnlyModelViewSet):
@@ -18,9 +26,8 @@ class RunningcatalogViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Runningcatalog.objects.all()
     serializer_class = RunningcatalogSerializer
-    #filter_class = RunningcatalogFilter
-    filter_fields = ['dataset']
-
+    filter_class = RunningcatalogFilter
+    filter_backends = (rest_framework.filters.DjangoFilterBackend,)
 
 
 class ExtractedsourceViewSet(viewsets.ReadOnlyModelViewSet):
@@ -45,3 +52,11 @@ class ImageViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+
+
+class AssocxtrsourceViewset(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows Assocxtrsources to be viewed.
+    """
+    queryset = Assocxtrsource.objects.all()
+    serializer_class = AssocxtrsourceSerializer
