@@ -6,7 +6,7 @@ from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.db import db_schema_version, check_database
 from banana.models import Dataset, Image, Transient, Extractedsource, \
-                          Runningcatalog, schema_version
+                          Runningcatalog, schema_version, Assocxtrsource
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
@@ -119,3 +119,37 @@ class MonposList(RunningcatalogList):
         qs = super(MonposList, self).get_queryset()
         qs = qs.filter(assocxtrsources__xtrsrc__extract_type=2).distinct()
         return qs
+
+
+class AssocxtrsourceList(SortListMixin, HybridTemplateMixin,
+                         DatasetMixin, ListView):
+    model = Assocxtrsource
+    paginate_by = 100
+    dataset_field = 'xtrsrc__image__dataset'
+
+    def get_queryset(self):
+        self.v, self.eta = self.get_filters()
+        qs = self.model._default_manager.transients(self.v,  self.eta,
+                                                    self.get_dataset_id())
+        qs = qs.using(self.request.SELECTED_DATABASE).\
+            order_by(self.get_order())
+        qs = self.filter_queryset(qs)
+        return qs
+
+    def get_filters(self):
+        try:
+            v = float(self.request.GET.get('v'))
+        except TypeError, ValueError:
+            v = None
+        try:
+            eta = float(self.request.GET.get('eta'))
+        except TypeError, ValueError:
+            eta = None
+        return v, eta
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AssocxtrsourceList, self).get_context_data(*args,
+                                                                   **kwargs)
+        context['v'] = self.v
+        context['eta'] = self.eta
+        return context

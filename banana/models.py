@@ -4,7 +4,8 @@ from convert import alpha
 from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
-from banana.managers import RunningcatalogManager
+from banana.managers.runningcatalog import RunningcatalogManager
+from banana.managers.assocxtrsource import AssocxtrsourceManager
 
 schema_version = 27
 
@@ -79,6 +80,9 @@ class Assocxtrsource(models.Model):
     loglr = models.FloatField(null=True, blank=True)
     v_int = models.FloatField()
     eta_int = models.FloatField()
+
+    objects = AssocxtrsourceManager()
+
     class Meta:
         managed = False
         db_table = 'assocxtrsource'

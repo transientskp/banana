@@ -16,7 +16,8 @@ class ViewTest(TestCase):
         'transients',
         'extractedsources',
         'runningcatalogs',
-        'monposs'
+        'monposs',
+        'assocxtrsources'
     ]
 
     detail_views = [
