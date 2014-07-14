@@ -1,0 +1,3 @@
+# id, runcat, v_int, eta_int
+{% for object in object_list %}{{ object.id }}, "{{ object.runcat }}", "{{ object.v_int }}", "{{ object.eta_int }}"
+{% endfor %}

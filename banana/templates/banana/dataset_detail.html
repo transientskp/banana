@@ -14,6 +14,7 @@
 <div class="row-fluid">
     <div class="span12 text-center">
         <a href="{% url 'transients' db_name %}?dataset={{ dataset.id }}" class="btn">Transients</a>
+        <a href="{% url 'assocxtrsources' db_name %}?dataset={{ dataset.id }}" class="btn">Transients Next Generation</a>
         <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}" class="btn">Images</a>
         <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}" class="btn">Extracted Sources</a>
         <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}" class="btn">Running Catalogs</a>
