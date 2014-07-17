@@ -324,6 +324,25 @@ class Rejectreason(models.Model):
         return "%s" % (self.description)
 
 
+class Skyregion(models.Model):
+    id = models.IntegerField(primary_key=True)
+    dataset = models.ForeignKey(Dataset, db_column='dataset',
+                                related_name='skyregions')
+    centre_ra = models.FloatField()
+    centre_decl = models.FloatField()
+    xtr_radius = models.FloatField()
+    x = models.FloatField()
+    y = models.FloatField()
+    z = models.FloatField()
+
+    def __unicode__(self):
+        return "%s, %s" % (self.centre_ra, self.centre_decl)
+
+    class Meta:
+        managed = False
+        db_table = 'skyregion'
+
+
 class Runningcatalog(models.Model):
     id = models.IntegerField(primary_key=True)
 
@@ -350,7 +369,10 @@ class Runningcatalog(models.Model):
     z = models.FloatField()
     inactive = models.BooleanField()
     mon_src = models.BooleanField()
-
+    extractedsources = models.ManyToManyField(Extractedsource,
+                                              through=Assocxtrsource)
+    skyregions = models.ManyToManyField(Skyregion,
+                                        through=Assocskyrgn)
     objects = RunningcatalogManager()
 
     class Meta:
@@ -361,9 +383,12 @@ class Runningcatalog(models.Model):
         return "%s" % (self.id)
 
     def lightcurve(self):
-        assocs = Assocxtrsource.objects.using(self._state.db).filter(runcat=self.id)
+        """
+        returns the associated extractedsources, but prefetches the related
+        image and image band data
+        """
         related = ['image', 'image__band']
-        return Extractedsource.objects.using(self._state.db).filter(assocxtrsources__in=assocs).prefetch_related(*related)
+        return self.extractedsources.prefetch_related(*related)
 
     @property
     def ra_err(self):
@@ -425,23 +450,7 @@ class RunningcatalogFlux(models.Model):
         db_table = 'runningcatalog_flux'
 
 
-class Skyregion(models.Model):
-    id = models.IntegerField(primary_key=True)
-    dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='skyregions')
-    centre_ra = models.FloatField()
-    centre_decl = models.FloatField()
-    xtr_radius = models.FloatField()
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
 
-    def __unicode__(self):
-        return "%s, %s" % (self.centre_ra, self.centre_decl)
-
-    class Meta:
-        managed = False
-        db_table = 'skyregion'
 
 
 class Temprunningcatalog(models.Model):
@@ -519,11 +528,7 @@ class Transient(models.Model):
         return str(self.id)
 
     def lightcurve(self):
-        assocs = Assocxtrsource.objects.using(self._state.db).\
-            filter(runcat=self.runcat)
-        related = ['image', 'image__band']
-        return Extractedsource.objects.using(self._state.db).\
-            filter(assocxtrsources__in=assocs).prefetch_related(*related)
+        return self.runcat.lightcurve()
 
     def index_in_dataset(self):
         #Memoize this, since it's not going to change
