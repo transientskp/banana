@@ -11,7 +11,7 @@ from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
 from django.utils.datastructures import MultiValueDictKeyError
-
+from django.db.models import Max, Avg
 
 class DatabaseList(TemplateView):
     template_name = "banana/database_list.html"
@@ -59,9 +59,13 @@ class TransientList(SortListMixin, HybridTemplateMixin,
 
     def get_queryset(self):
         qs = super(TransientList, self).get_queryset()
-        related = ['band', 'runcat']
-        return qs.prefetch_related(*related)
 
+        related = ['band', 'runcat']
+        return qs.prefetch_related(*related)\
+            .annotate(lightcurve_max=Max('runcat__extractedsources__f_int',
+                                         distinct=True))\
+            .annotate(lightcurve_mean=Avg('runcat__extractedsources__f_int',
+                                          distinct=True))
 
 class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
@@ -77,13 +81,18 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin,
 
     def get_queryset(self):
         self.area = self.get_area()
+        manager = self.model._default_manager
+
         if self.area:
             ra, decl, distance = self.area
-            qs = self.model._default_manager.near_position(ra, decl, distance)
+            qs = manager.near_position(ra, decl, distance)
         else:
-            qs = self.model._default_manager.all()
-        qs = qs.using(self.request.SELECTED_DATABASE).\
-            order_by(self.get_order())
+            qs = manager.all()
+        qs = qs.order_by(self.get_order())\
+            .annotate(lightcurve_max=Max('extractedsources__f_int',
+                                         distinct=True))\
+            .annotate(lightcurve_mean=Avg('extractedsources__f_int',
+                                          distinct=True))
         qs = self.filter_queryset(qs)
         return qs
 
