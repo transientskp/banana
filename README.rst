@@ -11,6 +11,6 @@ the `TKP website <http://www.transientskp.org/>`_.
 Documentation
 =============
 
-You can read the documentation and installation instructions at `Read The Docs
- <http://banana.readthedocs.org/>`_.
+You can read the documentation and installation instructions at
+`Read The Docs <http://banana.readthedocs.org/>`_.
 
