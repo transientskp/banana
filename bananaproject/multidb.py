@@ -1,18 +1,18 @@
 """
 Select database based on URL variable
 
-Inspired by this Django snipped:
+Inspired by `this Django snipped <https://djangosnippets.org/snippets/2037/>`_.
 
-https://djangosnippets.org/snippets/2037/
+
 
 It's assumed that any view in the system with a cfg keyword argument passed to
-it from the urlconf may be routed to a separate database. for example:
+it from the urlconf may be routed to a separate database. for example::
 
   url( r'^(?P<db>\w+)/account/$', 'views.account' )
 
 The middleware and router will select a database whose alias is <db>,
-"default" if no db argument is given and raise a 404 exception if not listed in
-settings.DATABASES, all completely transparent to the view itself.
+**default** if no db argument is given and raise a 404 exception if not listed in
+**settings.DATABASES**, all completely transparent to the view itself.
 """
 import threading
 from django.http import Http404
@@ -29,9 +29,9 @@ class MultiDbRouterMiddleware(object):
     between, any database operation will call the router, which checks for this
     context and returns an appropriate database alias.
 
-    Add this to your middleware, for example:
+    Add this to your middleware, for example::
 
-    MIDDLEWARE_CLASSES += ['bananaproject.multidb.MultiDbRouterMiddleware']
+        MIDDLEWARE_CLASSES += ['bananaproject.multidb.MultiDbRouterMiddleware']
     """
     def process_view(self, request, view_func, args, kwargs):
         if 'db' in kwargs:
@@ -48,9 +48,9 @@ class MultiDbRouter(object):
     """
     The multiple database router.
 
-    Add this to your Django database router configuration, for example:
+    Add this to your Django database router configuration, for example::
 
-    DATABASE_ROUTERS += ['bananaproject.multidb.MultiDbRouter']
+        DATABASE_ROUTERS += ['bananaproject.multidb.MultiDbRouter']
     """
     def _multi_db(self):
         from django.conf import settings
@@ -74,10 +74,10 @@ def multidb_context_processor(request):
     """
     This context processor will add a db_name to the request.
 
-    Add this to your Django context processors, for example:
+    Add this to your Django context processors, for example::
 
-    TEMPLATE_CONTEXT_PROCESSORS +=[
-        'bananaproject.multidb.multidb_context_processor']
+        TEMPLATE_CONTEXT_PROCESSORS +=[
+            'bananaproject.multidb.multidb_context_processor']
     """
     if hasattr(request, 'SELECTED_DATABASE'):
         return {'db_name': request.SELECTED_DATABASE}

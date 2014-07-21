@@ -21,15 +21,16 @@ To run the banana test suite run::
 Updating the fixtures
 ---------------------
 
-The make the test suite pass after a schema change you need to update the
+To make the test suite pass after a schema change you need to update the
 fixtures also:
 
   - Populate the database with some dataset, not too big but make sure
     all tables are populated (like transient).
   - run `./manage.py dumpdata --database=postgres_gijs --indent=1 banana > testing/fixtures/initial_data.json`
     to serialize the data into the fixture.
-  - Note that some libraries like **astropy** write things to stdout which ruins the json output. Check
-    the json file to make sure there is no garbage at the start of the file.
+  - Note that some libraries like **astropy** write things to stdout which ruins
+    the json output. Check  the json file to make sure there is no garbage at
+    the start of the file.
   - Run the test suite and check if all tests are passing
   - If not, fix
   - Issue pull request

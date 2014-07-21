@@ -14,8 +14,7 @@ Contents:
    introduction
    installation
    configuration
-   bananaproject
-   banana
+   layout
    models
    testing
    mixins
