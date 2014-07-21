@@ -1,5 +1,4 @@
 from django.db import models
-from banana.db import check_database
 
 
 class HybridTemplateMixin(object):
