@@ -8,36 +8,9 @@ the `TKP website <http://www.transientskp.org/>`_.
   :target: https://travis-ci.org/transientskp/banana
 
 
-Installation
-============
+Documentation
+=============
 
-to install banana::
+You can read the documentation and installation instructions at `Read The Docs
+ <http://banana.readthedocs.org/>`_.
 
-    pip install astropy
-    pip install -r requirements.txt
-    cp bananaproject/settings/local_example.py bananaproject/settings/local.py
-    gedit bananaproject/settings/local.py
-    ./manage collectstatic
-    ./manage runserver
-
-
-Testing
-=======
-
-To run the banana test suite run::
-
-    $ ./manage.py test --settings=testing.settings
-
-
-
-Notes
-=====
-
-It is possible (and advisable) to run banana in a virtualenv, but matplotlib may
-complain about not being able to import the ``PyQT4`` or ``sip`` modules.
-The solution to this is to use a non-interactive backend by default.
-There is a one-liner matplotlibrc config file included which should be picked
-up, at least when running the django-debug server.
-For reference however, the necessary edit is to set::
-
-    backend      : agg
