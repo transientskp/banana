@@ -1,7 +1,7 @@
 django>=1.6,<1.7
 djonet
 python-monetdb
-astropy==0.3.1
+astropy==0.4
 aplpy==0.9.12
 numpy
 pymongo
