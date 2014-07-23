@@ -77,7 +77,7 @@ class AssocxtrsourceManager(models.Manager):
         related = ['runcat', 'xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
         orm_args = {'id__in': ids}
         if v_int:
-            orm_args['v_int'] = v_int
+            orm_args['v_int__gt'] = v_int
         if eta_int:
-            orm_args['eta_int'] = eta_int
+            orm_args['eta_int__gt'] = eta_int
         return self.prefetch_related(*related).filter(**orm_args)
