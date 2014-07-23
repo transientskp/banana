@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from banana.managers import RunningcatalogManager
 
-schema_version = 26
+schema_version = 27
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -495,6 +495,10 @@ class Transient(models.Model):
     siglevel = models.FloatField(null=True, blank=True)
     v_int = models.FloatField()
     eta_int = models.FloatField()
+    previous_limits_image = models.ForeignKey(Image,
+                                              db_column='previous_limits_image',
+                                              related_name='transients'
+                                              )
     detection_level = models.FloatField(null=True, blank=True)
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc',
