@@ -80,4 +80,4 @@ class AssocxtrsourceManager(models.Manager):
             orm_args['v_int__gt'] = v_int
         if eta_int:
             orm_args['eta_int__gt'] = eta_int
-        return self.prefetch_related(*related).filter(**orm_args)
+        return self.select_related(*related).filter(**orm_args)
