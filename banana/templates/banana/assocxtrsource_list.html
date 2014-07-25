@@ -4,6 +4,7 @@
 {% load units %}
 {% load tableheader %}
 {% load paginator %}
+{% load flux_units_dropdown %}
 
 {% block title %}Transients · Banana{% endblock title %}
 
@@ -36,6 +37,7 @@
     </div>
 
     <div class="span4 text-center">
+        {% flux_units_dropdown %}
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
@@ -52,8 +54,8 @@
                 {% tableheader 'id' %}
                 {% tableheader 'runcat' %}
                 {% tableheader 'xtrsrc' %}
-                {% tableheader 'xtrsrc__f_peak' 'f_peak' %}
-                {% tableheader 'xtrsrc__f_int'  'f_int' %}
+                {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy)' %}
+                {% tableheader 'xtrsrc__f_int'  'Int. flux (Jy)' %}
                 {% tableheader 'xtrsrc__image__band__freq_central' 'freq_central' %}
                 {% tableheader 'xtrsrc__image__taustart_ts' 'taustart_ts' %}
                 {% tableheader 'xtrsrc__image__dataset' 'dataset' %}
@@ -67,13 +69,14 @@
             </thead>
 
             <tbody>
+            {% with request.GET.flux_prefix as prefix %}
             {% for object in object_list %}
             <tr>
                 <td>{{ object.id }}</td>
                 <td><a href="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></td>
                 <td><a href="{% url 'extractedsource' db_name object.xtrsrc %}">{{ object.xtrsrc }}</a></td>
-                <td>{{ object.xtrsrc.f_peak|stringformat:".3f" }}</td>
-                <td>{{ object.xtrsrc.f_int|stringformat:".3f" }}</td>
+                <td>{{ object.xtrsrc.f_peak|flux_unit:prefix|scientific }}</td>
+                <td>{{ object.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
                 <td>{{ object.xtrsrc.image.band.freq_central|scientific }}</td>
                 <td>{{ object.xtrsrc.image.taustart_ts }}</td>
                 <td>{{ object.xtrsrc.image.dataset.id }}</td>
@@ -85,6 +88,7 @@
                 <td>{{ object.eta_int|stringformat:".3f" }}</td>
             </tr>
             {% endfor %}
+            {% endwith %}
             </tbody>
         </table>
     </div>
