@@ -74,7 +74,8 @@ class AssocxtrsourceManager(models.Manager):
 
         cursor.execute(query, raw_args)
         ids = [i[0] for i in cursor.fetchall()]
-        related = ['runcat', 'xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+        related = ['runcat', 'xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band',
+                   'xtrsrc__image__dataset']
         orm_args = {'id__in': ids}
         if v_int:
             orm_args['v_int__gt'] = v_int
