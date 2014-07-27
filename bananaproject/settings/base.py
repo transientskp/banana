@@ -1,6 +1,7 @@
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 import os
-here = os.path.dirname(__file__)
+#Project root dir:
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = False
 
@@ -13,7 +14,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(here, '../../default.db'),
+        'NAME': os.path.join(BASE_DIR, '../default.db'),
     }
 }
 
@@ -36,7 +37,7 @@ MEDIA_ROOT = ''
 
 MEDIA_URL = ''
 
-STATIC_ROOT = os.path.join(here, '../../static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
 STATIC_URL = '/static/'
 
@@ -71,8 +72,12 @@ ROOT_URLCONF = 'bananaproject.urls'
 
 WSGI_APPLICATION = 'bananaproject.wsgi.application'
 
+
+# See also the ``HybridTemplateMixin`` class which defines default template
+# paths for many Banana views.
 TEMPLATE_DIRS = (
-    os.path.join(here, '../templates')
+    os.path.join(BASE_DIR, 'templates'),
+    os.path.join(BASE_DIR, '../banana/templates/banana'),
 )
 
 LOGIN_REDIRECT_URL = 'databases'

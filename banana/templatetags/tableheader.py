@@ -3,7 +3,7 @@ from banana.templatetags.units import units_map
 
 register = template.Library()
 
-@register.inclusion_tag('tableheader.html', takes_context=True)
+@register.inclusion_tag('tags/tableheader.html', takes_context=True)
 def tableheader(context, field, description=False):
     if not description:
         description = field.title()

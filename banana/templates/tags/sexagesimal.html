@@ -1,3 +1,9 @@
-{% load units %}
+{% comment %}
 
+Defines formatting for a position displayed in sexagesimal notation.
+
+See units.py for context.
+
+{% endcomment %}
+{% load units %}
 ({{ ra|format_angle }}, {{ decl|format_angle:"dms" }})&pm;({{ ra_err|deg2asec|format_ra_error|stringformat:".3f" }}&Prime;, {{ decl_err|deg2asec|stringformat:".3f" }}&Prime;)
