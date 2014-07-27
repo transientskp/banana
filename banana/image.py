@@ -2,13 +2,43 @@ import numpy
 import aplpy
 from matplotlib import pyplot
 from banana.mongo import get_hdu
-from banana.convert import deg_to_asec
+
 
 # colors for the extracted types
 #  0: blind fit, 1: forced fit, 2: manual monitoring
 source_colors = ['yellow', 'lightgreen', 'cyan']
 
-def image_plot(pyfits_hdu, size=5, sources=[]):
+
+def extract_props(sources, pyfits_hdu):
+    """
+    Extracts relevant information from a list of extracted sources.
+
+    args:
+        sources: a list of extracted sources
+        pyfits_hdu: a pyfits header
+
+    returns:
+        a list of lists for ra, dec, semimajor, semiminor, pa, color
+    """
+    # If the image has a reference declination pointing to the north
+    # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
+    # with an RA 180 degrees wrong. We rotate them back here. See Trap
+    # issue #4599 for (much) more discussion.
+    if "CRVAL2" in pyfits_hdu[0].header and \
+                   pyfits_hdu[0].header["CRVAL2"] == 90:
+        ra = [(source.ra + 180) % 360 for source in sources]
+    else:
+        ra = [source.ra for source in sources]
+    dec = [source.decl for source in sources]
+    semimajor = [source.semimajor / 900 for source in sources]
+    semiminor = [source.semiminor / 900 for source in sources]
+    pa = [source.pa + 90 for source in sources]
+    color = [source_colors[source.extract_type] for source in sources]
+
+    return ra, dec, semimajor, semiminor, pa, color
+
+
+def image_plot(pyfits_hdu, size=5, sources=[], transients=[]):
     """
     Plot image from fits HDU and draw circles around sources.
 
@@ -16,6 +46,7 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
         pyfits_hdu: a pyfits file object
         size: size in inches
         sources: a list of Extractedsource ORM models
+        transients: a list of sources that are part of a transient lightcurve
 
     Returns:
         a matplotlib canvas which can be used to write the image to
@@ -32,22 +63,15 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
     if not sources:
         return fig.canvas
 
-    # If the image has a reference declination pointing to the north
-    # celestial pole (ie, CRVAL2=90), our APLpy will incorrectly plot them
-    # with an RA 180 degrees wrong. We rotate them back here. See Trap
-    # issue #4599 for (much) more discussion.
-    if "CRVAL2" in pyfits_hdu[0].header and \
-                   pyfits_hdu[0].header["CRVAL2"] == 90:
-        ra = [(source.ra + 180) % 360 for source in sources]
-    else:
-        ra = [source.ra for source in sources]
-    dec = [source.decl for source in sources]
-    semimajor = [source.semimajor / 900 for source in sources]
-    semiminor = [source.semiminor / 900 for source in sources]
-    pa = [source.pa + 90 for source in sources]
-    color = [source_colors[source.extract_type] for source in sources]
+    ra, dec, semimajor, semiminor, pa, color = extract_props(sources,
+                                                              pyfits_hdu)
     plot.show_ellipses(ra, dec, semimajor, semiminor, pa, facecolor='none',
                        edgecolor=color, linewidth=1,)
+
+    # and the same for transient sources
+    ra, dec, semimajor, semiminor, pa, color = extract_props(transients,
+                                                              pyfits_hdu)
+    plot.show_circles(ra, dec, 0.1, color='blue')
     return fig.canvas
 
 

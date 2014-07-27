@@ -14,6 +14,7 @@ class ImagePlot(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ImagePlot, self).get_context_data(**kwargs)
         context['sources'] = self.object.extractedsources.all()
+        context['transients'] = self.object.transient_sources()
         try:
             context['size'] = int(self.request.GET.get('size', 5))
         except ValueError:
@@ -25,7 +26,8 @@ class ImagePlot(DetailView):
         response = HttpResponse(mimetype="image/png")
         if context['hdu']:
             canvas = banana.image.image_plot(context['hdu'], context['size'],
-                                             context['sources'])
+                                             context['sources'],
+                                             context['transients'])
             canvas.print_figure(response, format='png', bbox_inches='tight',
                                 pad_inches=0, dpi=100)
         return response

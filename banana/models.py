@@ -283,6 +283,19 @@ class Image(models.Model):
             raise ObjectDoesNotExist
         return Image.objects.using(self._state.db).get(id=id)
 
+    def transient_sources(self):
+        """
+        returns a list of extracted sources that are part of a transient
+        lightcurve
+        """
+        q = """
+        SELECT e.*
+        FROM extractedsource AS e, image AS i, assocxtrsource AS a,
+          runningcatalog as r
+        WHERE a.runcat = r.id AND a.xtrsrc = e.id AND e.image = i.id AND i.id=%s
+        """
+        return Extractedsource.objects.raw(q, [self.id]).using(self._state.db)
+
 
 class Node(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -580,7 +593,6 @@ class Transient(models.Model):
             return qs[int(round(count/2))]
         lightcurve = self.lightcurve()
         return median(lightcurve, 'f_int')
-
 
 class Version(models.Model):
     name = models.CharField(max_length=12, primary_key=True)
