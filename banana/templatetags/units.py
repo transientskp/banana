@@ -88,6 +88,7 @@ def format_ra_error(value):
     return float(value) / 15
 
 
+@register.inclusion_tag('sexagesimal.html', takes_context=True)
 def sexagesimal(context, ra, decl, ra_err, decl_err):
     """
     units in degrees
@@ -97,7 +98,6 @@ def sexagesimal(context, ra, decl, ra_err, decl_err):
     context['ra_err'] = ra_err
     context['decl_err'] = decl_err
     return context
-register.inclusion_tag('sexagesimal.html', takes_context=True)(sexagesimal)
 
 
 @register.filter
