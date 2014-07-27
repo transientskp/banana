@@ -72,7 +72,9 @@ ROOT_URLCONF = 'bananaproject.urls'
 WSGI_APPLICATION = 'bananaproject.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(here, '../templates')
+    os.path.join(here, '../templates'),
+    os.path.join(here, '../../banana/templatetags'),
+    os.path.join(here, '../../banana/templates/banana/includes'),
 )
 
 LOGIN_REDIRECT_URL = 'databases'
