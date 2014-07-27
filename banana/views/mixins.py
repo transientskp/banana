@@ -3,8 +3,23 @@ from django.db import models
 
 class HybridTemplateMixin(object):
     """
-    Checks the request for a format variable. If it is json or csv, will
-    set the content_type and template accordingly.
+    Assigns a default ``template_name``, and checks the request for a format.
+
+    If the format specified in the querystring is json or csv, this will change
+    the ``content_type`` and ``template_name`` accordingly.
+
+    If template name is not explicitly set, we assign one based on the
+    object or model in the view. We derive the template path as:
+
+        <app_label>/<object_name.lower()><template_name_suffix><extension>
+
+    where ``template_name_suffix`` is something like '_list' or '_detail'
+    (inherited from the Django standard class views)
+    e.g.:
+
+        banana/extractedsource_list.html
+    
+        banana/extractedsource_detail.html
     """
     def dispatch(self, *args, **kwargs):
         self.extension = self.request.GET.get('format', 'html')
