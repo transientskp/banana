@@ -24,4 +24,4 @@ def paginatorizer(context, adjacent_pages=5):
 
     return context
 
-register.inclusion_tag('paginator.html', takes_context=True)(paginatorizer)
+register.inclusion_tag('tags/paginator.html', takes_context=True)(paginatorizer)
