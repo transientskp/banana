@@ -19,6 +19,11 @@
 
 <img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
+<b>yellow:</b> blind fit
+<b>lightgreen:</b> forced fit
+<b>cyan:</b> manual monitored
+<b>blue:</b> transient
+
 <map name="simple">
     {% for id, x, y, size in sources %}
         <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
