@@ -10,6 +10,10 @@ MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 INSTALLED_APPS += ['debug_toolbar']
 
+# settings below is required if you run banana with WSGI
+# http://stackoverflow.com/a/21005346/575524
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 SECRET_KEY = 'changeme!@'
 
 # Change default flux display prefix / units
