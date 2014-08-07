@@ -13,7 +13,7 @@ class ViewTest(TestCase):
     list_views = [
         'datasets',
         'images',
-        'transients',
+        'newsources',
         'extractedsources',
         'runningcatalogs',
         'monposs',
@@ -21,7 +21,7 @@ class ViewTest(TestCase):
     ]
 
     detail_views = [
-        'transient',
+        'newsource',
         'dataset',
         'extractedsource',
         'runningcatalog',

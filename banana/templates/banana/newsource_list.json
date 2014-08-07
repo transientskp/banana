@@ -1,0 +1,10 @@
+
+[
+{% for object in object_list %}
+    {
+        "id": {{ object.id }},
+        "runcat": {{ object.runcat }}
+    }{% if not forloop.last %},{% endif %}
+ {% endfor %}
+]
+

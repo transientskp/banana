@@ -20,18 +20,15 @@ structure. The easy way to do this is as follows:
     build a list of all the databases on the host you specify, based on the
     assumption that the database name, username and password are all the same.
   - Within your banana directory, dump a set of models representing your new
-    database by running: `./manage.py inspectdb --database=<dbname>`, where
-    **<dbname>** is just the name of your database (in the case of MonetDB) or
-    the string **postgres_** followed by the name of your database (for
-    Posgtres). This will print the new models to standard out: you'll probably
-    want to redirect them to a file (say, **models-new.py**).
+    database by running::
+
+        $ ./manage.py inspectdb --database=<dbname> > banana/models_new.py
+
   - Using your favourite tool, update **banana/models.py** to reflect the
-    additions in **models-new.py** (that is, run
-    `vimdiff banana/models.py models-new.py` or equivalent). Note that
-    **anana/models.py** has a bunch of useful customization which we don't
-    want to lose: **don't** replace it with the new version, but rather
-    carefully compare it with the new models and merge only the relevant
-    changes.
+    additions in **banana/models_new.py**. Note that **banana/models.py** has a
+    bunch of useful customization which we don't want to lose. **don't** replace
+    it with the new version, but rather carefully compare it with the new models
+    and merge only the relevant changes.
   - Update the **schema_version** variable defined in **banana/models.py** to
     reflect the new schema.
   - Check for any templates (stored in **banana/templates**) which are using

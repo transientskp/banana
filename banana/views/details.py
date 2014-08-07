@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
-                          Transient
+                          Newsource
 from banana.views.mixins import HybridTemplateMixin,\
                                 DatasetMixin, SortListMixin
 from collections import OrderedDict
@@ -87,22 +87,21 @@ class ExtractedSourceDetail(DetailView):
         context['extractedsource'] = self.object
         return context
 
-
-class TransientDetail(SortListMixin, DatasetMixin,
+class NewsourceDetail(SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
-    model = Transient
+    model = Newsource
     paginate_by = 100
     default_order = 'image__taustart_ts'
-    template_name = "banana/transient_detail.html"
+    template_name = "banana/newsource_detail.html"
 
     def get_queryset(self):
-        qs = super(TransientDetail, self).get_queryset()
-        self.transient = get_object_or_404(qs, id=self.kwargs['pk'])
-        return self.transient.lightcurve().order_by(self.get_order())
+        qs = super(NewsourceDetail, self).get_queryset()
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.object.lightcurve().order_by(self.get_order())
 
     def get_context_data(self, **kwargs):
-        context = super(TransientDetail, self).get_context_data(**kwargs)
-        context['object'] = self.transient
+        context = super(NewsourceDetail, self).get_context_data(**kwargs)
+        context['object'] = self.object
         return context
 
 

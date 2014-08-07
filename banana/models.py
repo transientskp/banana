@@ -7,7 +7,7 @@ from django.db import connections
 from banana.managers.runningcatalog import RunningcatalogManager
 from banana.managers.assocxtrsource import AssocxtrsourceManager
 
-schema_version = 27
+schema_version = 30
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -60,7 +60,7 @@ class Assocskyrgn(models.Model):
                                related_name='assocskyrgns')
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='assocskyrgns')
-    distance_deg = models.FloatField(null=True, blank=True)
+    distance_deg = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -73,16 +73,17 @@ class Assocxtrsource(models.Model):
                                related_name='assocxtrsources')
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
                                related_name='assocxtrsources',
-                               null=True, blank=True)
+                               blank=True, null=True)
     type = models.SmallIntegerField()
-    distance_arcsec = models.FloatField(null=True, blank=True)
-    r = models.FloatField(null=True, blank=True)
-    loglr = models.FloatField(null=True, blank=True)
+    distance_arcsec = models.FloatField(blank=True, null=True)
+    r = models.FloatField(blank=True, null=True)
+    loglr = models.FloatField(blank=True, null=True)
     v_int = models.FloatField()
     eta_int = models.FloatField()
+    f_datapoints = models.IntegerField()
 
     objects = AssocxtrsourceManager()
-
+    
     class Meta:
         managed = False
         db_table = 'assocxtrsource'
@@ -106,13 +107,13 @@ class Dataset(models.Model):
     rerun = models.IntegerField()
     type = models.SmallIntegerField()
     process_start_ts = models.DateTimeField()
-    process_end_ts = models.DateTimeField(null=True, blank=True)
-    detection_threshold = models.FloatField(null=True, blank=True)
-    analysis_threshold = models.FloatField(null=True, blank=True)
-    assoc_radius = models.FloatField(null=True, blank=True)
-    backsize_x = models.SmallIntegerField(null=True, blank=True)
-    backsize_y = models.SmallIntegerField(null=True, blank=True)
-    margin_width = models.FloatField(null=True, blank=True)
+    process_end_ts = models.DateTimeField(blank=True, null=True)
+    detection_threshold = models.FloatField(blank=True, null=True)
+    analysis_threshold = models.FloatField(blank=True, null=True)
+    assoc_radius = models.FloatField(blank=True, null=True)
+    backsize_x = models.SmallIntegerField(blank=True, null=True)
+    backsize_y = models.SmallIntegerField(blank=True, null=True)
+    margin_width = models.FloatField(blank=True, null=True)
     description = models.CharField(max_length=100)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
@@ -124,8 +125,8 @@ class Dataset(models.Model):
     def __unicode__(self):
         return self.description
 
-    def transients(self):
-        return Transient.objects.using(self._state.db).\
+    def newsources(self):
+        return Newsource.objects.using(self._state.db).\
             filter(runcat__dataset=self)
 
     def extractedsources(self):
@@ -183,16 +184,17 @@ class Extractedsource(models.Model):
     racosdecl = models.FloatField()
     margin = models.BooleanField()
     det_sigma = models.FloatField()
-    semimajor = models.FloatField(null=True, blank=True)
-    semiminor = models.FloatField(null=True, blank=True)
-    pa = models.FloatField(null=True, blank=True)
-    f_peak = models.FloatField(null=True, blank=True)
-    f_peak_err = models.FloatField(null=True, blank=True)
-    f_int = models.FloatField(null=True, blank=True)
-    f_int_err = models.FloatField(null=True, blank=True)
-    extract_type = models.SmallIntegerField(null=True, blank=True)
+    semimajor = models.FloatField(blank=True, null=True)
+    semiminor = models.FloatField(blank=True, null=True)
+    pa = models.FloatField(blank=True, null=True)
+    f_peak = models.FloatField(blank=True, null=True)
+    f_peak_err = models.FloatField(blank=True, null=True)
+    f_int = models.FloatField(blank=True, null=True)
+    f_int_err = models.FloatField(blank=True, null=True)
+    extract_type = models.SmallIntegerField(blank=True, null=True)
+    fit_type = models.SmallIntegerField(blank=True, null=True)
     ff_runcat = models.ForeignKey('Runningcatalog', db_column='ff_runcat',
-                                  null=True, blank=True)
+                                  blank=True, null=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
 
@@ -211,9 +213,9 @@ class Extractedsource(models.Model):
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
-    freq_central = models.FloatField(null=True, blank=True)
-    freq_low = models.FloatField(null=True, blank=True)
-    freq_high = models.FloatField(null=True, blank=True)
+    freq_central = models.FloatField(blank=True, null=True)
+    freq_low = models.FloatField(blank=True, null=True)
+    freq_high = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -230,13 +232,13 @@ class Image(models.Model):
     id = models.IntegerField(primary_key=True)
     dataset = models.ForeignKey(Dataset, db_column='dataset',
                                 related_name='images')
-    tau = models.IntegerField(null=True, blank=True)
+    tau = models.IntegerField(blank=True, null=True)
     band = models.ForeignKey(Frequencyband, db_column='band',
                              related_name='images')
     stokes = models.SmallIntegerField()
-    tau_time = models.FloatField(null=True, blank=True)
+    tau_time = models.FloatField(blank=True, null=True)
     freq_eff = models.FloatField()
-    freq_bw = models.FloatField(null=True, blank=True)
+    freq_bw = models.FloatField(blank=True, null=True)
     taustart_ts = models.DateTimeField()
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='images')
@@ -245,13 +247,13 @@ class Image(models.Model):
     rb_pa = models.FloatField()
     deltax = models.FloatField()
     deltay = models.FloatField()
-    fwhm_arcsec = models.FloatField(null=True, blank=True)
-    fov_degrees = models.FloatField(null=True, blank=True)
+    fwhm_arcsec = models.FloatField(blank=True, null=True)
+    fov_degrees = models.FloatField(blank=True, null=True)
     rms_qc = models.FloatField()
-    rms_min = models.FloatField(null=True, blank=True)
-    rms_max = models.FloatField(null=True, blank=True)
-    detection_thresh = models.FloatField(null=True, blank=True)
-    analysis_thresh = models.FloatField(null=True, blank=True)
+    rms_min = models.FloatField(blank=True, null=True)
+    rms_max = models.FloatField(blank=True, null=True)
+    detection_thresh = models.FloatField(blank=True, null=True)
+    analysis_thresh = models.FloatField(blank=True, null=True)
     url = models.CharField(max_length=1024, blank=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
@@ -284,15 +286,93 @@ class Image(models.Model):
         return Image.objects.using(self._state.db).get(id=id)
 
 
+class Newsource(models.Model):
+    id = models.IntegerField(primary_key=True)
+    runcat = models.ForeignKey('Runningcatalog', db_column='runcat')
+    trigger_xtrsrc = models.ForeignKey(Extractedsource,
+                                       db_column='trigger_xtrsrc')
+    newsource_type = models.SmallIntegerField()
+    previous_limits_image = models.ForeignKey(Image,
+                                              db_column='previous_limits_image')
+
+    class Meta:
+        managed = False
+        db_table = 'newsource'
+
+    def lightcurve(self):
+        return self.runcat.lightcurve()
+
+    def index_in_dataset(self):
+        #Memoize this, since it's not going to change
+        # (unless a transient is deleted?)
+        if not hasattr(self, '_index_in_dataset'):
+            qs = Newsource.objects.using(self._state.db).\
+                filter(runcat__dataset=self.runcat.dataset,
+                       ).\
+                order_by("id")
+            l = list(qs.values_list('id', flat=True))
+            self._index_in_dataset = l.index(self.id)
+        return self._index_in_dataset
+
+    def number_in_dataset(self):
+        num = Newsource.objects.using(self._state.db).\
+            filter(runcat__dataset=self.runcat.dataset).count()
+        return num
+
+    def get_next_by_id_offset(self, offset):
+        """
+        Returns transient 'offset' places away in list of transients.
+
+        List is limited to parent dataset, sorted by id.
+
+        If 'offset' places the next id outside the list,
+        raises ObjectDoesNotExist error
+
+        """
+        qs = Newsource.objects.using(self._state.db).\
+            filter(runcat__dataset=self.runcat.dataset,
+                   ).\
+            order_by("id")
+        l = list(qs.values_list('id', flat=True))
+
+        index = l.index(self.id)
+        offset_idx = index+offset
+
+        if offset_idx < 0 or offset_idx >= len(l):
+            #Desired behaviour is to only return linear offsets
+            #i.e. don't loop using -ve index behaviour!
+            raise ObjectDoesNotExist
+
+        id = l[offset_idx]
+        return Newsource.objects.using(self._state.db).get(id=id)
+
+    def get_next_by_id(self):
+        return self.get_next_by_id_offset(1)
+
+    def get_prev_by_id(self):
+        return self.get_next_by_id_offset(-1)
+
+    def lightcurve_median(self):
+        """
+        median value of the transient lightcurve
+        """
+        def median(queryset, column):
+            count = queryset.count()
+            qs = queryset.values_list(column, flat=True).order_by(column)
+            return qs[int(round(count/2))]
+        lightcurve = self.lightcurve()
+        return median(lightcurve, 'f_int')
+
+
 class Node(models.Model):
     id = models.IntegerField(primary_key=True)
     node = models.SmallIntegerField()
     zone = models.SmallIntegerField()
-    zone_min = models.SmallIntegerField(null=True, blank=True)
-    zone_max = models.SmallIntegerField(null=True, blank=True)
-    zone_min_incl = models.NullBooleanField(null=True, blank=True)
-    zone_max_incl = models.NullBooleanField(null=True, blank=True)
-    zoneheight = models.FloatField(null=True, blank=True)
+    zone_min = models.SmallIntegerField(blank=True, null=True)
+    zone_max = models.SmallIntegerField(blank=True, null=True)
+    zone_min_incl = models.NullBooleanField()
+    zone_max_incl = models.NullBooleanField()
+    zoneheight = models.FloatField(blank=True, null=True)
     nodes = models.SmallIntegerField()
 
     class Meta:
@@ -302,7 +382,7 @@ class Node(models.Model):
 
 class Rejection(models.Model):
     id = models.IntegerField(primary_key=True)
-    image = models.ForeignKey(Image, db_column='image',
+    image = models.ForeignKey(Image, db_column='image', blank=True, null=True,
                               related_name='rejections')
     rejectreason = models.ForeignKey('Rejectreason', db_column='rejectreason',
                                      blank=True, null=True)
@@ -326,25 +406,6 @@ class Rejectreason(models.Model):
 
     def __unicode__(self):
         return "%s" % (self.description)
-
-
-class Skyregion(models.Model):
-    id = models.IntegerField(primary_key=True)
-    dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='skyregions')
-    centre_ra = models.FloatField()
-    centre_decl = models.FloatField()
-    xtr_radius = models.FloatField()
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
-
-    def __unicode__(self):
-        return "%s, %s" % (self.centre_ra, self.centre_decl)
-
-    class Meta:
-        managed = False
-        db_table = 'skyregion'
 
 
 class Runningcatalog(models.Model):
@@ -375,8 +436,9 @@ class Runningcatalog(models.Model):
     mon_src = models.BooleanField()
     extractedsources = models.ManyToManyField(Extractedsource,
                                               through=Assocxtrsource)
-    skyregions = models.ManyToManyField(Skyregion,
+    skyregions = models.ManyToManyField('Skyregion',
                                         through=Assocskyrgn)
+
     objects = RunningcatalogManager()
 
     class Meta:
@@ -420,24 +482,39 @@ class RunningcatalogFlux(models.Model):
     band = models.ForeignKey(Frequencyband, db_column='band')
     stokes = models.SmallIntegerField()
     f_datapoints = models.IntegerField()
-    resolution = models.FloatField(null=True, blank=True)
-    avg_f_peak = models.FloatField(null=True, blank=True)
-    avg_f_peak_sq = models.FloatField(null=True, blank=True)
-    avg_f_peak_weight = models.FloatField(null=True, blank=True)
-    avg_weighted_f_peak = models.FloatField(null=True, blank=True)
-    avg_weighted_f_peak_sq = models.FloatField(null=True, blank=True)
-    avg_f_int = models.FloatField(null=True, blank=True)
-    avg_f_int_sq = models.FloatField(null=True, blank=True)
-    avg_f_int_weight = models.FloatField(null=True, blank=True)
-    avg_weighted_f_int = models.FloatField(null=True, blank=True)
-    avg_weighted_f_int_sq = models.FloatField(null=True, blank=True)
+    avg_f_peak = models.FloatField(blank=True, null=True)
+    avg_f_peak_sq = models.FloatField(blank=True, null=True)
+    avg_f_peak_weight = models.FloatField(blank=True, null=True)
+    avg_weighted_f_peak = models.FloatField(blank=True, null=True)
+    avg_weighted_f_peak_sq = models.FloatField(blank=True, null=True)
+    avg_f_int = models.FloatField(blank=True, null=True)
+    avg_f_int_sq = models.FloatField(blank=True, null=True)
+    avg_f_int_weight = models.FloatField(blank=True, null=True)
+    avg_weighted_f_int = models.FloatField(blank=True, null=True)
+    avg_weighted_f_int_sq = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'runningcatalog_flux'
 
 
+class Skyregion(models.Model):
+    id = models.IntegerField(primary_key=True)
+    dataset = models.ForeignKey(Dataset, db_column='dataset',
+                                related_name='skyregions')
+    centre_ra = models.FloatField()
+    centre_decl = models.FloatField()
+    xtr_radius = models.FloatField()
+    x = models.FloatField()
+    y = models.FloatField()
+    z = models.FloatField()
 
+    def __unicode__(self):
+        return "%s, %s" % (self.centre_ra, self.centre_decl)
+
+    class Meta:
+        managed = False
+        db_table = 'skyregion'
 
 
 class Temprunningcatalog(models.Model):
@@ -470,116 +547,24 @@ class Temprunningcatalog(models.Model):
     z = models.FloatField()
     margin = models.BooleanField()
     inactive = models.BooleanField()
-    beam_semimaj = models.FloatField(null=True, blank=True)
-    beam_semimin = models.FloatField(null=True, blank=True)
-    beam_pa = models.FloatField(null=True, blank=True)
-    f_datapoints = models.IntegerField(null=True, blank=True)
-    avg_f_peak = models.FloatField(null=True, blank=True)
-    avg_f_peak_sq = models.FloatField(null=True, blank=True)
-    avg_f_peak_weight = models.FloatField(null=True, blank=True)
-    avg_weighted_f_peak = models.FloatField(null=True, blank=True)
-    avg_weighted_f_peak_sq = models.FloatField(null=True, blank=True)
-    avg_f_int = models.FloatField(null=True, blank=True)
-    avg_f_int_sq = models.FloatField(null=True, blank=True)
-    avg_f_int_weight = models.FloatField(null=True, blank=True)
-    avg_weighted_f_int = models.FloatField(null=True, blank=True)
-    avg_weighted_f_int_sq = models.FloatField(null=True, blank=True)
+    beam_semimaj = models.FloatField(blank=True, null=True)
+    beam_semimin = models.FloatField(blank=True, null=True)
+    beam_pa = models.FloatField(blank=True, null=True)
+    f_datapoints = models.IntegerField(blank=True, null=True)
+    avg_f_peak = models.FloatField(blank=True, null=True)
+    avg_f_peak_sq = models.FloatField(blank=True, null=True)
+    avg_f_peak_weight = models.FloatField(blank=True, null=True)
+    avg_weighted_f_peak = models.FloatField(blank=True, null=True)
+    avg_weighted_f_peak_sq = models.FloatField(blank=True, null=True)
+    avg_f_int = models.FloatField(blank=True, null=True)
+    avg_f_int_sq = models.FloatField(blank=True, null=True)
+    avg_f_int_weight = models.FloatField(blank=True, null=True)
+    avg_weighted_f_int = models.FloatField(blank=True, null=True)
+    avg_weighted_f_int_sq = models.FloatField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'temprunningcatalog'
-
-
-class Transient(models.Model):
-    id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey(Runningcatalog, db_column='runcat',
-                               related_name='transients')
-    band = models.ForeignKey(Frequencyband, db_column='band',
-                             related_name='transients')
-    siglevel = models.FloatField(null=True, blank=True)
-    v_int = models.FloatField()
-    eta_int = models.FloatField()
-    detection_level = models.FloatField(null=True, blank=True)
-    trigger_xtrsrc = models.ForeignKey(Extractedsource,
-                                       db_column='trigger_xtrsrc',
-                                       related_name='transients')
-    transient_type = models.SmallIntegerField()
-    previous_limits_image = models.ForeignKey(Image,
-                                              db_column='previous_limits_image',
-                                              blank=True, null=True)
-    status = models.IntegerField(null=True, blank=True)
-    t_start = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        managed = False
-        db_table = 'transient'
-
-    def __unicode__(self):
-        return str(self.id)
-
-    def lightcurve(self):
-        return self.runcat.lightcurve()
-
-    def index_in_dataset(self):
-        #Memoize this, since it's not going to change
-        # (unless a transient is deleted?)
-        if not hasattr(self, '_index_in_dataset'):
-            qs = Transient.objects.using(self._state.db).\
-                filter(runcat__dataset=self.runcat.dataset,
-                       ).\
-                order_by("id")
-            l = list(qs.values_list('id', flat=True))
-            self._index_in_dataset = l.index(self.id)
-        return self._index_in_dataset
-
-    def number_in_dataset(self):
-        num = Transient.objects.using(self._state.db).\
-            filter(runcat__dataset=self.runcat.dataset).count()
-        return num
-
-    def get_next_by_id_offset(self, offset):
-        """
-        Returns transient 'offset' places away in list of transients.
-
-        List is limited to parent dataset, sorted by id.
-
-        If 'offset' places the next id outside the list,
-        raises ObjectDoesNotExist error
-
-        """
-        qs = Transient.objects.using(self._state.db).\
-            filter(runcat__dataset=self.runcat.dataset,
-                   ).\
-            order_by("id")
-        l = list(qs.values_list('id', flat=True))
-
-        index = l.index(self.id)
-        offset_idx = index+offset
-
-        if offset_idx < 0 or offset_idx >= len(l):
-            #Desired behaviour is to only return linear offsets
-            #i.e. don't loop using -ve index behaviour!
-            raise ObjectDoesNotExist
-
-        id = l[offset_idx]
-        return Transient.objects.using(self._state.db).get(id=id)
-
-    def get_next_by_id(self):
-        return self.get_next_by_id_offset(1)
-
-    def get_prev_by_id(self):
-        return self.get_next_by_id_offset(-1)
-
-    def lightcurve_median(self):
-        """
-        median value of the transient lightcurve
-        """
-        def median(queryset, column):
-            count = queryset.count()
-            qs = queryset.values_list(column, flat=True).order_by(column)
-            return qs[int(round(count/2))]
-        lightcurve = self.lightcurve()
-        return median(lightcurve, 'f_int')
 
 
 class Version(models.Model):

@@ -15,7 +15,7 @@
     </div>
 {% else %}
     <div class="span12 text-center">
-        <a href="{% url 'transients' db_name %}" class="btn">All Transients</a>
+        <a href="{% url 'newsources' db_name %}" class="btn">All New Sources</a>
         <a href="{% url 'images' db_name %}" class="btn">All Images</a>
         <a href="{% url 'extractedsources' db_name %}" class="btn">All Extracted Sources</a>
         <a href="{% url 'runningcatalogs' db_name %}" class="btn">All Running Catalogs</a>
@@ -35,9 +35,6 @@
                 {% tableheader 'num_images' 'Number of Images' %}
                 {% tableheader 'process_start_ts' 'Start time' %}
                 {% tableheader 'process_end_ts' 'End time' %}
-                <!--  {% tableheader 'num_transients' 'Number of Transients' %} -->
-
-
             </tr>
             </thead>
             <tbody>
@@ -49,7 +46,6 @@
                 <td>{{ dataset.num_images }}</td>
                 <td>{{ dataset.process_start_ts }}</td>
                 <td>{{ dataset.process_end_ts }}</td>
-                <!-- <td>{{ dataset.num_transients }}</td> -->
             </tr>
             </a>
             {% endfor %}

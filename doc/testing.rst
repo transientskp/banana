@@ -26,8 +26,10 @@ fixtures also:
 
   - Populate the database with some dataset, not too big but make sure
     all tables are populated (like transient).
-  - run `./manage.py dumpdata --database=postgres_gijs --indent=1 banana > testing/fixtures/initial_data.json`
-    to serialize the data into the fixture.
+  - to serialize the data into the fixture run::
+
+        $ ./manage.py dumpdata --database=postgres_gijs --indent=1 banana > testing/fixtures/initial_data.json
+
   - Note that some libraries like **astropy** write things to stdout which ruins
     the json output. Check  the json file to make sure there is no garbage at
     the start of the file.
