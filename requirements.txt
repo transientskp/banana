@@ -11,6 +11,8 @@ python-dateutil
 psycopg2
 GitPython==0.3.2.RC1
 pytz
+django-filter
+
 
 ## for caching:
 #python-memcached

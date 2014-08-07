@@ -17,7 +17,6 @@ class ViewTest(TestCase):
         'extractedsources',
         'runningcatalogs',
         'monposs',
-        'assocxtrsources'
     ]
 
     detail_views = [
@@ -71,9 +70,13 @@ class ViewTest(TestCase):
 
     def test_detail_views(self):
         for detail_view in self.detail_views:
-            response = self.client.get(reverse(detail_view,
-                                               kwargs={'db': test_db,
-                                                       'pk': 1}))
+            try:
+                response = self.client.get(reverse(detail_view,
+                                                   kwargs={'db': test_db,
+                                                           'pk': 1}))
+            except:
+                print "%s view failed" % detail_view
+                raise
             self.assertEqual(response.status_code, 200)
 
     def test_extracted_sources_pixel(self):

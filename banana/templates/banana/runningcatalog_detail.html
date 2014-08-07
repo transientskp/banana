@@ -6,8 +6,16 @@
 
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset.id %}">Dataset {{ object.dataset }}</a></li>{% endblock %}
-{% block navdeep %}<li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>{% endblock %}
+
+{% block navdataset %}
+{% if dataset %}
+<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+{% endif %}
+{% endblock %}
+
+{% block navdeep %}
+<li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+{% endblock %}
 
 {% block navdeeper %}
 <li class="active"><a href="{% url 'runningcatalog' db_name object.id%}">Running Catalog {{ object.id }}</a></li>

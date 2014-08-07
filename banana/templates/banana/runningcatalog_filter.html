@@ -1,0 +1,160 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+{% load tableheader %}
+{% load paginator %}
+{% load addcss %}
+
+{% block title %}Running Catalogs · Banana{% endblock title %}
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+    {% if dataset %}
+        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block navdeep %}
+    <li class="active"><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="well">
+        <div class="row-fluid">
+            <form action="" method="get"  class="form-horizontal">
+                <div class="span4">
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_wm_ra_0">Ra(°):</label>
+                        <div class="controls mini">
+                            {{ filter.form.wm_ra|addcss:"input-mini" }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_wm_decl_0">Dec(°):</label>
+                        <div class="controls mini">
+                            {{ filter.form.wm_decl|addcss:"input-mini" }}
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label  mini" for="id_newsource">Newsource:</label>
+                        <div class="controls  mini">
+                            {{ filter.form.newsource|addcss:"input-mini" }}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="span4">
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_v_int_0">V<sub>ν</sub>:</label>
+                        <div class="controls mini">
+                            {{ filter.form.v_int|addcss:"input-mini" }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_eta_int_0">η<sub>ν</sub>:</label>
+                        <div class="controls mini">
+                            {{ filter.form.eta_int|addcss:"input-mini" }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls  mini">
+                            <input type="submit" class="btn"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_sigma_min_0">Σ<sub>min</sub>:</label>
+                        <div class="controls mini">
+                            {{ filter.form.sigma_min|addcss:"input-mini" }}
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label mini" for="id_sigma_max_0">Σ<sub>max</sub>:</label>
+                        <div class="controls mini">
+                            {{ filter.form.sigma_max|addcss:"input-mini" }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+
+        {% if runningcatalog_list %}
+
+            <div class="span2 text-center">
+            </div>
+            <div class="span8 text-center">
+                {% paginatorizer %}
+            </div>
+            <div class="span2 text-center">
+                <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+            </div>
+
+            <div class="span12">
+                <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                    <thead>
+                    <tr>
+                        {% tableheader 'id' '#' %}
+                        {% tableheader 'wm_ra' 'Ra(°)' %}
+                        {% tableheader 'wm_decl' 'Dec(°)' %}
+                        <th>Ra Error(″)</th>
+                        <th>Decl Error(″)</th>
+                        {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
+                        {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
+                        {% tableheader 'datapoints' '# points' %}
+                        {% tableheader 'newsource.previous_limits_image' 'new source' %}
+                        {% tableheader 'sigma_max' 'Σ<sub>max</sub>' %}
+                        {% tableheader 'sigma_min' 'Σ<sub>min</sub>' %}
+                        {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
+                        {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
+                        {% tableheader 'v_int' %}
+                        {% tableheader 'eta_int' %}
+                    </tr>
+                    </thead>
+
+
+                    <tbody>
+                    {% for object in runningcatalog_list %}
+                        <tr>
+                            <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
+                            <td>{{ object.wm_ra|stringformat:".3f" }}</td>
+                            <td>{{ object.wm_decl|stringformat:".3f" }}</td>
+                            <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
+                            <td>{{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
+                            <td>{{object.wm_ra|format_angle:"time"}}</td>
+                            <td>{{object.wm_decl|format_angle:"dms"}}</td>
+                            <td>{{ object.datapoints }}</td>
+                            <td>{{ object.newsource.id }}</td>
+                            <td>{{ object.sigma_min|stringformat:".3f" }}</td>
+                            <td>{{ object.sigma_max|stringformat:".3f" }}</td>
+                            <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
+                            <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
+                            <td>{{ object.v_int|stringformat:".3f" }}</td>
+                            <td>{{ object.eta_int|stringformat:".3f" }}</td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="span12 text-center">
+                {% paginatorizer %}
+            </div>
+
+        {% else %}
+            <p>No Running Catalogs.</p>
+        {% endif %}
+    </div>
+
+{% endblock content %}
