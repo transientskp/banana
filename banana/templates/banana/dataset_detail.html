@@ -13,7 +13,7 @@
 
 <div class="row-fluid">
     <div class="span12 text-center">
-        <a href="{% url 'transients' db_name %}?dataset={{ dataset.id }}" class="btn">Transients</a>
+        <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}" class="btn">New Sources</a>
         <a href="{% url 'assocxtrsources' db_name %}?dataset={{ dataset.id }}" class="btn">Transients Next Generation</a>
         <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}" class="btn">Images</a>
         <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}" class="btn">Extracted Sources</a>
@@ -40,8 +40,8 @@
             <dt>Processing Finished</dt>
             <dd>{{ dataset.process_end_ts }}</dd>
 
-            <dt>detected transients</dt>
-            <dd><a href="{% url 'transients' db_name%}?dataset={{ dataset.id }}">{{ dataset.transients.all.count }}</a></dd>
+            <dt>New Sources</dt>
+            <dd><a href="{% url 'newsources' db_name%}?dataset={{ dataset.id }}">{{ dataset.newsources.all.count }}</a></dd>
 
             <dt>Total image count</dt>
             <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>

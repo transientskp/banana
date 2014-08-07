@@ -9,7 +9,7 @@
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
-{% block navdeep %}<li><a href="{% url 'transients' db_name %}?dataset={{ object.runcat.dataset_id }}">Transients</a></li>{% endblock %}
+{% block navdeep %}<li><a href="{% url 'newsources' db_name %}?dataset={{ object.runcat.dataset_id }}">New Sources</a></li>{% endblock %}
 {% block navdeper %}<li class="active"><a href="{% url 'transient' db_name object.id %}">Transient {{ object.id }}</a></li>{% endblock %}
 
 {% block title %}Transient {{ object.id }} · Banana{% endblock title %}
@@ -27,7 +27,7 @@
 
 <div class="row-fluid">
     <div class="span5">
-        <h2>Transient #{{ object.id }}</h2>
+        <h2>New source #{{ object.id }}</h2>
         <div class="text-center">
             <!-- Aladin Lite viewer  -->
             <div id="aladin-lite-div" style="width:420px;height:420px;"></div>
@@ -53,9 +53,6 @@
                 {{ object.runcat.wm_decl|stringformat:".3f" }}&deg;) &pm;
                 ({{ object.runcat.ra_err|deg2asec|stringformat:".3f" }}&Prime;,
                 {{ object.runcat.decl_err|deg2asec|stringformat:".3f" }}&Prime;)</dd>
-            <dt>Frequency band</dt>
-            <dd>{{ object.band }}</dd>
-            <dt>Effective frequency</dt>
             <dd>{{ object.freq_eff }} ?</dd>
             <dt>Significance level</dt>
             <dd>{{ object.siglevel|stringformat:".3f" }}</dd>
@@ -74,7 +71,7 @@
             <dt>Trigger</dt>
             <dd><a href="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></dd>
             <dt>Max flux</dt>
-            <dd>{{  object.lightcurve_max|stringformat:".3f" }}</dd>
+            <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
             <dt>Mean flux</dt>
             <dd>{{ object.lightcurve_mean|stringformat:".3f" }}</dd>
             <dt>Median flux</dt>

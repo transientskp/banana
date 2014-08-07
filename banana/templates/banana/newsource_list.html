@@ -5,7 +5,7 @@
 {% load paginator %}
 {% load tableheader %}
 
-{% block title %}Transients · Banana{% endblock title %}
+{% block title %}New Sources · Banana{% endblock title %}
 
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -17,13 +17,13 @@
 {% endblock %}
 
 {% block navdeep %}
-<li class="active"><a href="{% url 'transients' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Transients</a></li>
+<li class="active"><a href="{% url 'newsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Transients</a></li>
 {% endblock %}
 
 
 {% block content %}
 
-{% if transient_list %}
+{% if object_list %}
 <div class="row-fluid">
     <div class="span12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
@@ -42,7 +42,6 @@
                 {% tableheader 'runcat__wm_ra' 'Pos (h:m:s,d:m:s)' %}
                 {% tableheader 't_start' 'Start date' %}
                 {% tableheader 'siglevel' 'Significance' %}
-                {% tableheader 'band' 'Band' %}
                 {% tableheader 'eta_int' 'ην' %}
                 {% tableheader 'v_int' 'Vν' %}
                 {% tableheader 'runcat__datapoints' '# of points' %}
@@ -53,21 +52,17 @@
             </tr>
             </thead>
             <tbody>
-            {% for transient in transient_list %}
+            {% for object in object_list %}
             <tr>
-                <td><a href="{% url 'transient' db_name transient.id %}">{{ transient.id }}</a></td>
-                <td>{{ transient.runcat.wm_ra|stringformat:".3f" }}, {{ transient.runcat.wm_decl|stringformat:".3f" }}</td>
-                <td>{{ transient.runcat.wm_ra|format_angle:"time"}}, {{ transient.runcat.wm_decl|format_angle:"dms" }}</td>
-                <td>{{ transient.t_start|date:"c" }}</td>
-                <td>{{ transient.siglevel|stringformat:".3f" }}</td>
-                <td>{{ transient.band }}</td>
-                <td>{{ transient.eta_int|stringformat:".2f" }}</td>
-                <td>{{ transient.v_int|stringformat:".4f" }}</td>
-                <td>{{ transient.runcat.datapoints }}</td>
-                <td>{{ transient.runcat }}</td>
-                <td>{{ transient.lightcurve_max|stringformat:".3f" }}</td>
-                <td>{{ transient.lightcurve_mean|stringformat:".3f" }}</td>
-                <td>{{ transient.lightcurve_median|stringformat:".3f" }}</td>
+                <td><a href="{% url 'newsource' db_name object.id %}">{{ object.id }}</a></td>
+                <td>{{ object.runcat.wm_ra|stringformat:".3f" }}, {{ object.runcat.wm_decl|stringformat:".3f" }}</td>
+                <td>{{ object.runcat.wm_ra|format_angle:"time"}}, {{ object.runcat.wm_decl|format_angle:"dms" }}</td>
+                <td>{{ object.trigger_xtrsrc.image.taustart_ts }} </td>
+                <td>{{ object.runcat.datapoints }}</td>
+                <td>{{ object.runcat }}</td>
+                <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
+                <td>{{ object.lightcurve_mean|stringformat:".3f" }}</td>
+                <td>{{ object.lightcurve_median|stringformat:".3f" }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -80,7 +75,7 @@
 
 </div>
 {% else %}
-<p>No Transients.</p>
+<p>No new sources.</p>
 {% endif %}
 
 

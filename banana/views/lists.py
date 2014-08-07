@@ -5,13 +5,14 @@ from django.db.models import Count
 from django.views.generic import ListView, TemplateView
 import banana.db
 from banana.db import db_schema_version, check_database
-from banana.models import Dataset, Image, Transient, Extractedsource, \
+from banana.models import Dataset, Image, Newsource, Extractedsource, \
                           Runningcatalog, schema_version, Assocxtrsource
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
 from django.utils.datastructures import MultiValueDictKeyError
 from django.db.models import Max, Avg
+
 
 class DatabaseList(TemplateView):
     template_name = "banana/database_list.html"
@@ -34,8 +35,6 @@ class DatasetList(SortListMixin, HybridTemplateMixin, ListView):
     def get_queryset(self):
         qs = super(DatasetList, self).get_queryset()
         return qs.annotate(num_images=Count('images'))
-                # TODO: multiple annotations don't work
-                #  num_transients=Count('runningcatalogs__transients')
 
 
 class ImageList(SortListMixin, HybridTemplateMixin,
@@ -51,21 +50,22 @@ class ImageList(SortListMixin, HybridTemplateMixin,
             annotate(num_extractedsources=Count('extractedsources'))
 
 
-class TransientList(SortListMixin, HybridTemplateMixin,
+class NewsourceList(SortListMixin, HybridTemplateMixin,
                     DatasetMixin, ListView):
-    model = Transient
+    model = Newsource
     paginate_by = 100
     dataset_field = 'runcat__dataset'
 
     def get_queryset(self):
-        qs = super(TransientList, self).get_queryset()
+        qs = super(NewsourceList, self).get_queryset()
 
-        related = ['band', 'runcat']
+        related = ['runcat']
         return qs.prefetch_related(*related)\
             .annotate(lightcurve_max=Max('runcat__extractedsources__f_int',
                                          distinct=True))\
             .annotate(lightcurve_mean=Avg('runcat__extractedsources__f_int',
                                           distinct=True))
+
 
 class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):

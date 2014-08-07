@@ -9,7 +9,7 @@ Preserves flux prefix choice.
     <ul>
     {% with object.get_prev_by_id as prev %}
       {% if prev %}
-        <li><a href="{% url 'transient' db_name prev.id %}?flux_prefix={{ request.GET.flux_prefix}}">Prev</a></li>
+        <li><a href="{% url 'newsource' db_name prev.id %}?flux_prefix={{ request.GET.flux_prefix}}">Prev</a></li>
       {% else %}
         <li class="disabled"><a href="#">Prev</a></li>
       {% endif %}
@@ -17,7 +17,7 @@ Preserves flux prefix choice.
 
     {% with object.get_next_by_id as next %}
       {% if next %}
-        <li><a href="{% url 'transient' db_name next.id %}?flux_prefix={{ request.GET.flux_prefix}}">Next</a></li>
+        <li><a href="{% url 'newsource' db_name next.id %}?flux_prefix={{ request.GET.flux_prefix}}">Next</a></li>
       {% else %}
         <li class="disabled"><a href="#">Next</a></li>
       {% endif %}
