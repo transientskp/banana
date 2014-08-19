@@ -378,7 +378,6 @@ class Runningcatalog(models.Model):
                                               through=Assocxtrsource)
     skyregions = models.ManyToManyField('Skyregion',
                                         through=Assocskyrgn)
-
     objects = RunningcatalogManager()
 
 
