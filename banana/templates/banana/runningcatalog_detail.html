@@ -127,28 +127,30 @@
             <div class="span12">
                 <table class="table table-bordered table-striped responsive-utilities table-condensed ">
                     <thead>
-                    {% tableheader 'id' 'ID' %}
-                    {% tableheader 'image__taustart_ts' 'Date (UTC)' %}
-                    {% tableheader 'image__tau_time' 'Integration time (s)' %}
-                    {% tableheader 'image__band__freq_central' 'Frequency (Hz)' %}
-                    {% tableheader 'f_int' 'Flux (Jy)' %}
-                    {% tableheader 'f_int_err' 'Flux error (Jy)' %}
-                    {% tableheader 'extract_type' 'xtract type' %}
-                    {% tableheader 'image' 'Image ID' %}
-
+                    {% tableheader 'xtrsrc__id' 'ID' %}
+                    {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
+                    {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
+                    {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
+                    {% tableheader 'xtrsrc__f_int' 'Flux (Jy)' %}
+                    {% tableheader 'xtrsrc__f_int_err' 'Flux error (Jy)' %}
+                    {% tableheader 'xtrsrc__extract_type' 'xtract type' %}
+                    {% tableheader 'xtrsrc__image' 'Image ID' %}
+                    {% tableheader 'v_int' 'Vν' %}
+                    {% tableheader 'eta_int' 'ην' %}
                     </thead>
                     <tbody>
-                    {% for point in object_list %}
+                    {% for assocxtrsource in object_list %}
                         <tr class="{% cycle 'odd' 'even' %}">
-                            <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
-                            <td>{{ point.image.taustart_ts|date:"c" }}</td>
-                            <td>{{ point.image.tau_time|scientific }}</td>
-                            <td>{{ point.image.band.freq_central|scientific }}</td>
-                            <td>{{ point.f_int|scientific }}</td>
-                            <td>{{ point.f_int_err|scientific }}</td>
-                            <td>{{ point.extract_type }}</td>
-                            <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
-
+                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int_err|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                            <td>{{ assocxtrsource.v_int|scientific }}</td>
+                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -161,7 +163,7 @@
 
         <script>
             imgs = {
-            {% for point in object_list %}{{point.id}}: '{% url 'extractedsource_plot' db_name point.id %}?size=1'{% if not forloop.last %},{% endif %}
+            {% for assocxtrsource in object_list %}{{assocxtrsource.xtrsrc.id}}: '{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1'{% if not forloop.last %},{% endif %}
             {% endfor %}
             };
 
@@ -179,19 +181,19 @@
     <script>
         // get data from django template
         var lightcurve = [
-                {% for point in paginator.object_list %}{
-                    "band": '{{ point.image.band }}',
-                    "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
-                    "f_int": {{ point.f_int }},
-                    "f_int_err": {{ point.f_int_err }},
-                    "tau_time": {{ point.image.tau_time }},
-                    "extract_type": {{ point.extract_type }},
+                {% for assocxtrsource in paginator.object_list %}{
+                    "band": '{{ assocxtrsource.xtrsrc.image.band }}',
+                    "taustart_ts": {{ assocxtrsource.xtrsrc.image.taustart_ts|datetime2miliseconds }},
+                    "f_int": {{ assocxtrsource.xtrsrc.f_int }},
+                    "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err }},
+                    "tau_time": {{ assocxtrsource.xtrsrc.image.tau_time }},
+                    "extract_type": {{ assocxtrsource.xtrsrc.extract_type }},
                     }{% if not forloop.last %}, {% endif %}
                 {% endfor %}
         ];
 
         var title = 'Lightcurve for Running Catalog #{{ object.id }}';
-        var subtitle = 'start date {% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}';
+        var subtitle = '';
     </script>
 
     <script src="{{ STATIC_URL }}lightcurve.js"></script>

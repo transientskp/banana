@@ -109,17 +109,18 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = Runningcatalog
     paginate_by = 100
-    default_order = 'image__taustart_ts'
+    default_order = 'xtrsrc__image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
 
     def get_queryset(self):
-        qs = super(RunningcatalogDetail, self).get_queryset()
-        qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
-                                            distinct=True))
-        qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
-                                            distinct=True))
+        qs = super(RunningcatalogDetail, self).get_queryset()\
+            .annotate(lightcurve_max=Max('extractedsources__f_int',
+                                         distinct=True))\
+            .annotate(lightcurve_avg=Avg('extractedsources__f_int',
+                                         distinct=True))\
+            .order_by(self.get_order())
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
-        return self.object.extractedsources.order_by(self.get_order())
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
