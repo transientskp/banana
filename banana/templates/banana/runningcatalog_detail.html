@@ -8,17 +8,17 @@
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
 {% block navdataset %}
-{% if dataset %}
-<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-{% endif %}
+    {% if dataset %}
+        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+    {% endif %}
 {% endblock %}
 
 {% block navdeep %}
-<li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+    <li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
 {% endblock %}
 
 {% block navdeeper %}
-<li class="active"><a href="{% url 'runningcatalog' db_name object.id%}">Running Catalog {{ object.id }}</a></li>
+    <li class="active"><a href="{% url 'runningcatalog' db_name object.id%}">Running Catalog {{ object.id }}</a></li>
 {% endblock %}
 
 {% block title %}Running Catalog · Banana{% endblock title %}
@@ -34,14 +34,14 @@
 {% block content %}
 
 
-<div class="row-fluid">
+    <div class="row-fluid">
     <div class="span5">
 
         <h2>Running Catalog #{{ object.id }}</h2>
 
         <div class="text-center">
             <!-- Aladin Lite viewer  -->
-            <div id="aladin-lite-div" style="width:420px;height:420px;"></div>
+            <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
             <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
             <script type="text/javascript">
                 var aladin = A.aladin('#aladin-lite-div');
@@ -55,117 +55,148 @@
     <div class="span7">
         <div id='lightcurve'></div>
 
-        <dl class="dl-horizontal">
-            <dt>Position</dt>
-            <dd>({{ object.wm_ra|stringformat:".3f" }}°,
-                {{ object.wm_decl|stringformat:".3f" }}°) &pm;
-                ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
-                {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
-            <dt># of datapoints</dt>
-            <dd>{{ object.datapoints }}</dd>
-            <dt>Dataset</dt>
-            <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
-            <dt>Max flux</dt>
-            <dd>{{  object.lightcurve_max|stringformat:".3f" }}</dd>
-            <dt>Mean flux</dt>
-            <dd>{{ object.lightcurve_mean|stringformat:".3f" }}</dd>
-            <dt>Median flux</dt>
-            <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
-        </dl>
+        <div class="row-fluid well">
+            <div class="span6">
+                <dl class="dl-horizontal">
+                    <dt>Position</dt>
+                    <dd>({{ object.wm_ra|stringformat:".3f" }}°,
+                        {{ object.wm_decl|stringformat:".3f" }}°) &pm;
+                        ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
+                        {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
 
-        <div class="text-center">
+                    <dt>New source</dt>
+                    <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
+                    <dt>ην</dt>
+                    <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                    <dt>Vν</dt>
+                    <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                    <dt>Σmin</dt>
+                    <dd>{% if object.sigma_min %}{{  object.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                    <dt>Σmax</dt>
+                    <dd>{% if object.sigma_max %}{{  object.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                    <dt>Trigger source</dt>
+                    <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+
+                </dl>
+            </div>
+            <div class="span6">
+                <dl class="dl-horizontal">
+                    <dt>Previous limit image</dt>
+                    <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image }}</a>{% else %}No{% endif %}</dd>
+
+                    <dt># of datapoints</dt>
+                    <dd>{{ object.datapoints }}</dd>
+
+                    <dt>Dataset</dt>
+                    <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+
+                    <dt>Max flux</dt>
+                    <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
+
+                    <dt>Mean flux</dt>
+                    <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
+
+                    <dt>Median flux</dt>
+                    <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
+                </dl>
+            </div>
         </div>
     </div>
-</div>
 
-{% if object_list %}
-<div class="row-fluid">
-    <div class="row-fluid">
-        <div class="span4">
-            <h2>Lightcurve</h2>
+    {% if object_list %}
+        <div class="row-fluid">
+            <div class="row-fluid">
+                <div class="span4">
+                    <h2>Lightcurve</h2>
+                </div>
+                <div class="span4">
+                    {% paginatorizer %}
+                </div>
+                <div class="span2">
+                    <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
+                </div>
+                <div class="span2">
+                    <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
+                </div>
+            </div>
+            <div class="span12">
+                <table class="table table-bordered table-striped responsive-utilities table-condensed ">
+                    <thead>
+                    {% tableheader 'xtrsrc__id' 'ID' %}
+                    {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
+                    {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
+                    {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
+                    {% tableheader 'xtrsrc__f_int' 'Flux (Jy)' %}
+                    {% tableheader 'xtrsrc__f_int_err' 'Flux error (Jy)' %}
+                    {% tableheader 'xtrsrc__extract_type' 'xtract type' %}
+                    {% tableheader 'xtrsrc__image' 'Image ID' %}
+                    {% tableheader 'v_int' 'Vν' %}
+                    {% tableheader 'eta_int' 'ην' %}
+                    </thead>
+                    <tbody>
+                    {% for assocxtrsource in object_list %}
+                        <tr class="{% cycle 'odd' 'even' %}">
+                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int_err|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                            <td>{{ assocxtrsource.v_int|scientific }}</td>
+                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="span12 text-center">
+                {% paginatorizer %}
+            </div>
         </div>
-        <div class="span4">
-            {% paginatorizer %}
-        </div>
-        <div class="span2">
-            <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
-        </div>
-        <div class="span2">
-            <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-        </div>
-    </div>
-    <div class="span12">
-        <table class="table table-bordered table-striped responsive-utilities table-condensed ">
-            <thead>
-                {% tableheader 'id' 'ID' %}
-                {% tableheader 'image__taustart_ts' 'Date (UTC)' %}
-                {% tableheader 'image__tau_time' 'Integration time (s)' %}
-                {% tableheader 'image__band__freq_central' 'Frequency (Hz)' %}
-                {% tableheader 'f_int' 'Flux (Jy)' %}
-                {% tableheader 'f_int_err' 'Flux error (Jy)' %}
-                {% tableheader 'extract_type' 'xtract type' %}
-                {% tableheader 'image' 'Image ID' %}
 
-            </thead>
-            <tbody>
-                {% for point in object_list %}
-                <tr class="{% cycle 'odd' 'even' %}">
-                    <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
-                    <td>{{ point.image.taustart_ts|date:"c" }}</td>
-                    <td>{{ point.image.tau_time|scientific }}</td>
-                    <td>{{ point.image.band.freq_central|scientific }}</td>
-                    <td>{{ point.f_int|scientific }}</td>
-                    <td>{{ point.f_int_err|scientific }}</td>
-                    <td>{{ point.extract_type }}</td>
-                    <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
+        <script>
+            imgs = {
+            {% for assocxtrsource in object_list %}{{assocxtrsource.xtrsrc.id}}: '{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1'{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            };
 
-                </tr>
+            function showThumbnails() {
+                for (key in imgs) {
+                    var elem = document.createElement("img");
+                    elem.src = imgs[key];
+                    document.getElementById("thumbnail" + key).appendChild(elem);
+                }
+            }
+        </script>
+    {% endif %}
+
+
+    <script>
+        // get data from django template
+        var lightcurve = [
+                {% for assocxtrsource in paginator.object_list %}{
+                    "band": '{{ assocxtrsource.xtrsrc.image.band }}',
+                    "taustart_ts": {{ assocxtrsource.xtrsrc.image.taustart_ts|datetime2miliseconds }},
+                    "f_int": {{ assocxtrsource.xtrsrc.f_int }},
+                    "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err }},
+                    "tau_time": {{ assocxtrsource.xtrsrc.image.tau_time }},
+                    "extract_type": {{ assocxtrsource.xtrsrc.extract_type }},
+                    }{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="span12 text-center">
-        {% paginatorizer %}
-    </div>
-</div>
+        ];
 
-<script>
-imgs = {
-    {% for point in object_list %}{{point.id}}: '{% url 'extractedsource_plot' db_name point.id %}?size=1'{% if not forloop.last %},{% endif %}
-    {% endfor %}
-};
+        var title = 'Lightcurve for Running Catalog #{{ object.id }}';
+        var subtitle = '';
+    </script>
 
-function showThumbnails() {
-    for (key in imgs) {
-        var elem = document.createElement("img");
-        elem.src = imgs[key];
-        document.getElementById("thumbnail" + key).appendChild(elem);
-    }
-}
-</script>
-{% endif %}
-
-
-<script>
-    // get data from django template
-    var lightcurve = [
-        {% for point in paginator.object_list %}{
-            "band": '{{ point.image.band }}',
-            "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
-            "f_int": {{ point.f_int }},
-            "f_int_err": {{ point.f_int_err }},
-            "tau_time": {{ point.image.tau_time }},
-            "extract_type": {{ point.extract_type }},
-        }{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    ];
-
-    var title = 'Lightcurve for Running Catalog #{{ object.id }}';
-var subtitle = 'start date {% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}';
-</script>
-
-<script src="{{ STATIC_URL }}lightcurve.js"></script>
+    <script src="{{ STATIC_URL }}lightcurve.js"></script>
 
 {% endblock content %}
 

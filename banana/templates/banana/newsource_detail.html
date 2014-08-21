@@ -10,7 +10,7 @@
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
 {% block navdeep %}<li><a href="{% url 'newsources' db_name %}?dataset={{ object.runcat.dataset_id }}">New Sources</a></li>{% endblock %}
-{% block navdeper %}<li class="active"><a href="{% url 'newsource' db_name object.id %}">New source {{ object.id }}</a></li>{% endblock %}
+{% block navdeeper %}<li class="active"><a href="{% url 'newsource' db_name object.id %}">New source {{ object.id }}</a></li>{% endblock %}
 
 {% block title %}New source {{ object.id }} · Banana{% endblock title %}
 
@@ -23,7 +23,6 @@
 
     <div class="span7">
         <div id='lightcurve'></div>
-
         <dl class="dl-horizontal">
             <dt>Position</dt>
             <dd>({{ object.runcat.wm_ra|stringformat:".3f" }}&deg;,
@@ -31,14 +30,6 @@
                 ({{ object.runcat.ra_err|deg2asec|stringformat:".3f" }}&Prime;,
                 {{ object.runcat.decl_err|deg2asec|stringformat:".3f" }}&Prime;)</dd>
             <dd>{{ object.freq_eff }} ?</dd>
-            <dt>Significance level</dt>
-            <dd>{{ object.siglevel|stringformat:".3f" }}</dd>
-            <dt>&eta;<sub>&nu;</sub></dt>
-            <dd>{{ object.eta_int|scientific }}</dd>
-            <dt>V<sub>&nu;</sub></dt>
-            <dd>{{ object.v_int|scientific }}</dd>
-            <dt>Start date</dt>
-            <dd>{% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}</dd>
             <dt># of datapoints</dt>
             <dd>{{ object.runcat.datapoints }}</dd>
             <dt>Running cat #</dt>
@@ -47,40 +38,8 @@
             <dd><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">{{ object.runcat.dataset.id }}</a></dd>
             <dt>Trigger</dt>
             <dd><a href="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></dd>
-            <dt>Max flux</dt>
-            <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
-            <dt>Mean flux</dt>
-            <dd>{{ object.lightcurve_mean|stringformat:".3f" }}</dd>
-            <dt>Median flux</dt>
-            <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
         </dl>
-
     </div>
-
-
-{% if object_list %}
-
-
-<div class="row-fluid">
-    <div class="span2">
-        <h3>Lightcurve</h3>
-    </div>
-
-    <div class="span2">
-        {% paginatorizer %}
-    </div>
-
-    <div class="span8">
-        <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn" type="button">Thumbnails</button></a>
-        {% flux_units_dropdown %}
-        <a href="{% url 'runningcatalogs' db_name %}?ra={{ object.runcat.wm_ra }}&decl={{ object.runcat.wm_decl }}&distance=0.03&order=distance&dataset={{ object.runcat.dataset_id }}" class="btn">Possible Associations</a>
-        <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.runcat.wm_ra }}d{{ object.runcat.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
-    </div>
-</div>
-
-</div>
-{% endif %}
 
 
 

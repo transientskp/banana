@@ -1,7 +1,7 @@
 """
 All views that visualise a model object (banana.models)
 """
-from django.db.models import Count
+from django.db.models import Count, Max, Avg
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
@@ -109,15 +109,20 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = Runningcatalog
     paginate_by = 100
-    default_order = 'image__taustart_ts'
+    default_order = 'xtrsrc__image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
 
     def get_queryset(self):
-        qs = super(RunningcatalogDetail, self).get_queryset()
-        self.runningcatalog = get_object_or_404(qs, id=self.kwargs['pk'])
-        return self.runningcatalog.extractedsources.order_by(self.get_order())
+        qs = super(RunningcatalogDetail, self).get_queryset()\
+            .annotate(lightcurve_max=Max('extractedsources__f_int',
+                                         distinct=True))\
+            .annotate(lightcurve_avg=Avg('extractedsources__f_int',
+                                         distinct=True))\
+            .order_by(self.get_order())
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
-        context['object'] = self.runningcatalog
+        context['object'] = self.object
         return context
