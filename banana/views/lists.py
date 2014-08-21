@@ -3,15 +3,17 @@ All views that generate lists of model objects
 """
 from django.db.models import Count
 from django.views.generic import ListView, TemplateView
-import banana.db
-from banana.db import db_schema_version, check_database
+from django_filters.views import FilterView
+from django.db.models import Max, Avg
+
+from banana.filters import RunningcatalogFilter
+from banana.db import db_schema_version
+from banana.db import list as db_list
 from banana.models import Dataset, Image, Newsource, Extractedsource, \
-                          Runningcatalog, schema_version, Assocxtrsource
+                          Runningcatalog, schema_version
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
-from django.utils.datastructures import MultiValueDictKeyError
-from django.db.models import Max, Avg
 
 
 class DatabaseList(TemplateView):
@@ -20,7 +22,7 @@ class DatabaseList(TemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super(DatabaseList, self).get_context_data(*args, **kwargs)
         context.update(repo_info())
-        database_list = banana.db.list()
+        database_list = db_list()
         for database in database_list:
             database['version'] = db_schema_version(database['name'])
         context['database_list'] = database_list
@@ -56,16 +58,6 @@ class NewsourceList(SortListMixin, HybridTemplateMixin,
     paginate_by = 100
     dataset_field = 'runcat__dataset'
 
-    def get_queryset(self):
-        qs = super(NewsourceList, self).get_queryset()
-
-        related = ['runcat']
-        return qs.prefetch_related(*related)\
-            .annotate(lightcurve_max=Max('runcat__extractedsources__f_int',
-                                         distinct=True))\
-            .annotate(lightcurve_mean=Avg('runcat__extractedsources__f_int',
-                                          distinct=True))
-
 
 class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
@@ -74,40 +66,23 @@ class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
     dataset_field = 'image__dataset'
 
 
-class RunningcatalogList(SortListMixin, HybridTemplateMixin,
-                         DatasetMixin, ListView):
+class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
+                         FilterView):
+
     model = Runningcatalog
+    filterset_class = RunningcatalogFilter
     paginate_by = 100
 
     def get_queryset(self):
-        self.area = self.get_area()
-        manager = self.model._default_manager
-
-        if self.area:
-            ra, decl, distance = self.area
-            qs = manager.near_position(ra, decl, distance)
-        else:
-            qs = manager.all()
-        qs = qs.order_by(self.get_order())\
-            .annotate(lightcurve_max=Max('extractedsources__f_int',
-                                         distinct=True))\
-            .annotate(lightcurve_mean=Avg('extractedsources__f_int',
-                                          distinct=True))
-        qs = self.filter_queryset(qs)
+        qs = super(RunningcatalogList, self).get_queryset()
+        related = ['newsource__previous_limits_image',
+                   'newsource__trigger_xtrsrc']
+        qs = qs.select_related(*related)
+        qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
+                                            distinct=True))
+        qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
+                                            distinct=True))
         return qs
-
-    def get_area(self):
-        try:
-            return [float(self.request.GET[x]) for x in ('ra', 'decl',
-                                                         'distance')]
-        except (MultiValueDictKeyError, ValueError):
-            return False
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(RunningcatalogList, self).get_context_data(*args,
-                                                                   **kwargs)
-        context['area'] = self.area
-        return context
 
 
 class MonposList(RunningcatalogList):
@@ -119,37 +94,3 @@ class MonposList(RunningcatalogList):
         qs = super(MonposList, self).get_queryset()
         qs = qs.filter(assocxtrsources__xtrsrc__extract_type=2).distinct()
         return qs
-
-
-class AssocxtrsourceList(SortListMixin, HybridTemplateMixin,
-                         DatasetMixin, ListView):
-    model = Assocxtrsource
-    paginate_by = 100
-    dataset_field = 'xtrsrc__image__dataset'
-
-    def get_queryset(self):
-        self.v, self.eta = self.get_filters()
-        qs = self.model._default_manager.transients(self.v,  self.eta,
-                                                    self.get_dataset_id())
-        qs = qs.using(self.request.SELECTED_DATABASE).\
-            order_by(self.get_order())
-        qs = self.filter_queryset(qs)
-        return qs
-
-    def get_filters(self):
-        try:
-            v = float(self.request.GET.get('v'))
-        except TypeError, ValueError:
-            v = None
-        try:
-            eta = float(self.request.GET.get('eta'))
-        except TypeError, ValueError:
-            eta = None
-        return v, eta
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(AssocxtrsourceList, self).get_context_data(*args,
-                                                                   **kwargs)
-        context['v'] = self.v
-        context['eta'] = self.eta
-        return context

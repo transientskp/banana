@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'banana',
     'sqlconsole',
+    'django_filters',
 ]
 
 INTERNAL_IPS = ['127.0.0.1']

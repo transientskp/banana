@@ -22,7 +22,7 @@ SELECT min(x.ra - r.wm_ra) as min_ra
   ,max(x.decl - r.wm_decl) as max_decl
 FROM assocxtrsource a
   ,extractedsource x
-  ,runningcatalog r
+  ,augmented_runningcatalog r
   ,image im1
 WHERE a.runcat = r.id
 AND a.xtrsrc = x.id
@@ -42,7 +42,7 @@ FROM
     ) AS INTEGER) AS scaled_decl
   FROM assocxtrsource a
     ,extractedsource x
-    ,runningcatalog r
+    ,augmented_runningcatalog r
     ,image im1
   WHERE a.runcat = r.id
   AND a.xtrsrc = x.id
@@ -83,7 +83,7 @@ class Assocxtrsource(models.Model):
     f_datapoints = models.IntegerField()
 
     objects = AssocxtrsourceManager()
-    
+
     class Meta:
         managed = False
         db_table = 'assocxtrsource'
@@ -126,16 +126,16 @@ class Dataset(models.Model):
         return self.description
 
     def newsources(self):
-        return Newsource.objects.using(self._state.db).\
+        return Newsource.objects.using(self._state.db). \
             filter(runcat__dataset=self)
 
     def extractedsources(self):
-        return Extractedsource.objects.using(self._state.db).\
+        return Extractedsource.objects.using(self._state.db). \
             filter(image__dataset=self)
 
-    def heatmap(self, N_bins=21):
+    def heatmap(self, n_bins=21):
         """
-        :param N_bins: the number of bins for each axes in the 2d histogram
+        :param n_bins: the number of bins for each axes in the 2d histogram
         """
         cursor = connections[self._state.db].cursor()
         cursor.execute(minmax_query, [self.id])
@@ -151,14 +151,14 @@ class Dataset(models.Model):
 
         # TODO: potential SQL injection here, but SQLite can't handle dict args
         cursor.execute(scaled_query % {'dataset': self.id, 'ra_min': ra_min,
-                                      'ra_max': ra_max, 'decl_min': decl_min,
-                                      'decl_max': decl_max,
-                                      'N_bins': N_bins})
+                                       'ra_max': ra_max, 'decl_min': decl_min,
+                                       'decl_max': decl_max,
+                                       'N_bins': n_bins})
         return cursor.fetchall()
 
     def rejected_images(self):
-        return Image.objects.using(self._state.db).filter(dataset=self).\
-            annotate(num_rejections=Count('rejections')).\
+        return Image.objects.using(self._state.db).filter(dataset=self). \
+            annotate(num_rejections=Count('rejections')). \
             filter(num_rejections__gt=0)
 
 
@@ -206,7 +206,7 @@ class Extractedsource(models.Model):
         return str(self.id)
 
     def runningcatalogs(self):
-        assocs = Assocxtrsource.objects.using(self._state.db).\
+        assocs = Assocxtrsource.objects.using(self._state.db). \
             filter(xtrsrc=self.id)
         return [a.runcat for a in assocs]
 
@@ -270,25 +270,25 @@ class Image(models.Model):
         returns next image, limited by dataset, stokes and frequency,
         sorted by time.
         """
-        qs = Image.objects.using(self._state.db).\
-            filter(dataset=self.dataset,
-                   band=self.band,
-                   stokes=self.stokes,
-                   skyrgn=self.skyrgn
-                   ).\
-            order_by("taustart_ts")
+        qs = Image.objects.using(self._state.db)\
+            .filter(dataset=self.dataset, band=self.band,stokes=self.stokes,
+                    skyrgn=self.skyrgn)\
+            .order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
         try:
-            id = l[index+1]
+            id_ = l[index + 1]
         except IndexError:
             raise ObjectDoesNotExist
-        return Image.objects.using(self._state.db).get(id=id)
+        return Image.objects.using(self._state.db).get(id=id_)
+
+    def __str__(self):
+        return "image #%s" % self.id
 
 
 class Newsource(models.Model):
     id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey('Runningcatalog', db_column='runcat')
+    runcat = models.OneToOneField('Runningcatalog', db_column='runcat')
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc')
     newsource_type = models.SmallIntegerField()
@@ -299,69 +299,9 @@ class Newsource(models.Model):
         managed = False
         db_table = 'newsource'
 
-    def lightcurve(self):
-        return self.runcat.lightcurve()
+    def __str__(self):
+        return 'newsource #%s' % self.id
 
-    def index_in_dataset(self):
-        #Memoize this, since it's not going to change
-        # (unless a transient is deleted?)
-        if not hasattr(self, '_index_in_dataset'):
-            qs = Newsource.objects.using(self._state.db).\
-                filter(runcat__dataset=self.runcat.dataset,
-                       ).\
-                order_by("id")
-            l = list(qs.values_list('id', flat=True))
-            self._index_in_dataset = l.index(self.id)
-        return self._index_in_dataset
-
-    def number_in_dataset(self):
-        num = Newsource.objects.using(self._state.db).\
-            filter(runcat__dataset=self.runcat.dataset).count()
-        return num
-
-    def get_next_by_id_offset(self, offset):
-        """
-        Returns transient 'offset' places away in list of transients.
-
-        List is limited to parent dataset, sorted by id.
-
-        If 'offset' places the next id outside the list,
-        raises ObjectDoesNotExist error
-
-        """
-        qs = Newsource.objects.using(self._state.db).\
-            filter(runcat__dataset=self.runcat.dataset,
-                   ).\
-            order_by("id")
-        l = list(qs.values_list('id', flat=True))
-
-        index = l.index(self.id)
-        offset_idx = index+offset
-
-        if offset_idx < 0 or offset_idx >= len(l):
-            #Desired behaviour is to only return linear offsets
-            #i.e. don't loop using -ve index behaviour!
-            raise ObjectDoesNotExist
-
-        id = l[offset_idx]
-        return Newsource.objects.using(self._state.db).get(id=id)
-
-    def get_next_by_id(self):
-        return self.get_next_by_id_offset(1)
-
-    def get_prev_by_id(self):
-        return self.get_next_by_id_offset(-1)
-
-    def lightcurve_median(self):
-        """
-        median value of the transient lightcurve
-        """
-        def median(queryset, column):
-            count = queryset.count()
-            qs = queryset.values_list(column, flat=True).order_by(column)
-            return qs[int(round(count/2))]
-        lightcurve = self.lightcurve()
-        return median(lightcurve, 'f_int')
 
 
 class Node(models.Model):
@@ -405,7 +345,7 @@ class Rejectreason(models.Model):
         db_table = 'rejectreason'
 
     def __unicode__(self):
-        return "%s" % (self.description)
+        return "%s" % self.description
 
 
 class Runningcatalog(models.Model):
@@ -441,20 +381,19 @@ class Runningcatalog(models.Model):
 
     objects = RunningcatalogManager()
 
+
+    # The fields below are computed in the augmented view
+    v_int = models.FloatField(blank=True, null=True)
+    eta_int = models.FloatField(blank=True, null=True)
+    sigma_max = models.FloatField(blank=True, null=True)
+    sigma_min = models.FloatField(blank=True, null=True)
+
     class Meta:
         managed = False
-        db_table = 'runningcatalog'
+        db_table = 'augmented_runningcatalog'
 
     def __unicode__(self):
-        return "%s" % (self.id)
-
-    def lightcurve(self):
-        """
-        returns the associated extractedsources, but prefetches the related
-        image and image band data
-        """
-        related = ['image', 'image__band']
-        return self.extractedsources.prefetch_related(*related)
+        return "%s" % self.id
 
     @property
     def ra_err(self):
@@ -464,16 +403,19 @@ class Runningcatalog(models.Model):
     def decl_err(self):
         return self.wm_uncertainty_ns
 
+    @property
     def lightcurve_median(self):
         """
         median value of the Runningcatalog lightcurve.
         """
+
         def median(queryset, column):
             count = queryset.count()
             qs = queryset.values_list(column, flat=True).order_by(column)
-            return qs[int(round(count/2))]
-        lightcurve = self.lightcurve()
-        return median(lightcurve, 'f_int')
+            return qs[int(round(count / 2))]
+
+        return median(self.extractedsources, 'f_int')
+
 
 
 class RunningcatalogFlux(models.Model):

@@ -10,39 +10,16 @@
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
 {% block navdeep %}<li><a href="{% url 'newsources' db_name %}?dataset={{ object.runcat.dataset_id }}">New Sources</a></li>{% endblock %}
-{% block navdeper %}<li class="active"><a href="{% url 'transient' db_name object.id %}">Transient {{ object.id }}</a></li>{% endblock %}
+{% block navdeper %}<li class="active"><a href="{% url 'newsource' db_name object.id %}">New source {{ object.id }}</a></li>{% endblock %}
 
-{% block title %}Transient {{ object.id }} · Banana{% endblock title %}
+{% block title %}New source {{ object.id }} · Banana{% endblock title %}
 
-{% block morehead %}
-    <!-- required for error bars -->
-    <script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>
-
-    <!-- include Aladin Lite CSS  -->
-    <link rel="stylesheet" href="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css" />
-{% endblock %}
 
 {% block content %}
 
 
 <div class="row-fluid">
-    <div class="span5">
-        <h2>New source #{{ object.id }}</h2>
-        <div class="text-center">
-            <!-- Aladin Lite viewer  -->
-            <div id="aladin-lite-div" style="width:420px;height:420px;"></div>
-            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
-            <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div');
-                aladin.setZoom(0.18);
-                aladin.gotoPosition({{ object.runcat.wm_ra }}, {{ object.runcat.wm_decl }});
-                aladin.setImageSurvey("P/DSS2/color");
-            </script>
-        </div>
-
-        <h5>({{object.index_in_dataset|add:1 }} of {{object.number_in_dataset}} in Dataset {{object.runcat.dataset_id}})</h5>
-        {% include "includes/transient_paginator.html" %}
-    </div>
+    <h2>New source #{{ object.id }}</h2>
 
     <div class="span7">
         <div id='lightcurve'></div>
@@ -102,81 +79,10 @@
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
-        <table class="table table-bordered table-striped responsive-utilities table-condensed ">
-            <thead>
-                {% tableheader 'id' 'ID' %}
-                {% tableheader 'image__taustart_ts' 'Date (UTC)' %}
-                {% tableheader 'image__tau_time' 'Integration time (s)' %}
-                {% tableheader 'image__band__freq_central' 'Frequency (Hz)' %}
-                {% tableheader 'f_int' 'Int. flux (Jy)' %}
-                {% tableheader 'f_int_err' 'Int flux err (Jy)' %}
-                {% tableheader 'f_peak' 'Peak flux (Jy)' %}
-                {% tableheader 'f_peak_err' 'Peak flux err (Jy)' %}
-                {% tableheader 'extract_type' 'xtract type' %}
-                {% if request.GET.thumb == "1" %}
-                    {% tableheader 'thumbnail' %}
-                {% endif %}
-                {% tableheader 'image' 'Image ID' %}
-            </thead>
-            <tbody>
-                {% with request.GET.flux_prefix as prefix %}
-                {% for point in object_list %}
-                <tr class="{% cycle 'odd' 'even' %}">
-                    <td><a href="{% url 'extractedsource' db_name point.id %}">{{ point.id }}</a></td>
-                    <td>{{ point.image.taustart_ts|date:"c" }}</td>
-                    <td>{{ point.image.tau_time|scientific }}</td>
-                    <td>{{ point.image.band.freq_central|scientific }}</td>
-                    <td>{{ point.f_int|flux_unit:prefix|scientific }}</td>
-                    <td>{{ point.f_int_err|flux_unit:prefix|scientific }}</td>
-                    <td>{{ point.f_peak|flux_unit:prefix|scientific }}</td>
-                    <td>{{ point.f_peak_err|flux_unit:prefix|scientific }}</td>
-                    <td>{{ point.extract_type }}</td>
-                    {% if request.GET.thumb == "1" %}
-                        <td><img src="{% url 'extractedsource_plot' db_name point.id %}?size=1"></td>
-                    {% endif %}
-                    <td><a href="{% url 'image' db_name point.image.id %}">{{ point.image.id }}</td>
-                </tr>
-                {% endfor %}
-                {% endwith %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="span12 text-center">
-        {% paginatorizer %}
-    </div>
-
 </div>
 {% endif %}
 
 
-<script>
-    // get data from django template
-    var lightcurve = [
-        {% for point in paginator.object_list %}{
-            "band": '{{ point.image.band }}',
-            "taustart_ts": {{ point.image.taustart_ts|datetime2miliseconds }},
-            "f_int": {{ point.f_int }},
-            "f_int_err": {{ point.f_int_err }},
-            "tau_time": {{ point.image.tau_time }},
-            "extract_type": {{ point.extract_type }},
-        }{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    ];
-    var title = 'Lightcurve for transient #{{object.id}}';
-    var subtitle = 'start date {% if object.t_start %}{{ object.t_start|date:"c" }}{% else %} Unknown {% endif %}';
-
-    var trigger_f_int = {{ object.trigger_xtrsrc.f_int }};
-    var trigger_taustart_ts = {{ object.trigger_xtrsrc.image.taustart_ts|datetime2miliseconds }};
-    var trigger_f_int_err = {{ object.trigger_xtrsrc.f_int_err }};
-    var trigger_extract_type = {{ object.trigger_xtrsrc.extract_type }};
-    var trigger_tau_time = {{ object.trigger_xtrsrc.image.tau_time }};
-    var trigger_symbol = "url({{ STATIC_URL }}circle.png)";
-</script>
-
-<script src="{{ STATIC_URL }}lightcurve.js"></script>
 
 {% endblock content %}
 

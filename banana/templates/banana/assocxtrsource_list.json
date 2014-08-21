@@ -1,5 +1,0 @@
-[{% for object in object_list %}
-  {
-     "id": {{ object.id }}
-  }{% if not forloop.last %},{% endif %}
-{% endfor %}]

@@ -4,6 +4,7 @@ from banana.views import images, lists, details
 from banana.views.etc import extracted_sources_pixel
 
 # maximum cache time...
+
 cache_time = 60*60*24*30
 
 urlpatterns = patterns('',
@@ -19,19 +20,15 @@ urlpatterns = patterns('',
     url(r'^(?P<db>\w+)/newsources/$',
         lists.NewsourceList.as_view(),
         name='newsources'),
-    url(r'^(?P<db>\w+)/assocxtrsources/$',
-        lists.AssocxtrsourceList.as_view(),
-        name='assocxtrsources'),
     url(r'^(?P<db>\w+)/extractedsources/$',
         lists.ExtractedsourcesList.as_view(),
         name='extractedsources'),
-    url(r'^(?P<db>\w+)/runningcatalogs/$',
-        lists.RunningcatalogList.as_view(),
-        name='runningcatalogs'),
     url(r'^(?P<db>\w+)/monposs/$',
         lists.MonposList.as_view(),
         name='monposs'),
-
+    url(r'^(?P<db>\w+)/runningcatalogs/$',
+        lists.RunningcatalogList.as_view(),
+        name='runningcatalogs'),
 
     url(r'^(?P<db>\w+)/newsource/(?P<pk>\d+)/$',
         details.NewsourceDetail.as_view(),
