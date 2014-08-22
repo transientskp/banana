@@ -25,8 +25,9 @@ class Median(Aggregate):
         klass = MedianSql
         # TODO: this is a hack for now, SQLite doesn't support median and
         # custom functions so we just return the average in case of testing
-        logger.warning('Detected test run, using avg() SQL function, not median()')
+
         if settings.TESTING:
+            logger.warning('Detected test run, using avg() SQL function, not median()')
             aggregate = Avg(col, source=source, is_summary=is_summary,
                             **self.extra)
         else:
