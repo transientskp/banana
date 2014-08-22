@@ -3,6 +3,7 @@ from bananaproject.settings.base import *
 
 SECRET_KEY = "NSA is watching you"
 
+TESTING = True
 
 DATABASES = {
     'default': {

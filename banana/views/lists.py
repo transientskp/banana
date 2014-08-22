@@ -14,6 +14,7 @@ from banana.models import Dataset, Image, Newsource, Extractedsource, \
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
+from banana.aggregates import Median
 
 
 class DatabaseList(TemplateView):
@@ -81,6 +82,8 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
                                             distinct=True))
         qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
+                                            distinct=True))
+        qs = qs.annotate(lightcurve_median=Median('extractedsources__f_int',
                                             distinct=True))
         return qs
 
