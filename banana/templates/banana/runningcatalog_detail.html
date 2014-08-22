@@ -64,6 +64,12 @@
                         ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
                         {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
 
+                    <dt>Ra(h:m:s)</dt>
+                    <dd>{{object.wm_ra|format_angle:"time"}}</dd>
+
+                    <dt>Dec(d:m:s)</dt>
+                    <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
+
                     <dt>New source</dt>
                     <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
@@ -79,13 +85,15 @@
                     <dt>Σmax</dt>
                     <dd>{% if object.sigma_max %}{{  object.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
-                    <dt>Trigger source</dt>
-                    <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
-
                 </dl>
             </div>
             <div class="span6">
                 <dl class="dl-horizontal">
+
+                    <dt>Trigger source</dt>
+                    <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+
+
                     <dt>Previous limit image</dt>
                     <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image }}</a>{% else %}No{% endif %}</dd>
 
