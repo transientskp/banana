@@ -4,7 +4,7 @@
 Creates a drop-down button allowing flux unit selection
 {% endcomment %}
 <div class="btn-group">
-    <button class="btn dropdown-toggle" data-toggle="dropdown">Flux units <span class="caret"></span></button>
+    <button class="btn dropdown-toggle" data-toggle="dropdown">Flux units <col-md- class="caret"></col-md-></button>
     <ul class="dropdown-menu">
       {% for k, v in units_map.items %}
           <li><a href="?{% query_replace 'flux_prefix' k %}">{{ k|safe }}</a></li>

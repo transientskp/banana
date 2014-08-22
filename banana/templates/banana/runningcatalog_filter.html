@@ -24,83 +24,114 @@
 {% block content %}
 
     <div class="well">
-        <div class="row-fluid">
-            <form action="" method="get"  class="form-horizontal">
-                <div class="span4">
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_wm_ra_0">Ra(°):</label>
-                        <div class="controls mini">
-                            {{ filter.form.wm_ra|addcss:"input-mini" }}
-                        </div>
+        <form action="" method="get" role="form">
+            <div class="row">
+                <div class="form-group">
+                    <label for="id_wm_ra_0" class="col-xs-1 control-label">Ra(°):</label>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_wm_ra_0" name="wm_ra_0" type="text" {% if filter.form.wm_ra.value.0 %}value="{{ filter.form.wm_ra.value.0 }}"{% endif %} placeholder="min"/>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_wm_decl_0">Dec(°):</label>
-                        <div class="controls mini">
-                            {{ filter.form.wm_decl|addcss:"input-mini" }}
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label  mini" for="id_newsource">Newsource:</label>
-                        <div class="controls  mini">
-                            {{ filter.form.newsource|addcss:"input-mini" }}
-                        </div>
-                    </div>
-
-                </div>
-                <div class="span4">
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_v_int_0">V<sub>ν</sub>:</label>
-                        <div class="controls mini">
-                            {{ filter.form.v_int|addcss:"input-mini" }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_eta_int_0">η<sub>ν</sub>:</label>
-                        <div class="controls mini">
-                            {{ filter.form.eta_int|addcss:"input-mini" }}
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <div class="controls  mini">
-                            <input type="submit" class="btn"/>
-                        </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_wm_ra_1" name="wm_ra_1" type="text" {% if filter.form.wm_ra.value.1 %}value="{{ filter.form.wm_ra.value.1 }}"{% endif %} placeholder="max"/>
                     </div>
                 </div>
-                <div class="span4">
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_sigma_min_0">Σ<sub>min</sub>:</label>
-                        <div class="controls mini">
-                            {{ filter.form.sigma_min|addcss:"input-mini" }}
-                        </div>
-                    </div>
 
-                    <div class="control-group">
-                        <label class="control-label mini" for="id_sigma_max_0">Σ<sub>max</sub>:</label>
-                        <div class="controls mini">
-                            {{ filter.form.sigma_max|addcss:"input-mini" }}
-                        </div>
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label for="id_v_int_0" class="col-xs-1 control-label">V<sub>ν</sub>:</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_v_int_0" name="v_int_0" type="text"  {% if filter.form.v_int.value.0 %}value="{{ filter.form.v_int.value.0 }}"{% endif %} placeholder="min"/>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_v_int_1" name="v_int_1" type="text"  {% if filter.form.v_int.value.0 %}value="{{ filter.form.v_int.value.0 }}"{% endif %} placeholder="max"/>
                     </div>
                 </div>
-            </form>
-        </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>min</sub>:</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_sigma_min_0" name="sigma_min_0" type="text" placeholder="min"/>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_sigma_min_1" name="sigma_min_1" type="text" placeholder="max"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label for="id_wm_decl_0" class="col-xs-1 control-label">Dec(°):</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control " id="id_wm_decl_0" name="wm_decl_0" type="text" placeholder="min"/>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_wm_decl_1" name="wm_decl_1" type="text" placeholder="max"/>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label for="id_eta_int_0" class="col-xs-1 control-label">η<sub>ν</sub>:</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_eta_int_0" name="eta_int_0" type="text" {% if filter.form.eta_int_0.value.0 %}value="{{ filter.form.eta_int_0.value.0 }}"{% endif %} placeholder="min"/>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_eta_int_1" name="eta_int_0" type="text" {% if filter.form.eta_int_0.value.1 %}value="{{ filter.form.eta_int_0.value.1 }}"{% endif %} placeholder="max"/>
+                    </div>
+                </div>
+
+
+
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>max</sub>:</label>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_sigma_max_0" name="sigma_max_0" type="text" {% if filter.form.sigma_max_0.value.0 %}value="{{ filter.form.sigma_max_0.value.0 }}"{% endif %} placeholder="min"/>
+                    </div>
+                    <div class="col-xs-1">
+                        <input class="form-control" id="id_sigma_max_1" name="sigma_max_1" type="text" {% if filter.form.sigma_max_0.value.1 %}value="{{ filter.form.sigma_max_1.value.1 }}"{% endif %} placeholder="max"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-xs-1">
+                        <label class="control-label mini" for="id_newsource">Newsource:</label>
+                    </div>
+                    <div class="col-xs-1 col-xs-offset-1">
+                        {{ filter.form.newsource }}
+                    </div>
+                    <div class="col-xs-1 col-xs-offset-2">
+                        <input type="submit" class="btn"/>
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
 
-    <div class="row-fluid">
-
+    <div class="row">
         {% if runningcatalog_list %}
-
-            <div class="span2 text-center">
+            <div class="col-md-2 text-center">
             </div>
-            <div class="span8 text-center">
+            <div class="col-md-8 text-center">
                 {% paginatorizer %}
             </div>
-            <div class="span2 text-center">
-                <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+            <div class="col-md-2 text-center">
+                <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
             </div>
 
-            <div class="span12">
+            <div class="col-md-12">
                 <table class="table table-bordered table-striped responsive-utilities table-condensed " >
                     <thead>
                     <tr>
@@ -148,7 +179,7 @@
                 </table>
             </div>
 
-            <div class="span12 text-center">
+            <div class="col-md-12 text-center">
                 {% paginatorizer %}
             </div>
 

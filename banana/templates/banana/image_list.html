@@ -21,13 +21,13 @@
 
 {% load units %}
 
-<div class="row-fluid">
+<div class="row">
     {% if image_list %}
-        <div class="span12 text-center">
-            <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+        <div class="col-md-12 text-center">
+            <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
         </div>
 
-        <div class="span12 text-center">
+        <div class="col-md-12 text-center">
             {% paginatorizer %}
         </div>
 
@@ -71,7 +71,7 @@
         </table>
     </div>
 
-    <div class="span12 text-center">
+    <div class="col-md-12 text-center">
         {% paginatorizer %}
     </div>
 

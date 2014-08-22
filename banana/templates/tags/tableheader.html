@@ -13,9 +13,9 @@ Encloses column-headers with re-ordering hyperlinks (via http query strings)
         {% endif %}
         {{ description }}
         {% if order == field %}
-            <i class="icon-arrow-down"></i>
+            <span class="glyphicon glyphicon-arrow-down"></span>
         {% elif order == antifield %}
-            <i class="icon-arrow-up"></i>
+            <span class="glyphicon glyphicon-arrow-up"></span>
         {% endif %}
     {% endwith %}
     </a>

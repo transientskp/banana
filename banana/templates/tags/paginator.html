@@ -1,6 +1,5 @@
 {% load query_replace %}
-<div class="pagination pagination-centered pagination-mini">
-    <ul>
+<ul class="pagination pagination-sm">
         {% if page_obj.has_previous %}
         <li><a href="?{% query_replace 'page' page_obj.previous_page_number%}">&laquo;</a></li>
         {% else %}
@@ -34,5 +33,4 @@
         {% else %}
         <li class="disabled"><a>&raquo;</a></li>
         {% endif %}
-    </ul>
-</div>
+</ul>

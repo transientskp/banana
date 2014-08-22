@@ -24,23 +24,23 @@
 {% block content %}
 
 {% if object_list %}
-<div class="row-fluid">
-    <div class="span12 text-center">
+<div class="row">
+    <div class="col-md-12 text-center">
         <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
     </div>
 
-    <div class="span12 text-center">
+    <div class="col-md-12 text-center">
         {% paginatorizer %}
     </div>
 
-    <div class="span12">
+    <div class="col-md-12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " >
             <thead>
             <tr>
                 {% tableheader 'id' 'ID' %}
                 {% tableheader 'runcat__wm_ra' 'Pos (°)' %}
                 {% tableheader 'runcat__wm_ra' 'Pos (h:m:s,d:m:s)' %}
-                {% tableheader 't_start' 'Start date' %}
+                {% tableheader 'trigger_xtrsrc__image__taustart_ts' 'Start date' %}
                 {% tableheader 'runcat__datapoints' '# of points' %}
                 {% tableheader 'runcat' 'Run. cat. #' %}
                 {% tableheader 'trigger_xtrsrc' 'Trigger source' %}

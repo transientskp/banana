@@ -20,57 +20,61 @@
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico"/>
 </head>
 
-<body style="padding:60px;">
-
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-
-        <a class="brand"><img src="{{ STATIC_URL }}logo.png" width=20 height=20></a>
-        <ul class="nav">
-            {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
-            {% block navdatabase %}{% endblock navdatabase %}
-            {% block navdataset %}{% endblock navdataset %}
-            {% block navdeep %}{% endblock %}
-            {% block navdeeper %}{% endblock %}
-            {% block navdepest %}{% endblock %}
-        </ul>
-
-        <ul class="nav pull-right">
-            {% if user.is_authenticated %}
-                <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
-                {% if user.is_staff %}
-                    {% if db_name %}
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"><img src="{{ STATIC_URL }}logo.png" width=20 height=15></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
+                {% block navdatabase %}{% endblock navdatabase %}
+                {% block navdataset %}{% endblock navdataset %}
+                {% block navdeep %}{% endblock %}
+                {% block navdeeper %}{% endblock %}
+                {% block navdepest %}{% endblock %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
+                    {% if user.is_staff %}
+                        {% if db_name %}
+                            <li class="divider-vertical"></li>
+                            <li><a href="{% url 'sqlconsole' db_name %}">SQLConsole</a></li>
+                        {% endif %}
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                        <li class="divider-vertical"></li>
+                    {% endif %}
                     <li class="divider-vertical"></li>
-                    <li><a href="{% url 'sqlconsole' db_name %}">SQLConsole</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
                 {% endif %}
-                    <li class="divider-vertical"></li>
-                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                    <li class="divider-vertical"></li>
-                {% endif %}
-                <li class="divider-vertical"></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
 
-            {% else %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-            {% endif %}
+            </ul>
 
-        </ul>
+        </div>
     </div>
-</div>
+</nav>
 
 {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>{{ message.tags }}</strong> {{ message }}
-    </div>
+        <div class="alert alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>{{ message.tags }}</strong> {{ message }}
+        </div>
     {% endfor %}
 {% endif %}
 
 <div class="container-fluid">
-{% block content %}
-Put something here
-{% endblock content %}
+    {% block content %}
+        Put something here
+    {% endblock content %}
 </div>
 
 </body>

@@ -11,11 +11,11 @@
 {% if database_list %}
 
 
-<div class="row-fluid">
-    <div class="span4 offset2 text-center">
+<div class="row">
+    <div class="col-md-4 offset2 text-center">
         <img src="{{ STATIC_URL }}logo.png" width="200" height="200" style="margin-bottom:30px;">
     </div>
-    <div class="span6">
+    <div class="col-md-6">
          <dl class="dl-horizontal">
                 <dt>Branch</dt>
                 <dd><p class="text-info">{{ branch }}</p></dd>
@@ -35,8 +35,8 @@
     </div>
 </div>
 
-<div class="row-fluid">
-    <div class="span12">
+<div class="row">
+    <div class="col-md-12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " >
             <thead>
             <tr>

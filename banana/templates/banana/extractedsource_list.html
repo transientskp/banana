@@ -22,17 +22,17 @@
 {% block content %}
 
 {% if extractedsource_list %}
-<div class="row-fluid">
-    <div class="span12 text-center">
-        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn" type="button">CSV format</button></a>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
     </div>
 
-    <div class="span12 text-center">
+    <div class="col-md-12 text-center">
 
         {% paginatorizer %}
     </div>
 
-    <div class="span12">
+    <div class="col-md-12">
         <table class="table table-bordered table-striped responsive-utilities table-condensed " >
             <thead>
             <tr>
@@ -74,7 +74,7 @@
         </table>
     </div>
 
-    <div class="span12 text-center">
+    <div class="col-md-12 text-center">
         {% paginatorizer %}
     </div>
 
