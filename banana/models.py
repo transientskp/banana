@@ -402,20 +402,6 @@ class Runningcatalog(models.Model):
     def decl_err(self):
         return self.wm_uncertainty_ns
 
-    @property
-    def lightcurve_median(self):
-        """
-        median value of the Runningcatalog lightcurve.
-        """
-
-        def median(queryset, column):
-            count = queryset.count()
-            qs = queryset.values_list(column, flat=True).order_by(column)
-            return qs[int(round(count / 2))]
-
-        return median(self.extractedsources, 'f_int')
-
-
 
 class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)
