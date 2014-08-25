@@ -205,11 +205,6 @@ class Extractedsource(models.Model):
     def __unicode__(self):
         return str(self.id)
 
-    def runningcatalogs(self):
-        assocs = Assocxtrsource.objects.using(self._state.db). \
-            filter(xtrsrc=self.id)
-        return [a.runcat for a in assocs]
-
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)

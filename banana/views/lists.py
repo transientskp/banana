@@ -65,6 +65,12 @@ class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
     paginate_by = 100
     dataset_field = 'image__dataset'
 
+    def get_queryset(self):
+        qs = super(ExtractedsourcesList, self).get_queryset()
+        related = ['runningcatalog_set']
+        qs = qs.prefetch_related(*related)
+        return qs
+
 
 class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
                          FilterView):

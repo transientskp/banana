@@ -56,7 +56,7 @@
             {% for extractedsource in extractedsource_list %}
             <tr>
                 <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
-                <td>{{ extractedsource.runningcatalogs|join:", " }}</td>
+                <td>{{ extractedsource.runningcatalog_set.all|join:", " }}</td>
                 <td>{{ extractedsource.ra|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}</td>
                 <td>{{ extractedsource.decl|stringformat:".3f" }}</td>
