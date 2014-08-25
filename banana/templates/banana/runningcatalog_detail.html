@@ -32,142 +32,137 @@
 {% endblock %}
 
 {% block content %}
-
-
     <div class="row">
-    <div class="col-md-5">
+        <div class="col-md-5">
+            <h2>Running Catalog #{{ object.id }}</h2>
 
-        <h2>Running Catalog #{{ object.id }}</h2>
-
-        <div class="text-center">
-            <!-- Aladin Lite viewer  -->
-            <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
-            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
-            <script type="text/javascript">
-                var aladin = A.aladin('#aladin-lite-div');
-                aladin.setZoom(0.18);
-                aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
-                aladin.setImageSurvey("P/DSS2/color");
-            </script>
-        </div>
-    </div>
-
-    <div class="col-md-7">
-        <div id='lightcurve'></div>
-
-        <div class="row well">
-            <div class="col-md-6">
-                <dl class="dl-horizontal">
-                    <dt>Position</dt>
-                    <dd>({{ object.wm_ra|stringformat:".3f" }}°,
-                        {{ object.wm_decl|stringformat:".3f" }}°) &pm;
-                        ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
-                        {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
-
-                    <dt>Ra(h:m:s)</dt>
-                    <dd>{{object.wm_ra|format_angle:"time"}}</dd>
-
-                    <dt>Dec(d:m:s)</dt>
-                    <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
-
-                    <dt>New source</dt>
-                    <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
-
-                    <dt>ην</dt>
-                    <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
-
-                    <dt>Vν</dt>
-                    <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
-
-                    <dt>Σmin</dt>
-                    <dd>{% if object.sigma_min %}{{  object.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
-
-                    <dt>Σmax</dt>
-                    <dd>{% if object.sigma_max %}{{  object.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
-
-                </dl>
+            <div class="text-center">
+                <!-- Aladin Lite viewer  -->
+                <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
+                <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+                <script type="text/javascript">
+                    var aladin = A.aladin('#aladin-lite-div');
+                    aladin.setZoom(0.18);
+                    aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
+                    aladin.setImageSurvey("P/DSS2/color");
+                </script>
             </div>
-            <div class="col-md-6">
-                <dl class="dl-horizontal">
+        </div>
 
-                    <dt>Trigger source</dt>
-                    <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+        <div class="col-md-7">
+            <div id='lightcurve'></div>
 
+            <div class="row well well-sm">
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>Position</dt>
+                        <dd>({{ object.wm_ra|stringformat:".3f" }}°,
+                            {{ object.wm_decl|stringformat:".3f" }}°) &pm;
+                            ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
+                            {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
 
-                    <dt>Previous limit image</dt>
-                    <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image }}</a>{% else %}No{% endif %}</dd>
+                        <dt>Ra(h:m:s)</dt>
+                        <dd>{{object.wm_ra|format_angle:"time"}}</dd>
 
-                    <dt># of datapoints</dt>
-                    <dd>{{ object.datapoints }}</dd>
+                        <dt>Dec(d:m:s)</dt>
+                        <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
 
-                    <dt>Dataset</dt>
-                    <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+                        <dt>New source</dt>
+                        <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
-                    <dt>Max flux</dt>
-                    <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
+                        <dt>ην</dt>
+                        <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
-                    <dt>Mean flux</dt>
-                    <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
+                        <dt>Vν</dt>
+                        <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
-                    <dt>Median flux</dt>
-                    <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
-                </dl>
+                        <dt>Σmin</dt>
+                        <dd>{% if object.sigma_min %}{{  object.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                        <dt>Σmax</dt>
+                        <dd>{% if object.sigma_max %}{{  object.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>Trigger source</dt>
+                        <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+
+                        <dt>Previous limit image</dt>
+                        <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image }}</a>{% else %}No{% endif %}</dd>
+
+                        <dt># of datapoints</dt>
+                        <dd>{{ object.datapoints }}</dd>
+
+                        <dt>Dataset</dt>
+                        <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+
+                        <dt>Max flux</dt>
+                        <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
+
+                        <dt>Mean flux</dt>
+                        <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
+
+                        <dt>Median flux</dt>
+                        <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
+                    </dl>
+                </div>
             </div>
         </div>
     </div>
 
     {% if object_list %}
         <div class="row">
-            <div class="row">
-                <div class="col-md-4">
-                    <h2>Lightcurve</h2>
-                </div>
-                <div class="col-md-4">
-                    {% paginatorizer %}
-                </div>
-                <div class="col-md-2">
-                    <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10" class="btn">Simbad Cone Search</a>
-                </div>
-                <div class="col-md-2">
-                    <a href="?format=csv"><button class="btn" type="button">CSV format</button></a>
-                </div>
+            <div class="col-md-5">
+                <h2>Lightcurve</h2>
             </div>
-            <div class="col-md-12">
-                <table class="table table-bordered table-striped responsive-utilities table-condensed ">
-                    <thead>
-                    {% tableheader 'xtrsrc__id' 'ID' %}
-                    {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
-                    {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
-                    {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
-                    {% tableheader 'xtrsrc__f_int' 'Flux (Jy)' %}
-                    {% tableheader 'xtrsrc__f_int_err' 'Flux error (Jy)' %}
-                    {% tableheader 'xtrsrc__extract_type' 'xtract type' %}
-                    {% tableheader 'xtrsrc__image' 'Image ID' %}
-                    {% tableheader 'v_int' 'Vν' %}
-                    {% tableheader 'eta_int' 'ην' %}
-                    </thead>
-                    <tbody>
-                    {% for assocxtrsource in object_list %}
-                        <tr class="{% cycle 'odd' 'even' %}">
-                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
-                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int_err|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
-                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
-                            <td>{{ assocxtrsource.v_int|scientific }}</td>
-                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-12 text-center">
+            <div class="col-md-3">
                 {% paginatorizer %}
             </div>
+            <div class="col-md-4">
+                <div class="btn-group">
+                    <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad Cone Search</button></a>
+                    <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
+                </div>
+            </div>
         </div>
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped responsive-utilities table-condensed ">
+                <thead>
+                {% tableheader 'xtrsrc__id' 'ID' %}
+                {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
+                {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
+                {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
+                {% tableheader 'xtrsrc__f_int' 'Flux (Jy)' %}
+                {% tableheader 'xtrsrc__f_int_err' 'Flux error (Jy)' %}
+                {% tableheader 'xtrsrc__extract_type' 'xtract type' %}
+                {% tableheader 'xtrsrc__image' 'Image ID' %}
+                {% tableheader 'v_int' 'Vν' %}
+                {% tableheader 'eta_int' 'ην' %}
+                </thead>
+                <tbody>
+                {% for assocxtrsource in object_list %}
+                    <tr class="{% cycle 'odd' 'even' %}">
+                        <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                        <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                        <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                        <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                        <td>{{ assocxtrsource.xtrsrc.f_int|scientific }}</td>
+                        <td>{{ assocxtrsource.xtrsrc.f_int_err|scientific }}</td>
+                        <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                        <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                        <td>{{ assocxtrsource.v_int|scientific }}</td>
+                        <td>{{ assocxtrsource.eta_int|scientific }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-12 text-center">
+            {% paginatorizer %}
+        </div>
+
 
         <script>
             imgs = {

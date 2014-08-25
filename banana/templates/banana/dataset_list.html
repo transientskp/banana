@@ -19,7 +19,7 @@
     </div>
 
     <div class="col-md-12">
-        <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+        <table class="table table-striped table-condensed table-hover" >
             <thead>
             <tr>
                 {% tableheader 'id' %}
@@ -34,7 +34,7 @@
             {% for dataset in dataset_list %}
             <tr>
                 <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
-                <td>{{ dataset.description }}</td>
+                <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.description }}</a></td>
                 <td>{{ dataset.rerun }}</td>
                 <td>{{ dataset.num_images }}</td>
                 <td>{{ dataset.process_start_ts }}</td>

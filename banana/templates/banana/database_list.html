@@ -12,8 +12,8 @@
 
 
 <div class="row">
-    <div class="col-md-4 offset2 text-center">
-        <img src="{{ STATIC_URL }}logo.png" width="200" height="200" style="margin-bottom:30px;">
+    <div class="col-md-4 col-md-offset-2 text-center">
+        <img src="{{ STATIC_URL }}logo.png" width="180" height="130" style="margin-bottom:30px;">
     </div>
     <div class="col-md-6">
          <dl class="dl-horizontal">
@@ -37,7 +37,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+        <table class="table table-striped table-condensed table-hover" >
             <thead>
             <tr>
                 <th>name</th>
@@ -66,7 +66,7 @@
             </thead>
             <tbody>
             {% for database in database_list %}
-            <tr{% if database.locked or database.version == 'error' %} class="error"{% endif %}{% if database.version == schema_version %} class="success"{% endif %}>
+            <tr{% if database.locked or database.version == 'error' %} class="danger"{% endif %}{% if database.version == schema_version %} class="success"{% endif %}>
                 <td><a href="{% url 'datasets' database.name %}">{{database.name }}</a></td>
                 <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
                 <td>{{ database.type }}</td>

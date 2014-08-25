@@ -7,7 +7,7 @@ from django.db import connections
 from banana.managers.runningcatalog import RunningcatalogManager
 from banana.managers.assocxtrsource import AssocxtrsourceManager
 
-schema_version = 31
+schema_version = 32
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
