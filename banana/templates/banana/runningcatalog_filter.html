@@ -6,6 +6,7 @@
 {% load paginator %}
 {% load addcss %}
 
+
 {% block title %}Running Catalogs · Banana{% endblock title %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -22,170 +23,180 @@
 
 
 {% block content %}
-
-    <div class="well">
+    <div class="container-fluid">
         <form action="" method="get" role="form">
-            <div class="row">
-                <div class="form-group">
-                    <label for="id_wm_ra_0" class="col-xs-1 control-label">Ra(°):</label>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_wm_ra_0" name="wm_ra_0" type="text" {% if filter.form.wm_ra.value.0 %}value="{{ filter.form.wm_ra.value.0 }}"{% endif %} placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_wm_ra_1" name="wm_ra_1" type="text" {% if filter.form.wm_ra.value.1 %}value="{{ filter.form.wm_ra.value.1 }}"{% endif %} placeholder="max"/>
+            <div class="row well">
+                <legend>Transient paremeters</legend>
+
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_wm_ra" class="col-xs-1 control-label">Ra(°):</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_wm_ra_0" name="wm_ra_0" type="text" {% if filter.form.wm_ra.value.0 %}value="{{ filter.form.wm_ra.value.0 }}"{% endif %} placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_wm_ra_1" name="wm_ra_1" type="text" {% if filter.form.wm_ra.value.1 %}value="{{ filter.form.wm_ra.value.1 }}"{% endif %} placeholder="max"/>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label for="id_v_int_0" class="col-xs-1 control-label">V<sub>ν</sub>:</label>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_v_int_0" name="v_int_0" type="text" {% if filter.form.v_int.value.0 %}value="{{ filter.form.v_int.value.0 }}"{% endif %} placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_v_int_1" name="v_int_1" type="text" {% if filter.form.v_int.value.1 %}value="{{ filter.form.v_int.value.1 }}"{% endif %} placeholder="max"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>min</sub>:</label>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_sigma_min_0" name="sigma_min_0" type="text" {% if filter.form.sigma_min.value.0 %}value="{{ filter.form.sigma_min.value.0 }}"{% endif %}  placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_sigma_min_1" name="sigma_min_1" type="text" {% if filter.form.sigma_min.value.1 %}value="{{ filter.form.sigma_min.value.1 }}"{% endif %}  placeholder="max"/>
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_v_int_0" class="col-xs-1 control-label">V<sub>ν</sub>:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_v_int_0" name="v_int_0" type="text" {% if filter.form.v_int.value.0 %}value="{{ filter.form.v_int.value.0 }}"{% endif %} placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_v_int_1" name="v_int_1" type="text" {% if filter.form.v_int.value.1 %}value="{{ filter.form.v_int.value.1 }}"{% endif %} placeholder="max"/>
+                        </div>
                     </div>
                 </div>
 
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>min</sub>:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_sigma_min_0" name="sigma_min_0" type="text" {% if filter.form.sigma_min.value.0 %}value="{{ filter.form.sigma_min.value.0 }}"{% endif %}  placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_sigma_min_1" name="sigma_min_1" type="text" {% if filter.form.sigma_min.value.1 %}value="{{ filter.form.sigma_min.value.1 }}"{% endif %}  placeholder="max"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_wm_decl_0" class="col-xs-1 control-label">Dec(°):</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control " id="id_wm_decl_0" name="wm_decl_0" type="text" {% if filter.form.wm_decl.value.0 %}value="{{ filter.form.wm_decl.value.0 }}"{% endif %}  placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_wm_decl_1" name="wm_decl_1" type="text" {% if filter.form.wm_decl.value.1 %}value="{{ filter.form.wm_decl.value.1 }}"{% endif %}  placeholder="max"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_eta_int_0" class="col-xs-1 control-label">η<sub>ν</sub>:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_eta_int_0" name="eta_int_0" type="text" {% if filter.form.eta_int.value.0 %}value="{{ filter.form.eta_int.value.0 }}"{% endif %} placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_eta_int_1" name="eta_int_1" type="text" {% if filter.form.eta_int.value.1 %}value="{{ filter.form.eta_int.value.1 }}"{% endif %} placeholder="max"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>max</sub>:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_sigma_max_0" name="sigma_max_0" type="text" {% if filter.form.sigma_max.value.0 %}value="{{ filter.form.sigma_max.value.0 }}"{% endif %} placeholder="min"/>
+                        </div>
+                        <div class="col-md-4">
+                            <input class="form-control" id="id_sigma_max_1" name="sigma_max_1" type="text" {% if filter.form.sigma_max.value.1 %}value="{{ filter.form.sigma_max.value.1 }}"{% endif %} placeholder="max"/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-1">
+                            <label class="control-label mini" for="id_newsource">Newsource:</label>
+                        </div>
+                        <div class="col-md-1">
+                            {{ filter.form.newsource }}
+                        </div>
+                        <div class="col-md-1 col-md-offset-8">
+                            <input type="submit" class="btn"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label for="id_wm_decl_0" class="col-xs-1 control-label">Dec(°):</label>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control " id="id_wm_decl_0" name="wm_decl_0" type="text" {% if filter.form.wm_decl.value.0 %}value="{{ filter.form.wm_decl.value.0 }}"{% endif %}  placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_wm_decl_1" name="wm_decl_1" type="text" {% if filter.form.wm_decl.value.1 %}value="{{ filter.form.wm_decl.value.1 }}"{% endif %}  placeholder="max"/>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label for="id_eta_int_0" class="col-xs-1 control-label">η<sub>ν</sub>:</label>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_eta_int_0" name="eta_int_0" type="text" {% if filter.form.eta_int.value.0 %}value="{{ filter.form.eta_int.value.0 }}"{% endif %} placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_eta_int_1" name="eta_int_1" type="text" {% if filter.form.eta_int.value.1 %}value="{{ filter.form.eta_int.value.1 }}"{% endif %} placeholder="max"/>
-                    </div>
-                </div>
-
-
-
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>max</sub>:</label>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_sigma_max_0" name="sigma_max_0" type="text" {% if filter.form.sigma_max.value.0 %}value="{{ filter.form.sigma_max.value.0 }}"{% endif %} placeholder="min"/>
-                    </div>
-                    <div class="col-xs-1">
-                        <input class="form-control" id="id_sigma_max_1" name="sigma_max_1" type="text" {% if filter.form.sigma_max.value.1 %}value="{{ filter.form.sigma_max.value.1 }}"{% endif %} placeholder="max"/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <div class="col-xs-1">
-                        <label class="control-label mini" for="id_newsource">Newsource:</label>
-                    </div>
-                    <div class="col-xs-1 col-xs-offset-1">
-                        {{ filter.form.newsource }}
-                    </div>
-                    <div class="col-xs-1 col-xs-offset-2">
-                        <input type="submit" class="btn"/>
-                    </div>
-                </div>
-            </div>
-
         </form>
-    </div>
-
-    <div class="row">
-        {% if runningcatalog_list %}
-            <div class="col-md-2 text-center">
-            </div>
-            <div class="col-md-8 text-center">
-                {% paginatorizer %}
-            </div>
-            <div class="col-md-2 text-center">
-                <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
-            </div>
-
-            <div class="col-md-12">
-                <table class="table table-bordered table-striped responsive-utilities table-condensed " >
-                    <thead>
-                    <tr>
-                        {% tableheader 'id' '#' %}
-                        {% tableheader 'wm_ra' 'Ra(°)' %}
-                        {% tableheader 'wm_decl' 'Dec(°)' %}
-                        <th>Ra Error(″)</th>
-                        <th>Decl Error(″)</th>
-                        {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
-                        {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
-                        {% tableheader 'datapoints' '# points' %}
-                        {% tableheader 'newsource.previous_limits_image' 'new source' %}
-                        {% tableheader 'sigma_max' 'Σ<sub>max</sub>' %}
-                        {% tableheader 'sigma_min' 'Σ<sub>min</sub>' %}
-                        {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
-                        {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
-                        {% tableheader 'v_int' %}
-                        {% tableheader 'eta_int' %}
-                    </tr>
-                    </thead>
 
 
-                    <tbody>
-                    {% for object in runningcatalog_list %}
+
+        <div class="row">
+            {% if runningcatalog_list %}
+                <div class="col-md-2 text-center">
+                </div>
+                <div class="col-md-8 text-center">
+                    {% paginatorizer %}
+                </div>
+                <div class="col-md-2 text-center">
+                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
+                </div>
+
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                        <thead>
                         <tr>
-                            <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
-                            <td>{{ object.wm_ra|stringformat:".3f" }}</td>
-                            <td>{{ object.wm_decl|stringformat:".3f" }}</td>
-                            <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
-                            <td>{{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
-                            <td>{{object.wm_ra|format_angle:"time"}}</td>
-                            <td>{{object.wm_decl|format_angle:"dms"}}</td>
-                            <td>{{ object.datapoints }}</td>
-                            <td>{{ object.newsource.id }}</td>
-                            <td>{{ object.sigma_min|stringformat:".3f" }}</td>
-                            <td>{{ object.sigma_max|stringformat:".3f" }}</td>
-                            <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
-                            <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
-                            <td>{{ object.v_int|stringformat:".3f" }}</td>
-                            <td>{{ object.eta_int|stringformat:".3f" }}</td>
-
+                            {% tableheader 'id' '#' %}
+                            {% tableheader 'wm_ra' 'Ra(°)' %}
+                            {% tableheader 'wm_decl' 'Dec(°)' %}
+                            <th>Ra Error(″)</th>
+                            <th>Decl Error(″)</th>
+                            {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
+                            {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
+                            {% tableheader 'datapoints' '# points' %}
+                            {% tableheader 'newsource.previous_limits_image' 'new source' %}
+                            {% tableheader 'sigma_max' 'Σ<sub>max</sub>' %}
+                            {% tableheader 'sigma_min' 'Σ<sub>min</sub>' %}
+                            {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
+                            {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
+                            {% tableheader 'v_int' %}
+                            {% tableheader 'eta_int' %}
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
 
-            <div class="col-md-12 text-center">
-                {% paginatorizer %}
-            </div>
 
-        {% else %}
-            <p>No Running Catalogs.</p>
-        {% endif %}
+                        <tbody>
+                        {% for object in runningcatalog_list %}
+                            <tr>
+                                <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
+                                <td>{{ object.wm_ra|stringformat:".3f" }}</td>
+                                <td>{{ object.wm_decl|stringformat:".3f" }}</td>
+                                <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
+                                <td>{{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
+                                <td>{{object.wm_ra|format_angle:"time"}}</td>
+                                <td>{{object.wm_decl|format_angle:"dms"}}</td>
+                                <td>{{ object.datapoints }}</td>
+                                <td>{{ object.newsource.id }}</td>
+                                <td>{{ object.sigma_min|stringformat:".3f" }}</td>
+                                <td>{{ object.sigma_max|stringformat:".3f" }}</td>
+                                <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
+                                <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
+                                <td>{{ object.v_int|stringformat:".3f" }}</td>
+                                <td>{{ object.eta_int|stringformat:".3f" }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    {% paginatorizer %}
+                </div>
+
+            {% else %}
+                <h1 class="text-center">No Running Catalogs</h1>
+            {% endif %}
+        </div>
     </div>
-
 {% endblock content %}

@@ -11,79 +11,78 @@
 
 {% block content %}
 
-    <div class="row">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <h2 class="text-center">{{ dataset.description }}</h2>
+                <dl class="dl-horizontal">
+                    <dt>Dataset ID</dt>
+                    <dd>{{ dataset.id }}</dd>
 
-    </div>
+                    <dt>Description</dt>
+                    <dd>{{ dataset.description }}</dd>
 
-    <div class="row">
-        <div class="col-md-4">
-            <h2>{{ dataset.description }}</h2>
-            <dl class="dl-horizontal">
-                <dt>Dataset ID</dt>
-                <dd>{{ dataset.id }}</dd>
+                    <dt>Reprocessing step</dt>
+                    <dd>{{ dataset.rerun }}</dd>
 
-                <dt>Description</dt>
-                <dd>{{ dataset.description }}</dd>
+                    <dt>Processing started</dt>
+                    <dd>{{ dataset.process_start_ts }}</dd>
 
-                <dt>Reprocessing step</dt>
-                <dd>{{ dataset.rerun }}</dd>
+                    <dt>Processing Finished</dt>
+                    <dd>{{ dataset.process_end_ts }}</dd>
 
-                <dt>Processing started</dt>
-                <dd>{{ dataset.process_start_ts }}</dd>
+                    <dt>New Sources</dt>
+                    <dd><a href="{% url 'newsources' db_name%}?dataset={{ dataset.id }}">{{ dataset.newsources.all.count }}</a></dd>
 
-                <dt>Processing Finished</dt>
-                <dd>{{ dataset.process_end_ts }}</dd>
+                    <dt>Total image count</dt>
+                    <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
 
-                <dt>New Sources</dt>
-                <dd><a href="{% url 'newsources' db_name%}?dataset={{ dataset.id }}">{{ dataset.newsources.all.count }}</a></dd>
+                    <dt>Rejected image count</dt>
+                    <dd>{{ dataset.rejected_images.count }}</dd>
 
-                <dt>Total image count</dt>
-                <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
+                    <dt>running catalogs</dt>
+                    <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
 
-                <dt>Rejected image count</dt>
-                <dd>{{ dataset.rejected_images.count }}</dd>
+                    <dt>extracted sources</dt>
+                    <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>
+                </dl>
+            </div>
 
-                <dt>running catalogs</dt>
-                <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
-
-                <dt>extracted sources</dt>
-                <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>
-            </dl>
-        </div>
-
-        <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <div class="btn-group">
-                        <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Images</button></a>
-                        <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Running Catalogs</button></a>
-                        <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
-                        <a href="{% url 'monposs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitored Positions</button></a>
-                        <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="btn-group">
+                            <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Images</button></a>
+                            <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Running Catalogs</button></a>
+                            <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
+                            <a href="{% url 'monposs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitored Positions</button></a>
+                            <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <div id='sources_chart'></div>
-                </div></div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <div id='heatmap'></div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <hr>
+                        <div id='sources_chart'></div>
+                    </div></div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <hr>
+                        <div id='heatmap'></div>
+                    </div>
                 </div>
+
             </div>
+        </div>
 
+
+
+        <div class="row">
+            <div class="col-md-8 offset4">
+
+            </div>
         </div>
     </div>
-
-
-
-    <div class="row">
-        <div class="col-md-8 offset4">
-
-        </div>
-    </div>
-
 
     <script>
         $(function () {

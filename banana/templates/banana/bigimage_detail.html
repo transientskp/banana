@@ -3,10 +3,10 @@
 {% block title %}Image {{ image.id }} · Banana{% endblock title %}
 
 {% block morehead %}
-<script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
-<script type="text/javascript">$(function() {
-    $('.map').maphilight();
-});</script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
+    <script type="text/javascript">$(function() {
+        $('.map').maphilight();
+    });</script>
 {% endblock %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -16,21 +16,21 @@
 
 
 {% block content %}
+    <div class="container-fluid">
+        <img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
-<img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
+        <b>yellow:</b> blind fit
+        <b>lightgreen:</b> forced fit
+        <b>cyan:</b> manual monitored
+        <b>blue:</b> transient
 
-<b>yellow:</b> blind fit
-<b>lightgreen:</b> forced fit
-<b>cyan:</b> manual monitored
-<b>blue:</b> transient
+        <map name="simple">
+            {% for id, x, y, size in sources %}
+                <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
+            {% endfor %}
+        </map>
 
-<map name="simple">
-    {% for id, x, y, size in sources %}
-        <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
-    {% endfor %}
-</map>
-
-
+    </div>
 
 {% endblock content %}
 
