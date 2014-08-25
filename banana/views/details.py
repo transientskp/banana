@@ -122,7 +122,7 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
             .select_related('xtrsrc', 'assocxtrsources')
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
         assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
-        return Assocxtrsource.objects.using('postgres_gijs')\
+        return Assocxtrsource.objects.using(qs.db)\
             .filter(runcat=self.object.id)\
             .select_related(*assoc_related)
 
