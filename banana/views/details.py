@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
-                          Newsource
+                          Newsource, Assocxtrsource
 from banana.views.mixins import HybridTemplateMixin,\
                                 DatasetMixin, SortListMixin
 from collections import OrderedDict
@@ -87,6 +87,7 @@ class ExtractedSourceDetail(DetailView):
         context['extractedsource'] = self.object
         return context
 
+
 class NewsourceDetail(SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Newsource
@@ -114,13 +115,16 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
 
     def get_queryset(self):
         qs = super(RunningcatalogDetail, self).get_queryset()\
-            .annotate(lightcurve_max=Max('extractedsources__f_int',
+            .annotate(lightcurve_max=Max('xtrsrc__f_int',
                                          distinct=True))\
-            .annotate(lightcurve_avg=Avg('extractedsources__f_int',
+            .annotate(lightcurve_avg=Avg('xtrsrc__f_int',
                                          distinct=True))\
-            .order_by(self.get_order())
+            .select_related('xtrsrc', 'assocxtrsources')
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
-        return qs
+        assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+        return Assocxtrsource.objects.using('postgres_gijs')\
+            .filter(runcat=self.object.id)\
+            .select_related(*assoc_related)
 
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
