@@ -16,6 +16,8 @@ var symbols = {0: 'square', 1: 'triangle-down', 2: 'diamond'};
 lightcurve.forEach(function(entry) {
     var band = entry["band"];
     var data = {
+        url: entry['url'],
+        id: entry['id'],
         x: entry['taustart_ts'],
         y: entry['f_int'],
         f_int: entry['f_int'],
@@ -28,6 +30,8 @@ lightcurve.forEach(function(entry) {
     };
 
     var error_data = {
+        url: entry['url'],
+        id: entry['id'],
         x: entry['taustart_ts'],
         y: entry['f_int'],
         extract_type: entry['extract_type'],
@@ -122,7 +126,8 @@ $(function () {
                    '<br><b>flux (Jy): </b>' + this.point.f_int +
                    '<br><b>Integrated Flux Error (Jy): </b>' + this.point.f_int_err +
                    '<br><b>extract_type: </b>' + this.point.extract_type +
-                   '<br><b>Integration Time (s): </b>' + this.point.tau_time;
+                   '<br><b>Integration Time (s): </b>' + this.point.tau_time +
+                   '<br><b>extracted source</b>: ' + this.point.id;
           }
         },
 
