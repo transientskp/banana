@@ -63,7 +63,9 @@ def list():
                                  settings.MONETDB_PASSPHRASE)
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
-            databases.append({'name': dbname, 'type': 'postgresql'})
+            path = 'postgresql://%(USER)s@%(HOST)s:%(PORT)s/%(NAME)s' % dbparams
+            databases.append({'name': dbname, 'type': 'postgresql', 'path': path})
+    databases.sort(key=lambda x: x['name'])
     return databases
 
 
