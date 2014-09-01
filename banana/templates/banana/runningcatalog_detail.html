@@ -8,13 +8,11 @@
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
 {% block navdataset %}
-    {% if dataset %}
-        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-    {% endif %}
+    <li><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></li>
 {% endblock %}
 
 {% block navdeep %}
-    <li><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+    <li><a href="{% url 'runningcatalogs' db_name %}?dataset={{ object.dataset.id }}">Running Catalogs</a></li>
 {% endblock %}
 
 {% block navdeeper %}
@@ -73,16 +71,16 @@
                             <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
                             <dt>ην</dt>
-                            <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.extra.eta_int %}{{ object.extra.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                             <dt>Vν</dt>
-                            <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.extra.v_int %}{{  object.extra.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                             <dt>Σmin</dt>
-                            <dd>{% if object.sigma_min %}{{  object.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.extra.sigma_min %}{{  object.extra.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                             <dt>Σmax</dt>
-                            <dd>{% if object.sigma_max %}{{  object.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.extra.sigma_max %}{{  object.extra.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                         </dl>
                     </div>

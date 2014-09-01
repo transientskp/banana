@@ -22,7 +22,7 @@ SELECT min(x.ra - r.wm_ra) as min_ra
   ,max(x.decl - r.wm_decl) as max_decl
 FROM assocxtrsource a
   ,extractedsource x
-  ,augmented_runningcatalog r
+  ,runningcatalog r
   ,image im1
 WHERE a.runcat = r.id
 AND a.xtrsrc = x.id
@@ -42,7 +42,7 @@ FROM
     ) AS INTEGER) AS scaled_decl
   FROM assocxtrsource a
     ,extractedsource x
-    ,augmented_runningcatalog r
+    ,runningcatalog r
     ,image im1
   WHERE a.runcat = r.id
   AND a.xtrsrc = x.id
@@ -375,16 +375,9 @@ class Runningcatalog(models.Model):
                                         through=Assocskyrgn)
     objects = RunningcatalogManager()
 
-
-    # The fields below are computed in the augmented view
-    v_int = models.FloatField(blank=True, null=True)
-    eta_int = models.FloatField(blank=True, null=True)
-    sigma_max = models.FloatField(blank=True, null=True)
-    sigma_min = models.FloatField(blank=True, null=True)
-
     class Meta:
         managed = False
-        db_table = 'augmented_runningcatalog'
+        db_table = 'runningcatalog'
 
     def __unicode__(self):
         return "%s" % self.id
@@ -410,6 +403,18 @@ class Runningcatalog(models.Model):
 
         return median(self.extractedsources, 'f_int')
 
+
+class AugmentedRunningcatalog(models.Model):
+    id = models.OneToOneField('Runningcatalog', db_column='id',
+                              primary_key=True, related_name='extra')
+    v_int = models.FloatField(blank=True, null=True)
+    eta_int = models.FloatField(blank=True, null=True)
+    sigma_max = models.FloatField(blank=True, null=True)
+    sigma_min = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'augmented_runningcatalog'
 
 
 class RunningcatalogFlux(models.Model):

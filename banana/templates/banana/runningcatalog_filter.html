@@ -25,6 +25,9 @@
 {% block content %}
     <div class="container-fluid">
         <form action="" method="get" role="form">
+            {% if dataset %}
+                <input type="hidden" name="dataset" value="{{ dataset }}">
+            {% endif %}
             <div class="row well">
                 <legend>Transient paremeters</legend>
 
@@ -147,6 +150,7 @@
                         <thead>
                         <tr>
                             {% tableheader 'id' '#' %}
+                            {% tableheader 'dataset' 'dataset' %}
                             {% tableheader 'wm_ra' 'Ra(°)' %}
                             {% tableheader 'wm_decl' 'Dec(°)' %}
                             <th>Ra Error(″)</th>
@@ -155,12 +159,12 @@
                             {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
                             {% tableheader 'datapoints' '# points' %}
                             {% tableheader 'newsource.previous_limits_image' 'new source' %}
-                            {% tableheader 'sigma_max' 'Σ<sub>max</sub>' %}
-                            {% tableheader 'sigma_min' 'Σ<sub>min</sub>' %}
+                            {% tableheader 'extra__sigma_max' 'Σ<sub>max</sub>' %}
+                            {% tableheader 'extra__sigma_min' 'Σ<sub>min</sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
                             {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
-                            {% tableheader 'v_int' %}
-                            {% tableheader 'eta_int' %}
+                            {% tableheader 'extra__v_int' 'V<sub>ν</sub>' %}
+                            {% tableheader 'extra__eta_int' 'η<sub>ν</sub>' %}
                         </tr>
                         </thead>
 
@@ -169,6 +173,7 @@
                         {% for object in runningcatalog_list %}
                             <tr>
                                 <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
+                                <td>{{ object.dataset_id }}</td>
                                 <td>{{ object.wm_ra|stringformat:".3f" }}</td>
                                 <td>{{ object.wm_decl|stringformat:".3f" }}</td>
                                 <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
@@ -177,12 +182,12 @@
                                 <td>{{object.wm_decl|format_angle:"dms"}}</td>
                                 <td>{{ object.datapoints }}</td>
                                 <td>{{ object.newsource.id }}</td>
-                                <td>{{ object.sigma_min|stringformat:".3f" }}</td>
-                                <td>{{ object.sigma_max|stringformat:".3f" }}</td>
+                                <td>{{ object.extra.sigma_min|stringformat:".3f" }}</td>
+                                <td>{{ object.extra.sigma_max|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
-                                <td>{{ object.v_int|stringformat:".3f" }}</td>
-                                <td>{{ object.eta_int|stringformat:".3f" }}</td>
+                                <td>{{ object.extra.v_int|stringformat:".3f" }}</td>
+                                <td>{{ object.extra.eta_int|stringformat:".3f" }}</td>
 
                             </tr>
                         {% endfor %}
