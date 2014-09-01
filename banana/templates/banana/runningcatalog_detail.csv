@@ -1,3 +1,3 @@
-#id, taustart_ts, tau_time, freq_central, f_int, fint_err
-{% for point in object_list %}{{ point.id }}, "{{ point.image.taustart_ts|date:"c" }}", {{ point.image.tau_time }}, {{ point.image.band.freq_central }}, {{ point.f_int }}, {{ point.f_int_err }}
+#id, taustart_ts, tau_time, freq_central, f_int, fint_err, eta_nu, V_nu
+{% for point in object_list %}{{ point.id }}, "{{ point.xtrsrc.image.taustart_ts|date:"c" }}", {{ point.xtrsrc.image.tau_time }}, {{ point.xtrsrc.image.band.freq_central }}, {{ point.xtrsrc.f_int }}, {{ point.xtrsrc.f_int_err }}, {{ point.eta_int }}, {{ point.v_int }}
 {% endfor %}
