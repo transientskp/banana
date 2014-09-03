@@ -3,7 +3,9 @@
 {% load units %}
 {% load paginator %}
 {% load tableheader %}
-
+{% load query_replace %}
+{% load flux_units_dropdown %}
+{% load floatmath %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
@@ -114,16 +116,21 @@
 
         {% if object_list %}
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <h2>Lightcurve</h2>
                 </div>
                 <div class="col-md-3">
                     {% paginatorizer %}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="btn-group">
-                        <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad Cone Search</button></a>
+                        <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
                         <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
+                        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn btn-default">Thumbnails</button></a>
+                        {% flux_units_dropdown %}
+                        <a href="{% url 'runningcatalogs' db_name %}?wm_ra_0={{ object.wm_ra|float_substract:"0.03"|scientific }}&wm_ra_1={{ object.wm_ra|float_add:"0.03"|scientific }}&wm_decl_0={{ object.wm_decl|float_substract:"0.03"|scientific }}&wm_decl_1={{ object.wm_decl|float_add:"0.03"|scientific }}&dataset={{ object.dataset_id }}">
+                            <button class="btn btn-default">Possible Associations</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -140,22 +147,30 @@
                     {% tableheader 'xtrsrc__image' 'Image ID' %}
                     {% tableheader 'v_int' 'Vν' %}
                     {% tableheader 'eta_int' 'ην' %}
+                    {% if request.GET.thumb == "1" %}
+                        {% tableheader 'thumbnail' %}
+                    {% endif %}
                     </thead>
                     <tbody>
-                    {% for assocxtrsource in object_list %}
-                        <tr class="{% cycle 'odd' 'even' %}">
-                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
-                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int_err|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
-                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
-                            <td>{{ assocxtrsource.v_int|scientific }}</td>
-                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
-                        </tr>
-                    {% endfor %}
+                    {% with request.GET.flux_prefix as prefix %}
+                        {% for assocxtrsource in object_list %}
+                            <tr class="{% cycle 'odd' 'even' %}">
+                                <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                                <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                                <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                                <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                                <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
+                                <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:prefix|scientific }}</td>
+                                <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                                <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                                <td>{{ assocxtrsource.v_int|scientific }}</td>
+                                <td>{{ assocxtrsource.eta_int|scientific }}</td>
+                                {% if request.GET.thumb == "1" %}
+                                    <td><img src="{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1"></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% endwith %}
                     </tbody>
                 </table>
             </div>
