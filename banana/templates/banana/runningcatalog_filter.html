@@ -142,7 +142,7 @@
                     {% paginatorizer %}
                 </div>
                 <div class="col-md-2 text-center">
-                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
+                    <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default btn-sm">CSV format</button></a>
                 </div>
 
                 <div class="col-md-12">
@@ -150,7 +150,6 @@
                         <thead>
                         <tr>
                             {% tableheader 'id' '#' %}
-                            {% tableheader 'dataset' 'dataset' %}
                             {% tableheader 'wm_ra' 'Ra(°)' %}
                             {% tableheader 'wm_decl' 'Dec(°)' %}
                             <th>Ra Error(″)</th>
@@ -159,8 +158,8 @@
                             {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
                             {% tableheader 'datapoints' '# points' %}
                             {% tableheader 'newsource.previous_limits_image' 'new source' %}
-                            {% tableheader 'extra__sigma_max' 'Σ<sub>max</sub>' %}
                             {% tableheader 'extra__sigma_min' 'Σ<sub>min</sub>' %}
+                            {% tableheader 'extra__sigma_max' 'Σ<sub>max</sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
                             {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
                             {% tableheader 'extra__v_int' 'V<sub>ν</sub>' %}
@@ -170,10 +169,9 @@
 
 
                         <tbody>
-                        {% for object in runningcatalog_list %}
+                        {% for object in object_list %}
                             <tr>
                                 <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
-                                <td>{{ object.dataset_id }}</td>
                                 <td>{{ object.wm_ra|stringformat:".3f" }}</td>
                                 <td>{{ object.wm_decl|stringformat:".3f" }}</td>
                                 <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
