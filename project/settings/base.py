@@ -18,7 +18,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ('bananaproject.multidb.MultiDbRouter',)
+DATABASE_ROUTERS = ('project.multidb.MultiDbRouter',)
 
 
 TIME_ZONE = 'Europe/Amsterdam'
@@ -55,12 +55,12 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
-    'bananaproject.multidb.multidb_context_processor',
+    'project.multidb.multidb_context_processor',
 )
 
 
 MIDDLEWARE_CLASSES = [
-    'bananaproject.multidb.MultiDbRouterMiddleware',
+    'project.multidb.MultiDbRouterMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -68,9 +68,9 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
 
-ROOT_URLCONF = 'bananaproject.urls'
+ROOT_URLCONF = 'project.urls'
 
-WSGI_APPLICATION = 'bananaproject.wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
 
 # See also the ``HybridTemplateMixin`` class which defines default template

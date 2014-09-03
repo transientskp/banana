@@ -1,5 +1,5 @@
 
-from bananaproject.settings.base import *
+from project.settings.base import *
 
 SECRET_KEY = "NSA is watching you"
 

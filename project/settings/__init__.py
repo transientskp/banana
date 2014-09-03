@@ -1,7 +1,7 @@
 import logging
 
 msg = "no site specific configuration, please copy " \
-      "bananaproject/setting/local_example.py to bananaproject/setting/local.py"
+      "project/setting/local_example.py to project/setting/local.py"
 
 
 try:

@@ -31,7 +31,7 @@ class MultiDbRouterMiddleware(object):
 
     Add this to your middleware, for example::
 
-        MIDDLEWARE_CLASSES += ['bananaproject.multidb.MultiDbRouterMiddleware']
+        MIDDLEWARE_CLASSES += ['project.multidb.MultiDbRouterMiddleware']
     """
     def process_view(self, request, view_func, args, kwargs):
         if 'db' in kwargs:
@@ -50,7 +50,7 @@ class MultiDbRouter(object):
 
     Add this to your Django database router configuration, for example::
 
-        DATABASE_ROUTERS += ['bananaproject.multidb.MultiDbRouter']
+        DATABASE_ROUTERS += ['project.multidb.MultiDbRouter']
     """
     def _multi_db(self):
         from django.conf import settings
@@ -77,7 +77,7 @@ def multidb_context_processor(request):
     Add this to your Django context processors, for example::
 
         TEMPLATE_CONTEXT_PROCESSORS +=[
-            'bananaproject.multidb.multidb_context_processor']
+            'project.multidb.multidb_context_processor']
     """
     if hasattr(request, 'SELECTED_DATABASE'):
         return {'db_name': request.SELECTED_DATABASE}
