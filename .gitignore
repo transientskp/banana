@@ -2,6 +2,7 @@
 /.idea
 /static/
 /bananaproject/settings/local.py
+/project/settings/local.py
 /build/
 /default.db
 /doc/_build/*
