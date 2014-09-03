@@ -14,8 +14,12 @@ class NotNullFilter(Filter):
     field_class = BooleanField
 
     def filter(self, qs, value):
+        """
         if value is not None:
             return qs.filter(**{self.name + '__isnull': not value})
+        """
+        if value:
+            return qs.filter(**{self.name + '__isnull': False})
         return qs
 
 
