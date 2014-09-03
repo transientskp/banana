@@ -23,13 +23,13 @@ class RunningcatalogFilter(django_filters.FilterSet):
     """
     the django-filter logic used in the runningcatalog view.
     """
-    sigma_min = django_filters.RangeFilter(name='sigma_min')
-    sigma_max = django_filters.RangeFilter(name='sigma_max')
+    sigma_min = django_filters.RangeFilter(name='extra__sigma_min')
+    sigma_max = django_filters.RangeFilter(name='extra__sigma_max')
     wm_ra = django_filters.RangeFilter(label='Ra(°)')
     wm_decl = django_filters.RangeFilter(label='Dec(°)')
-    v_int = django_filters.RangeFilter(name='v_int',
+    v_int = django_filters.RangeFilter(name='extra__v_int',
                                        label=mark_safe('V<sub>ν</sub>'))
-    eta_int = django_filters.RangeFilter(name='eta_int',
+    eta_int = django_filters.RangeFilter(name='extra__eta_int',
                                          label=mark_safe('η<sub>ν</sub>'))
     newsource = NotNullFilter(name='newsource')
 
