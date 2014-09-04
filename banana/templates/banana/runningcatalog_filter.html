@@ -62,7 +62,7 @@
                 <div class="form-group col-md-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>min</sub>:</label>
+                            <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>min</sub></sub>:</label>
                         </div>
                         <div class="col-md-4">
                             <input class="form-control" id="id_sigma_min_0" name="sigma_min_0" type="text" {% if filter.form.sigma_min.value.0 %}value="{{ filter.form.sigma_min.value.0 }}"{% endif %}  placeholder="min"/>
@@ -104,7 +104,7 @@
                 <div class="form-group col-md-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>max</sub>:</label>
+                            <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>max</sub></sub>:</label>
                         </div>
                         <div class="col-md-4">
                             <input class="form-control" id="id_sigma_max_0" name="sigma_max_0" type="text" {% if filter.form.sigma_max.value.0 %}value="{{ filter.form.sigma_max.value.0 }}"{% endif %} placeholder="min"/>
@@ -165,8 +165,8 @@
                             {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
                             {% tableheader 'datapoints' '# points' %}
                             {% tableheader 'newsource.previous_limits_image' 'new source' %}
-                            {% tableheader 'extra__sigma_min' 'Σ<sub>min</sub>' %}
-                            {% tableheader 'extra__sigma_max' 'Σ<sub>max</sub>' %}
+                            {% tableheader 'extra__sigma_min' 'Σ<sub>RMS<sub>max</sub></sub>' %}
+                            {% tableheader 'extra__sigma_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
                             {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
                             {% tableheader 'extra__v_int' 'V<sub>ν</sub>' %}
