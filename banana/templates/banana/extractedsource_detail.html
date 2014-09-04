@@ -49,8 +49,8 @@
 
             <dt>Running Catalogs</dt>
             <dd>
-            {% for runcat in extractedsource.runningcatalogs %}
-            <a href="{% url 'runningcatalog' db_name runcat.id %}">{{ runcat.id }}</a>
+            {% for assocxtrsource in extractedsource.assocxtrsources.all %}
+            <a href="{% url 'runningcatalog' db_name assocxtrsource.runcat.id %}">{{ assocxtrsource.runcat.id }}</a>
             {% empty %}
                 None
             {% endfor %}
