@@ -142,7 +142,7 @@
 
 
         <div class="row">
-            {% if runningcatalog_list %}
+            {% if object_list %}
                 <div class="col-md-2 text-center">
                 </div>
                 <div class="col-md-8 text-center">
@@ -164,13 +164,13 @@
                             {% tableheader 'wm_ra' 'Ra(h:m:s)' %}
                             {% tableheader 'wm_decl' 'Dec(d:m:s)' %}
                             {% tableheader 'datapoints' '# points' %}
-                            {% tableheader 'newsource.previous_limits_image' 'new source' %}
-                            {% tableheader 'extra__sigma_min' 'Σ<sub>RMS<sub>max</sub></sub>' %}
-                            {% tableheader 'extra__sigma_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
+                            {% tableheader 'newsource' 'new source' %}
+                            {% tableheader 'sigma_min' 'Σ<sub>RMS<sub>max</sub></sub>' %}
+                            {% tableheader 'sigma_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
                             {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
-                            {% tableheader 'extra__v_int' 'V<sub>ν</sub>' %}
-                            {% tableheader 'extra__eta_int' 'η<sub>ν</sub>' %}
+                            {% tableheader 'v_int' 'V<sub>ν</sub>' %}
+                            {% tableheader 'eta_int' 'η<sub>ν</sub>' %}
                         </tr>
                         </thead>
 
@@ -187,12 +187,12 @@
                                 <td>{{object.wm_decl|format_angle:"dms"}}</td>
                                 <td>{{ object.datapoints }}</td>
                                 <td>{{ object.newsource.id }}</td>
-                                <td>{{ object.extra.sigma_min|stringformat:".3f" }}</td>
-                                <td>{{ object.extra.sigma_max|stringformat:".3f" }}</td>
+                                <td>{{ object.sigma_min|stringformat:".3f" }}</td>
+                                <td>{{ object.sigma_max|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
-                                <td>{{ object.extra.v_int|stringformat:".3f" }}</td>
-                                <td>{{ object.extra.eta_int|stringformat:".3f" }}</td>
+                                <td>{{ object.v_int|stringformat:".3f" }}</td>
+                                <td>{{ object.eta_int|stringformat:".3f" }}</td>
 
                             </tr>
                         {% endfor %}

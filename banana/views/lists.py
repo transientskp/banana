@@ -10,7 +10,7 @@ from banana.filters import RunningcatalogFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import Dataset, Image, Newsource, Extractedsource, \
-                          Runningcatalog, schema_version
+                          AugmentedRunningcatalog, schema_version
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
@@ -75,7 +75,8 @@ class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
 class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
                          FilterView):
 
-    model = Runningcatalog
+    model = AugmentedRunningcatalog
+    template_name = "banana/runningcatalog_filter.html"
     filterset_class = RunningcatalogFilter
     paginate_by = 100
 
@@ -83,11 +84,11 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         qs = super(RunningcatalogList, self).get_queryset()
         related = ['newsource__previous_limits_image',
                    'newsource__trigger_xtrsrc']
-        qs = qs.select_related(*related)
-        qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
-                                            distinct=True))
-        qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
-                                            distinct=True))
+        #qs = qs.select_related(*related)
+        #qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
+        #                                    distinct=True))
+        #qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
+        #                                    distinct=True))
         return qs
 
 
