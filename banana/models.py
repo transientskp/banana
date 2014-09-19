@@ -71,6 +71,8 @@ class Assocxtrsource(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
                                related_name='assocxtrsources')
+
+
     xtrsrc = models.ForeignKey('Extractedsource', db_column='xtrsrc',
                                related_name='assocxtrsources',
                                blank=True, null=True)
@@ -374,8 +376,6 @@ class Runningcatalog(models.Model):
     skyregions = models.ManyToManyField('Skyregion',
                                         through=Assocskyrgn)
 
-    #objects = RunningcatalogManager()
-
     def __unicode__(self):
         return "%s" % self.id
 
@@ -411,31 +411,38 @@ class AugmentedRunningcatalog(models.Model):
     # we don't create a reverse mapping here, since this is only the first
     # extracted source
     xtrsrc = models.ForeignKey(Extractedsource, db_column='xtrsrc',
-                               related_name='+')
+                               related_name='+', blank=True, null=True)
     dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='augmented_runningcatalogs')
-    datapoints = models.IntegerField()
-    zone = models.IntegerField()
-    wm_ra = models.FloatField()
-    wm_decl = models.FloatField()
-    wm_uncertainty_ew = models.FloatField()
-    wm_uncertainty_ns = models.FloatField()
-    avg_ra_err = models.FloatField()
-    avg_decl_err = models.FloatField()
-    avg_wra = models.FloatField()
-    avg_wdecl = models.FloatField()
-    avg_weight_ra = models.FloatField()
-    avg_weight_decl = models.FloatField()
-    x = models.FloatField()
-    y = models.FloatField()
-    z = models.FloatField()
-    inactive = models.BooleanField()
-    mon_src = models.BooleanField()
+                                related_name='augmented_runningcatalogs',
+                                blank=True, null=True)
+    datapoints = models.IntegerField(blank=True, null=True)
+    zone = models.IntegerField(blank=True, null=True)
+    wm_ra = models.FloatField(blank=True, null=True)
+    wm_decl = models.FloatField(blank=True, null=True)
+    wm_uncertainty_ew = models.FloatField(blank=True, null=True)
+    wm_uncertainty_ns = models.FloatField(blank=True, null=True)
+    avg_ra_err = models.FloatField(blank=True, null=True)
+    avg_decl_err = models.FloatField(blank=True, null=True)
+    avg_wra = models.FloatField(blank=True, null=True)
+    avg_wdecl = models.FloatField(blank=True, null=True)
+    avg_weight_ra = models.FloatField(blank=True, null=True)
+    avg_weight_decl = models.FloatField(blank=True, null=True)
+    x = models.FloatField(blank=True, null=True)
+    y = models.FloatField(blank=True, null=True)
+    z = models.FloatField(blank=True, null=True)
+    inactive = models.BooleanField(blank=True)
+    mon_src = models.BooleanField(blank=True)
 
     newsource = models.ForeignKey(Newsource, db_column='newsource',
                                   related_name='augmented_runningcatalogs')
 
-    #objects = RunningcatalogManager()
+    v_int = models.FloatField(blank=True, null=True)
+    eta_int = models.FloatField(blank=True, null=True)
+    sigma_max = models.FloatField(blank=True, null=True)
+    sigma_min = models.FloatField(blank=True, null=True)
+    lightcurve_avg = models.FloatField(blank=True, null=True)
+    lightcurve_max = models.FloatField(blank=True, null=True)
+
 
     def __unicode__(self):
         return "%s" % self.id
@@ -465,12 +472,6 @@ class AugmentedRunningcatalog(models.Model):
         managed = False
         db_table = 'augmented_runningcatalog'
 
-    v_int = models.FloatField(blank=True, null=True)
-    eta_int = models.FloatField(blank=True, null=True)
-    sigma_max = models.FloatField(blank=True, null=True)
-    sigma_min = models.FloatField(blank=True, null=True)
-    lightcurve_avg = models.FloatField(blank=True, null=True)
-    lightcurve_max = models.FloatField(blank=True, null=True)
 
 
 

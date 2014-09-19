@@ -2,11 +2,14 @@ import numpy
 import aplpy
 from matplotlib import pyplot
 from banana.mongo import get_hdu
-from banana.convert import deg_to_asec
+import logging
+
+logger = logging.getLogger(__name__)
 
 # colors for the extracted types
 #  0: blind fit, 1: forced fit, 2: manual monitoring
 source_colors = ['yellow', 'lightgreen', 'cyan']
+
 
 def image_plot(pyfits_hdu, size=5, sources=[]):
     """
@@ -109,11 +112,13 @@ def extractedsource(hdu, source, size=1):
     fig = pyplot.figure(figsize=(size, size))
     fits = aplpy.FITSFigure(hdu, figure=fig, subplot=[0, 0, 1, 1],
                             auto_refresh=False)
-    #fits.show_grayscale()
     fits.show_colorscale()
     fits.axis_labels.hide()
     fits.tick_labels.hide()
     fits.ticks.hide()
-    fits.recenter(source.ra, source.decl, width=source.semimajor / 90,
+    try:
+        fits.recenter(source.ra, source.decl, width=source.semimajor / 90,
                   height=source.semiminor / 90)
+    except Exception as e:
+        logger.error("can't recenter: " + str(e))
     return fig.canvas
