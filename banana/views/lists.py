@@ -85,19 +85,4 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         related = ['newsource__previous_limits_image',
                    'newsource__trigger_xtrsrc']
         #qs = qs.select_related(*related)
-        #qs = qs.annotate(lightcurve_max=Max('extractedsources__f_int',
-        #                                    distinct=True))
-        #qs = qs.annotate(lightcurve_avg=Avg('extractedsources__f_int',
-        #                                    distinct=True))
-        return qs
-
-
-class MonposList(RunningcatalogList):
-    """
-    Monitored Position list. This is just a list of runningcatalogs that
-    have extracted sources with extract type 2
-    """
-    def get_queryset(self):
-        qs = super(MonposList, self).get_queryset()
-        qs = qs.filter(assocxtrsources__xtrsrc__extract_type=2).distinct()
         return qs
