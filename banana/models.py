@@ -416,23 +416,10 @@ class AugmentedRunningcatalog(models.Model):
                                 related_name='augmented_runningcatalogs',
                                 blank=True, null=True)
     datapoints = models.IntegerField(blank=True, null=True)
-    zone = models.IntegerField(blank=True, null=True)
     wm_ra = models.FloatField(blank=True, null=True)
     wm_decl = models.FloatField(blank=True, null=True)
     wm_uncertainty_ew = models.FloatField(blank=True, null=True)
     wm_uncertainty_ns = models.FloatField(blank=True, null=True)
-    avg_ra_err = models.FloatField(blank=True, null=True)
-    avg_decl_err = models.FloatField(blank=True, null=True)
-    avg_wra = models.FloatField(blank=True, null=True)
-    avg_wdecl = models.FloatField(blank=True, null=True)
-    avg_weight_ra = models.FloatField(blank=True, null=True)
-    avg_weight_decl = models.FloatField(blank=True, null=True)
-    x = models.FloatField(blank=True, null=True)
-    y = models.FloatField(blank=True, null=True)
-    z = models.FloatField(blank=True, null=True)
-    inactive = models.BooleanField(blank=True)
-    mon_src = models.BooleanField(blank=True)
-
     newsource = models.ForeignKey(Newsource, db_column='newsource',
                                   related_name='augmented_runningcatalogs')
 
