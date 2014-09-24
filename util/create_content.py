@@ -1,5 +1,16 @@
 """
 Populate a TKP database with Mock data.
+
+procedure:
+    * (re)create a database
+    * populate it with tkp-manage.py initdb
+    * run this script to create mock data. Configure the connection
+      using the TKP_DB* environment variables
+    * configure the Banana project to use this database
+    * dump the db content:
+
+      $ ./manage.py dumpdata --database=%{TK_DBNAME} --indent=1 \
+              banana > testing/fixtures/initial_data.json
 """
 import tkp.db
 from tkp.testutil import db_subs
