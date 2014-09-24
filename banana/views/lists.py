@@ -84,5 +84,5 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         qs = super(RunningcatalogList, self).get_queryset()
         related = ['newsource__previous_limits_image',
                    'newsource__trigger_xtrsrc']
-        #qs = qs.select_related(*related)
+        qs = qs.prefetch_related('newsource')
         return qs
