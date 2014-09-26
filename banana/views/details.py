@@ -124,7 +124,8 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
         assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
         return Assocxtrsource.objects.using(qs.db)\
             .filter(runcat=self.object.id)\
-            .select_related(*assoc_related)
+            .select_related(*assoc_related)\
+            .order_by(self.get_order())
 
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
