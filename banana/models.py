@@ -425,8 +425,8 @@ class AugmentedRunningcatalog(models.Model):
 
     v_int = models.FloatField(blank=True, null=True)
     eta_int = models.FloatField(blank=True, null=True)
-    sigma_max = models.FloatField(blank=True, null=True)
-    sigma_min = models.FloatField(blank=True, null=True)
+    sigma_rms_min = models.FloatField(blank=True, null=True)
+    sigma_rms_max = models.FloatField(blank=True, null=True)
     lightcurve_avg = models.FloatField(blank=True, null=True)
     lightcurve_max = models.FloatField(blank=True, null=True)
 
