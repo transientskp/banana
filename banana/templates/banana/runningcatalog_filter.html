@@ -169,6 +169,7 @@
                             {% tableheader 'sigma_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub>' %}
                             {% tableheader 'lightcurve_max' 'flux<sub>max</sub>' %}
+                            {% tableheader 'lightcurve_median' 'flux<sub>median</sub>' %}
                             {% tableheader 'v_int' 'V<sub>ν</sub>' %}
                             {% tableheader 'eta_int' 'η<sub>ν</sub>' %}
                         </tr>
@@ -191,6 +192,7 @@
                                 <td>{{ object.sigma_max|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_avg|stringformat:".3f" }}</td>
                                 <td>{{ object.lightcurve_max|stringformat:".3f" }}</td>
+                                <td>{{ object.lightcurve_median|stringformat:".3f" }}</td>
                                 <td>{{ object.v_int|stringformat:".3f" }}</td>
                                 <td>{{ object.eta_int|stringformat:".3f" }}</td>
 
