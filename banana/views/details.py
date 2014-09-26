@@ -129,4 +129,5 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
+        context['prefix'] = self.request.GET.get('flux_prefix', None)
         return context

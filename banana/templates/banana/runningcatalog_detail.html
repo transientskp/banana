@@ -79,10 +79,10 @@
                             <dd>{% if object.extra.v_int %}{{  object.extra.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                             <dt>Σ<sub>RMS<sub>min</sub></sub></dt>
-                            <dd>{% if object.extra.sigma_min %}{{  object.extra.sigma_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.sigma_rms_min %}{{  object.sigma_rms_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                             <dt>Σ<sub>RMS<sub>max</sub></sub></dt>
-                            <dd>{% if object.extra.sigma_max %}{{  object.extra.sigma_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+                            <dd>{% if object.sigma_rms_max %}{{  object.sigma_rms_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
 
                         </dl>
                     </div>
@@ -152,25 +152,23 @@
                     {% endif %}
                     </thead>
                     <tbody>
-                    {% with request.GET.flux_prefix as prefix %}
-                        {% for assocxtrsource in object_list %}
-                            <tr class="{% cycle 'odd' 'even' %}">
-                                <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
-                                <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
-                                <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
-                                <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
-                                <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
-                                <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:prefix|scientific }}</td>
-                                <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
-                                <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
-                                <td>{{ assocxtrsource.v_int|scientific }}</td>
-                                <td>{{ assocxtrsource.eta_int|scientific }}</td>
-                                {% if request.GET.thumb == "1" %}
-                                    <td><img src="{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1"></td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                    {% endwith %}
+                    {% for assocxtrsource in object_list %}
+                        <tr class="{% cycle 'odd' 'even' %}">
+                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                            <td>{{ assocxtrsource.v_int|scientific }}</td>
+                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
+                            {% if request.GET.thumb == "1" %}
+                                <td><img src="{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

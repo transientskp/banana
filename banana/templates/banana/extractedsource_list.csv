@@ -1,3 +1,3 @@
-{% load units %}#id, runcat, ra (deg), ra_err (arcsec), decl (deg), decl_err (arcsec), det_sigma, f_peak, f_peak_err, f_int, f_int_err, extract_type
-{% for extractedsource in extractedsource_list %}{{ extractedsource.id }}, "{{ extractedsource.runningcatalogs|join:", " }}", {{ extractedsource.ra }}, {{ extractedsource.ra_err|deg2asec }}, {{ extractedsource.decl }}, {{ extractedsource.decl_err|deg2asec }}, {{ extractedsource.det_sigma }}, {{ extractedsource.f_peak }}, {{ extractedsource.f_peak_err }}, {{ extractedsource.f_int }}, {{ extractedsource.f_int_err }}, {{ extractedsource.extract_type }}
+{% load units %}#id, ra (deg), ra_err (arcsec), decl (deg), decl_err (arcsec), det_sigma, f_peak, f_peak_err, f_int, f_int_err, extract_type
+{% for extractedsource in extractedsource_list %}{{ extractedsource.id }}, {{ extractedsource.ra }}, {{ extractedsource.ra_err|deg2asec }}, {{ extractedsource.decl }}, {{ extractedsource.decl_err|deg2asec }}, {{ extractedsource.det_sigma }}, {{ extractedsource.f_peak }}, {{ extractedsource.f_peak_err }}, {{ extractedsource.f_int }}, {{ extractedsource.f_int_err }}, {{ extractedsource.extract_type }}
 {% endfor %}

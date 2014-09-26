@@ -4,8 +4,7 @@
         "id": {{ dataset.id }},
         "description": "{{ dataset.description }}",
         "rerun": {{ dataset.rerun }},
-        "num_images": {{ dataset.num_images }},
-        "process_ts": "{{ dataset.process_ts }}"
+        "num_images": {{ dataset.num_images }}
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
 ]
