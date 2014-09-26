@@ -4,13 +4,11 @@ All views that generate lists of model objects
 from django.db.models import Count
 from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
-from django.db.models import Max, Avg
-
 from banana.filters import RunningcatalogFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import Dataset, Image, Newsource, Extractedsource, \
-                          AugmentedRunningcatalog, schema_version
+                          AugmentedRunningcatalog, schema_version, Monitor
 from banana.views.mixins import HybridTemplateMixin, \
                                 SortListMixin, DatasetMixin
 from banana.vcs import repo_info
@@ -59,6 +57,11 @@ class NewsourceList(SortListMixin, HybridTemplateMixin,
     dataset_field = 'runcat__dataset'
 
 
+class MonitorList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
+    model = Monitor
+    paginate_by = 100
+
+
 class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
     model = Extractedsource
@@ -82,7 +85,5 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
 
     def get_queryset(self):
         qs = super(RunningcatalogList, self).get_queryset()
-        related = ['newsource__previous_limits_image',
-                   'newsource__trigger_xtrsrc']
         qs = qs.prefetch_related('newsource')
         return qs

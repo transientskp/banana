@@ -16,6 +16,7 @@ class ViewTest(TestCase):
         'newsources',
         'extractedsources',
         'runningcatalogs',
+        'monitors',
     ]
 
     detail_views = [
@@ -24,7 +25,8 @@ class ViewTest(TestCase):
         'extractedsource',
         'runningcatalog',
         'image',
-        'bigimage'
+        'bigimage',
+        'monitor',
     ]
 
     def test_database_view(self):
@@ -76,7 +78,8 @@ class ViewTest(TestCase):
             except:
                 print "%s view failed" % detail_view
                 raise
-            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 200, "%s view didn't give 200" %
+                             detail_view)
 
     def test_extracted_sources_pixel(self):
         response = self.client.get(reverse('extracted_sources_pixel',

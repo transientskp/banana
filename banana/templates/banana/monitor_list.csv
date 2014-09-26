@@ -1,0 +1,3 @@
+#id, dataset, ra, decl, runcat, name
+{% for object in object_list %}{{ object.id }}, {{ object.dataset }}, {{ object.ra }},  {{ object.decl }}, {{ object.runcat }}, {{ object.name }}
+{% endfor %}

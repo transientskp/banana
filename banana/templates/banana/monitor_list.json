@@ -1,0 +1,14 @@
+
+[
+{% for object in object_list %}
+    {
+        "id": {{ object.id }},
+        "dataset": {{ object.dataset.id }},
+        "ra": {{ object.ra }},
+        "decl": {{ object.decl }},
+        "runcat": {{ object.runcat }},
+        "name": "{{ object.name }}"
+    }{% if not forloop.last %},{% endif %}
+ {% endfor %}
+]
+

@@ -283,6 +283,21 @@ class Image(models.Model):
         return "image #%s" % self.id
 
 
+class Monitor(models.Model):
+    id = models.IntegerField(primary_key=True)
+    dataset = models.ForeignKey(Dataset, db_column='dataset',
+                                related_name='monitors')
+    ra = models.FloatField()
+    decl = models.FloatField()
+    runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
+                               blank=True, null=True, related_name='monitors')
+    name = models.CharField(max_length=100, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'monitor'
+
+
 class Newsource(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.OneToOneField('Runningcatalog', db_column='runcat')

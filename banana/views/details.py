@@ -6,8 +6,9 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
-from banana.models import Image, Dataset, Extractedsource, Runningcatalog,\
-                          Newsource, Assocxtrsource
+from banana.models import Image, Dataset, Extractedsource,\
+                            AugmentedRunningcatalog,\
+                          Newsource, Assocxtrsource, Monitor
 from banana.views.mixins import HybridTemplateMixin,\
                                 DatasetMixin, SortListMixin
 from collections import OrderedDict
@@ -88,6 +89,11 @@ class ExtractedSourceDetail(DetailView):
         return context
 
 
+class MonitorDetail(DetailView):
+    model = Monitor
+
+
+
 class NewsourceDetail(SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Newsource
@@ -108,17 +114,13 @@ class NewsourceDetail(SortListMixin, DatasetMixin,
 
 class RunningcatalogDetail(SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
-    model = Runningcatalog
+    model = AugmentedRunningcatalog
     paginate_by = 100
     default_order = 'xtrsrc__image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
 
     def get_queryset(self):
         qs = super(RunningcatalogDetail, self).get_queryset()\
-            .annotate(lightcurve_max=Max('xtrsrc__f_int',
-                                         distinct=True))\
-            .annotate(lightcurve_avg=Avg('xtrsrc__f_int',
-                                         distinct=True))\
             .select_related('xtrsrc', 'assocxtrsources')
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
         assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']

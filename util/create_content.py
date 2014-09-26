@@ -49,6 +49,8 @@ def main():
         db_subs.insert_image_and_simulated_sources(dataset, img_pars,
                                                    [transient_src],
                                                    new_source_sigma_margin)
+
+    tkp.db.execute("insert into monitor values(1, 1, 1, 1, 1, 'bla')")
     tkp.db.commit()
 
 

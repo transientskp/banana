@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load paginator %}
+{% load tableheader %}
+{% load units %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
+{% block navdeeper %}<li class="active"><a href="{% url 'monitor' db_name object.id %}">Monitor {{ object.id }}</a></li>{% endblock %}
+
+{% block title %}Monitor {{ object.id }} · Banana{% endblock title %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <h2>Monitor #{{ object.id }}</h2>
+            <div class="col-md-7">
+                <div id='lightcurve'></div>
+                <dl class="dl-horizontal">
+
+                    <dt>ID</dt>
+                    <dd><a href="{% url 'monitor' db_name object.id %}">{{ object.id }}</a></dd>
+
+                    <dt>Dataset</dt>
+                    <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+
+                    <dt>Ra(°)</dt>
+                    <dd>{{ object.ra|stringformat:".3f" }}</dd>
+
+                    <dt>Dec(°)</dt>
+                    <dd>{{ object.decl|stringformat:".3f" }}</dd>
+
+                    <dt>Ra(h:m:s)</dt>
+                    <dd>{{object.ra|format_angle:"time"}}</dd>
+
+                    <dt>Dec(d:m:s)</dt>
+                    <dd>{{object.decl|format_angle:"dms"}}</dd>
+
+                    <dt>Running catalog</dt>
+                    <dd><a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a></dd>
+
+                    <dt>Name</dt>
+                    <dd>{{ object.name }}</dd>
+
+                </dl>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
