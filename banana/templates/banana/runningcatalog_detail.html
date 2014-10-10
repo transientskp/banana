@@ -91,8 +91,8 @@
                             <dt>Trigger source</dt>
                             <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
 
-                            <dt>Previous limit image</dt>
-                            <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image }}</a>{% else %}No{% endif %}</dd>
+                            <dt>Previous limits image</dt>
+                            <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image.id }}</a>{% else %}No{% endif %}</dd>
 
                             <dt># of datapoints</dt>
                             <dd>{{ object.datapoints }}</dd>
@@ -141,9 +141,11 @@
                     {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
                     {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
                     {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
-                    {% tableheader 'xtrsrc__f_int' 'Flux (Jy)' %}
-                    {% tableheader 'xtrsrc__f_int_err' 'Flux error (Jy)' %}
-                    {% tableheader 'xtrsrc__extract_type' 'xtract type' %}
+                    {% tableheader 'xtrsrc__f_int' 'Int. flux (Jy)' %}
+                    {% tableheader 'xtrsrc__f_int_err' 'Int. flux err (Jy)' %}
+                    {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy)' %}
+                    {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy)' %}
+                    {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
                     {% tableheader 'xtrsrc__image' 'Image ID' %}
                     {% tableheader 'v_int' 'Vν' %}
                     {% tableheader 'eta_int' 'ην' %}
@@ -160,6 +162,8 @@
                             <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
                             <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
                             <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:prefix|scientific }}</td>
                             <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
                             <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
                             <td>{{ assocxtrsource.v_int|scientific }}</td>
