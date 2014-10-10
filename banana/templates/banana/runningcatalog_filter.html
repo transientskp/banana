@@ -29,7 +29,7 @@
                 <input type="hidden" name="dataset" value="{{ dataset }}">
             {% endif %}
             <div class="row well">
-                <legend>Transient paremeters</legend>
+                <legend>Transient parameters</legend>
 
                 <div class="form-group col-md-4">
                     <div class="row">
@@ -62,13 +62,13 @@
                 <div class="form-group col-md-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="id_sigma_min_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>min</sub></sub>:</label>
+                            <label for="id_sigma_rms_min_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>min</sub></sub>:</label>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="id_sigma_min_0" name="sigma_min_0" type="text" {% if filter.form.sigma_min.value.0 %}value="{{ filter.form.sigma_min.value.0 }}"{% endif %}  placeholder="min"/>
+                            <input class="form-control" id="id_sigma_rms_min_0" name="sigma_rms_min_0" type="text" {% if filter.form.sigma_rms_min.value.0 %}value="{{ filter.form.sigma_rms_min.value.0 }}"{% endif %}  placeholder="min"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="id_sigma_min_1" name="sigma_min_1" type="text" {% if filter.form.sigma_min.value.1 %}value="{{ filter.form.sigma_min.value.1 }}"{% endif %}  placeholder="max"/>
+                            <input class="form-control" id="id_sigma_rms_min_1" name="sigma_rms_min_1" type="text" {% if filter.form.sigma_rms_min.value.1 %}value="{{ filter.form.sigma_rms_min.value.1 }}"{% endif %}  placeholder="max"/>
                         </div>
                     </div>
                 </div>
@@ -104,13 +104,13 @@
                 <div class="form-group col-md-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="id_sigma_max_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>max</sub></sub>:</label>
+                            <label for="id_sigma_rms_max_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>max</sub></sub>:</label>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="id_sigma_max_0" name="sigma_max_0" type="text" {% if filter.form.sigma_max.value.0 %}value="{{ filter.form.sigma_max.value.0 }}"{% endif %} placeholder="min"/>
+                            <input class="form-control" id="id_sigma_rms_max_0" name="sigma_rms_max_0" type="text" {% if filter.form.sigma_rms_max.value.0 %}value="{{ filter.form.sigma_rms_max.value.0 }}"{% endif %} placeholder="min"/>
                         </div>
                         <div class="col-md-4">
-                            <input class="form-control" id="id_sigma_max_1" name="sigma_max_1" type="text" {% if filter.form.sigma_max.value.1 %}value="{{ filter.form.sigma_max.value.1 }}"{% endif %} placeholder="max"/>
+                            <input class="form-control" id="id_sigma_rms_max_1" name="sigma_rms_max_1" type="text" {% if filter.form.sigma_rms_max.value.1 %}value="{{ filter.form.sigma_rms_max.value.1 }}"{% endif %} placeholder="max"/>
                         </div>
                     </div>
                 </div>

@@ -27,8 +27,8 @@ class RunningcatalogFilter(django_filters.FilterSet):
     """
     the django-filter logic used in the runningcatalog view.
     """
-    sigma_min = django_filters.RangeFilter(name='sigma_min')
-    sigma_max = django_filters.RangeFilter(name='sigma_max')
+    sigma_rms_min = django_filters.RangeFilter(name='sigma_rms_min')
+    sigma_rms_max = django_filters.RangeFilter(name='sigma_rms_max')
     wm_ra = django_filters.RangeFilter(label='Ra(°)')
     wm_decl = django_filters.RangeFilter(label='Dec(°)')
     v_int = django_filters.RangeFilter(name='v_int',
