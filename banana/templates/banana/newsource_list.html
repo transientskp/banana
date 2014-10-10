@@ -44,8 +44,8 @@
                             {% tableheader 'runcat__datapoints' '# of points' %}
                             {% tableheader 'runcat' 'Run. cat. #' %}
                             {% tableheader 'trigger_xtrsrc' 'Trigger source' %}
-                            {% tableheader 'newsource_type' 'source type' %}
-                            {% tableheader 'previous_limits_image' 'last image' %}
+                            {% tableheader 'newsource_type' 'Source type' %}
+                            {% tableheader 'previous_limits_image' 'Limits image' %}
                         </tr>
                         </thead>
                         <tbody>
@@ -59,7 +59,7 @@
                                 <td><a href ="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></td>
                                 <td><a href ="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></td>
                                 <td>{{ object.newsource_type }}</td>
-                                <td><a href ="{% url 'image' db_name object.previous_limits_image.id %}">{{ object.previous_limits_image }}</a></td>
+                                <td><a href ="{% url 'image' db_name object.previous_limits_image.id %}">{{ object.previous_limits_image.id }}</a></td>
 
                             </tr>
                         {% endfor %}
