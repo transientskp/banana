@@ -7,7 +7,7 @@ from django.db import connections
 from banana.managers.runningcatalog import RunningcatalogManager
 from banana.managers.assocxtrsource import AssocxtrsourceManager
 
-schema_version = 33
+schema_version = 34
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -193,6 +193,8 @@ class Extractedsource(models.Model):
     f_peak_err = models.FloatField(blank=True, null=True)
     f_int = models.FloatField(blank=True, null=True)
     f_int_err = models.FloatField(blank=True, null=True)
+    chisq= models.FloatField(blank=True, null=True)
+    reduced_chisq= models.FloatField(blank=True, null=True)
     extract_type = models.SmallIntegerField(blank=True, null=True)
     fit_type = models.SmallIntegerField(blank=True, null=True)
     ff_runcat = models.ForeignKey('Runningcatalog', db_column='ff_runcat',
