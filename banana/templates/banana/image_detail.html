@@ -23,8 +23,94 @@
 {% block content %}
     <div class="container-fluid">
         <div class="row">
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>Image ID</dt>
+                    <dd>{{ object.id }}</dd>
+
+                    <dt>Dataset</dt>
+                    <dd>{{ object.dataset }}</dd>
+
+                    <dt>Centre</dt>
+                    <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
+
+                    <dt>start date (UT)</dt>
+                    <dd>{{ object.taustart_ts }}</dd>
+
+                    <dt>Integration time</dt>
+                    <dd>{{ object.tau_time|floatformat:3 }}</dd>
+
+                    <dt>Tau</dt>
+                    <dd>{{ object.tau }}</dd>
+
+                    <dt>Filename</dt>
+                    <dd>{{ object.filename }}</dd>
+
+
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>Rejections</dt>
+                    <dd>{{ object.rejections.all|yesno }} </dd>
+
+                    <dt>Number of sources</dt>
+                    <dd>{{ object.extractedsources.count }}</dd>
+
+
+                    <dt>Frequency <small>Hz</small></dt>
+                    <dd>{{ object.freq_eff|scientific  }}</dd>
+
+                    <dt>Assigned Band</dt>
+                    <dd>{{ object.band }}</dd>
+
+                    <dt>Bandwidth <small>Hz</small></dt>
+                    <dd>{{ object.freq_bw|scientific }}</dd>
+
+                    <dt>Stokes</dt>
+                    <dd>{{ object.stokes }}</dd>
+
+
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+
+                    <dt>rb_smaj</dt>
+                    <dd>{{ object.rb_smaj|floatformat:3 }}</dd>
+
+                    <dt>rb_smin</dt>
+                    <dd>{{ object.rb_smin|floatformat:3 }}</dd>
+
+                    <dt>rb_pa</dt>
+                    <dd>{{ object.rb_pa|floatformat:3 }}</dd>
+
+                    <dt>Delta X</dt>
+                    <dd>{{ object.deltax|floatformat:3 }}</dd>
+
+                    <dt>Delta Y</dt>
+                    <dd>{{ object.deltay|floatformat:3 }}</dd>
+
+                    <!--<dt>fwhm_arcsec</dt>-->
+                    <!--<dd>{{ object.fwhm_arcsec }}</dd>-->
+
+                    <!--<dt>fov_degrees</dt>-->
+                    <!--<dd>{{ object.fov_degrees }}</dd>-->
+
+                    <dt>RMS<sub>qc</sub></dt>
+                    <dd>{{ object.rms_qc|floatformat:3 }}</dd>
+
+                    <dt>RMS<sub>min</sub></dt>
+                    <dd>{{ object.rms_min|floatformat:3 }}</dd>
+
+                    <dt>RMS<sub>max</sub></dt>
+                    <dd>{{ object.rms_max|floatformat:3 }}</dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-5">
-                <div data-spy="affix">
+                <div data-spy="affix" >
                     <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
 
                     {% with object.get_next_by_taustart_ts_only as next %}
@@ -34,77 +120,6 @@
                     {% endwith %}
 
                     <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
-
-                    <dl class="dl-horizontal">
-                        <dt>Image ID</dt>
-                        <dd>{{ object.id }}</dd>
-
-                        <dt>Dataset</dt>
-                        <dd>{{ object.dataset }}</dd>
-
-                        <dt>Centre</dt>
-                        <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
-
-                        <dt>start date (UT)</dt>
-                        <dd>{{ object.taustart_ts }}</dd>
-
-                        <dt>Integration time</dt>
-                        <dd>{{ object.tau_time|floatformat:3 }}</dd>
-
-                        <dt>Frequency <small>Hz</small></dt>
-                        <dd>{{ object.freq_eff|scientific  }}</dd>
-
-                        <dt>Bandwidth <small>Hz</small></dt>
-                        <dd>{{ object.freq_bw|scientific }}</dd>
-
-                        <dt>Rejections</dt>
-                        <dd>{{ object.rejections.all|yesno }} </dd>
-
-                        <dt>Number of sources</dt>
-                        <dd>{{ object.extractedsources.count }}</dd>
-
-                        <dt>Filename</dt>
-                        <dd>{{ object.filename }}</dd>
-
-                        <dt>Stokes</dt>
-                        <dd>{{ object.stokes }}</dd>
-
-                        <dt>Tau</dt>
-                        <dd>{{ object.tau }}</dd>
-
-                        <dt>Band</dt>
-                        <dd>{{ object.band }}</dd>
-
-                        <dt>rb_smaj</dt>
-                        <dd>{{ object.rb_smaj|floatformat:3 }}</dd>
-
-                        <dt>rb_smin</dt>
-                        <dd>{{ object.rb_smin|floatformat:3 }}</dd>
-
-                        <dt>rb_pa</dt>
-                        <dd>{{ object.rb_pa|floatformat:3 }}</dd>
-
-                        <dt>Delta X</dt>
-                        <dd>{{ object.deltax|floatformat:3 }}</dd>
-
-                        <dt>Delta Y</dt>
-                        <dd>{{ object.deltay|floatformat:3 }}</dd>
-
-                        <dt>fwhm_arcsec</dt>
-                        <dd>{{ object.fwhm_arcsec }}</dd>
-
-                        <dt>fov_degrees</dt>
-                        <dd>{{ object.fov_degrees }}</dd>
-
-                        <dt>RMS<sub>qc</sub></dt>
-                        <dd>{{ object.rms_qc|floatformat:3 }}</dd>
-
-                        <dt>RMS<sub>min</sub></dt>
-                        <dd>{{ object.rms_min|floatformat:3 }}</dd>
-
-                        <dt>RMS<sub>max</sub></dt>
-                        <dd>{{ object.rms_max|floatformat:3 }}</dd>
-                    </dl>
                 </div>
             </div>
             <div class="col-md-7">
@@ -162,11 +177,9 @@
                 {% endif %}
                 </div>
                 </div>
-
-
-
             </div>
         </div>
+
     </div>
 
     <script>
