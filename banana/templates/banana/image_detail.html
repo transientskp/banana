@@ -5,7 +5,7 @@
 {% load tableheader %}
 {% load paginator %}
 {% load units %}
-
+{% load flux_units_dropdown %}
 {% block morehead %}
     <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
     <script type="text/javascript">$(function() {
@@ -111,14 +111,14 @@
         <div class="row">
             <div class="col-md-5">
                 <div data-spy="affix" >
-                    <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
-
-                    {% with object.get_next_by_taustart_ts_only as next %}
-                        {% if next %}
-                            <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
-                        {% endif %}
-                    {% endwith %}
-
+                    <div class="btn-group">
+                        <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
+                        {% with object.get_next_by_taustart_ts_only as next %}
+                            {% if next %}
+                                <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
                     <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
                 </div>
             </div>
@@ -126,8 +126,13 @@
                 {% if object.extractedsources.all %}
 
                     <div class="row">
-                        <div class="col-md-12 text-center">
+                        <div class="col-md-6 text-right">
                             {% paginatorizer %}
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <div class="btn-group">
+                            {% flux_units_dropdown %}
+                            </div>
                         </div>
                     </div>
 
@@ -157,10 +162,10 @@
                                 <td>{{ source.ra_err|deg2asec|floatformat:3 }}</td>
                                 <td>{{ source.decl_err|deg2asec|floatformat:3 }}</td>
                                 <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
-                                <td>{{ source.f_peak|scientific }}</td>
-                                <td>{{ source.f_peak_err|scientific }}</td>
-                                <td>{{ source.f_int|scientific }}</td>
-                                <td>{{ source.f_int_err|scientific }}</td>
+                                <td>{{ source.f_peak|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ source.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ source.f_int|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ source.f_int_err|flux_unit:flux_prefix|scientific }}</td>
 
                             </tr>
                             </a>

@@ -14,7 +14,7 @@ from banana.views.mixins import (HybridTemplateMixin,
 from collections import OrderedDict
 
 
-class ImageDetail(SortListMixin, DatasetMixin,
+class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
                       HybridTemplateMixin, ListView):
     model = Image
     paginate_by = 20
