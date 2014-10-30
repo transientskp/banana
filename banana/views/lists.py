@@ -74,6 +74,11 @@ class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
         qs = qs.prefetch_related(*related)
         return qs
 
+    def get_context_data(self, **kwargs):
+        context = super(ExtractedsourcesList, self).get_context_data(**kwargs)
+        context['flux_prefix'] = self.request.GET.get('flux_prefix', None)
+        return context
+
 
 class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
                          FilterView):
@@ -87,3 +92,8 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         qs = super(RunningcatalogList, self).get_queryset()
         qs = qs.prefetch_related('newsource')
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(RunningcatalogList, self).get_context_data(**kwargs)
+        context['flux_prefix'] = self.request.GET.get('flux_prefix', None)
+        return context

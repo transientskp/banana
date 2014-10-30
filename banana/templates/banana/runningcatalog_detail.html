@@ -119,10 +119,10 @@
                 <div class="col-md-3">
                     <h2>Lightcurve</h2>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 text-center">
                     {% paginatorizer %}
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 text-right">
                     <div class="btn-group">
                         <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
                         <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
@@ -160,10 +160,10 @@
                             <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
                             <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
                             <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:flux_prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:flux_prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:flux_prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
                             <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
                             <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
                             <td>{{ assocxtrsource.v_int|scientific }}</td>
