@@ -11,7 +11,7 @@ Encloses column-headers with re-ordering hyperlinks (via http query strings)
         {% else %}
             <a href="?{% query_replace 'order' '-'|safe|add:field %}">
         {% endif %}
-        {{ description }}
+        {{ description|safe }}
         {% if order == field %}
             <span class="glyphicon glyphicon-arrow-down"></span>
         {% elif order == antifield %}

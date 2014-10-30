@@ -7,10 +7,10 @@ from django_filters.views import FilterView
 from banana.filters import RunningcatalogFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
-from banana.models import Dataset, Image, Newsource, Extractedsource, \
-                          AugmentedRunningcatalog, schema_version, Monitor
-from banana.views.mixins import HybridTemplateMixin, \
-                                SortListMixin, DatasetMixin
+from banana.models import (Dataset, Image, Newsource, Extractedsource,
+                          AugmentedRunningcatalog, schema_version, Monitor)
+from banana.views.mixins import (HybridTemplateMixin,
+                                SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
 
 
@@ -62,7 +62,7 @@ class MonitorList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
     paginate_by = 100
 
 
-class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
+class ExtractedsourcesList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
     model = Extractedsource
     paginate_by = 100
@@ -74,9 +74,8 @@ class ExtractedsourcesList(SortListMixin, HybridTemplateMixin,
         qs = qs.prefetch_related(*related)
         return qs
 
-
-class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
-                         FilterView):
+class RunningcatalogList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
+                         DatasetMixin, FilterView):
 
     model = AugmentedRunningcatalog
     template_name = "banana/runningcatalog_filter.html"
@@ -87,3 +86,4 @@ class RunningcatalogList(SortListMixin, HybridTemplateMixin, DatasetMixin,
         qs = super(RunningcatalogList, self).get_queryset()
         qs = qs.prefetch_related('newsource')
         return qs
+

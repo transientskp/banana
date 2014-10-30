@@ -6,11 +6,11 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
-from banana.models import Image, Dataset, Extractedsource,\
-                            AugmentedRunningcatalog,\
-                          Newsource, Assocxtrsource, Monitor
-from banana.views.mixins import HybridTemplateMixin,\
-                                DatasetMixin, SortListMixin
+from banana.models import (Image, Dataset, Extractedsource,
+                            AugmentedRunningcatalog,
+                          Newsource, Assocxtrsource, Monitor)
+from banana.views.mixins import (HybridTemplateMixin,
+                                DatasetMixin, SortListMixin,FluxViewMixin)
 from collections import OrderedDict
 
 
@@ -112,7 +112,7 @@ class NewsourceDetail(SortListMixin, DatasetMixin,
         return context
 
 
-class RunningcatalogDetail(SortListMixin, DatasetMixin,
+class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
     model = AugmentedRunningcatalog
     paginate_by = 100
@@ -132,5 +132,4 @@ class RunningcatalogDetail(SortListMixin, DatasetMixin,
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
-        context['prefix'] = self.request.GET.get('flux_prefix', None)
         return context

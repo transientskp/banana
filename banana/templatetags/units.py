@@ -9,8 +9,6 @@ register = template.Library()
 # Handling unicode in an URL string is tricky (damn you, mu!).
 # So we use a map of ascii_key -> ((optionally unicode) prefix , power_of_ten)
 # This also allows us to specify a key for the 'unity' case.
-# NB key of None denotes the default, empty QueryDict case.
-# This can be altered in local_settings!
 units_map = OrderedDict((
             # ('tera',('T', 12)),
             # ('giga',('G', 9)),
@@ -21,6 +19,8 @@ units_map = OrderedDict((
             ('micro',(u"\u03BC", -6)),
             # ('nano',('n', -9))
             ))
+# NB key of None denotes the default, empty QueryDict case.
+# This can be altered in local_settings!
 units_map[None]= units_map['unity']
 
 @register.filter
