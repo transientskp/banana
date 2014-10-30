@@ -90,8 +90,7 @@ class SortListMixin(object):
 
 class DatasetMixin(object):
     """
-    mixin view that checks for a dataset request variable and adds it to the
-    context
+    Mixin view that adds the 'dataset' request variable to the context.
     """
 
     # if the queryset dataset filter has a different name, you should
@@ -115,3 +114,14 @@ class DatasetMixin(object):
     def get_queryset(self):
         qs = super(DatasetMixin, self).get_queryset()
         return self.filter_queryset(qs)
+
+
+
+class FluxViewMixin(object):
+    """
+    Mixin view that adds the 'flux_prefix' request variable to the context.
+    """
+    def get_context_data(self, *args, **kwargs):
+        context = super(FluxViewMixin, self).get_context_data(*args, **kwargs)
+        context['flux_prefix'] = self.request.GET.get('flux_prefix', None)
+        return context
