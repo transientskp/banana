@@ -17,7 +17,6 @@ def monetdb_db_config(host, port, passphrase, console=True):
             'PASSWORD': name,
             'HOST': host,
             'PORT': port,
-            'CONSOLE': console,
         }
     return databases
 
@@ -36,6 +35,5 @@ def postgresql_db_config(host, username, password, port=5432, console=True):
             'NAME': name,
             'USER': name,
             'PASSWORD': name,
-            'CONSOLE': console,
         }
     return databases

@@ -90,7 +90,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'banana',
-    'sqlconsole',
     'django_filters',
 ]
 

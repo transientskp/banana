@@ -7,8 +7,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^sqlconsole/', include('sqlconsole.urls')),
-                       url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+                       url(r'^accounts/login/$',
+                           'django.contrib.auth.views.login',
                            {'template_name':'login.html'},
                            name='login'),
                        url(r'^accounts/logout/$',

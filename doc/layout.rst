@@ -8,6 +8,5 @@ Contents:
 
    bananaproject
    banana
-   sqlconsole
    art
    doc

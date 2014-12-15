@@ -41,10 +41,6 @@
                 {% if user.is_authenticated %}
                     <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
                     {% if user.is_staff %}
-                        {% if db_name %}
-                            <li class="divider-vertical"></li>
-                            <li><a href="{% url 'sqlconsole' db_name %}">SQLConsole</a></li>
-                        {% endif %}
                         <li class="divider-vertical"></li>
                         <li><a href="{% url 'admin:index' %}">Admin</a></li>
                         <li class="divider-vertical"></li>
