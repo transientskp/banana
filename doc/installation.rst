@@ -20,9 +20,9 @@ Quick configuration
 
 copy the example config file::
 
-    $ cp bananaproject/settings/local_example.py bananaproject/settings/local.py
+    $ cp project/settings/local_example.py project/settings/local.py
 
-Now open :mod:`bananaproject.settings.local` in your favorite editor and
+Now open :mod:`project.settings.local` in your favorite editor and
 configure your database settings.
 
 

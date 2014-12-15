@@ -15,7 +15,7 @@ structure. The easy way to do this is as follows:
   - Generate a new database with the schema version you want to upgrade to
     (using, eg, `tkp-manage.py initdb`). Either MonetDB or Postgres is fine.
   - Get a Banana installation which is able to connect to your database. You'll
-    need to edit **bananaproject/settings/local.py** to set the appropriate
+    need to edit **project/settings/local.py** to set the appropriate
     hostname, port and password for MonetDB and/or for Postgres. Banana will
     build a list of all the databases on the host you specify, based on the
     assumption that the database name, username and password are all the same.

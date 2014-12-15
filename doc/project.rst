@@ -3,5 +3,5 @@
 Banana Project
 ==============
 
-.. automodule:: bananaproject
+.. automodule:: project
    :members:

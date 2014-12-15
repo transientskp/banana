@@ -3,7 +3,7 @@ Testing
 
 You should be careful when running the test suite. Default behavior for Django
 is to take your database configuration (which you defined in
-:mod:`bananaproject.settings.local`, append **_test** to the database name
+:mod:`project.settings.local`, append **_test** to the database name
 and attempt to create and destroy this database configuration. You probably
 don't want to do this in production. We created a seperate :mod:`testing`
 subproject that takes the **banana** configuration but overrides the database

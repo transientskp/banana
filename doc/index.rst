@@ -18,7 +18,6 @@ Contents:
    models
    testing
    mixins
-   managers
    multidb
 
 
