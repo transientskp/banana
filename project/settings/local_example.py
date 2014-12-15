@@ -1,28 +1,32 @@
 from base import *
 from banana.db import monetdb_list, postgres_list
 
+
 # use settings below to debug the application
 #DEBUG = True
-#MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 #INSTALLED_APPS += ['debug_toolbar']
+#TEMPLATE_DEBUG = DEBUG
 
-TEMPLATE_DEBUG = DEBUG
-
-# settings below is required if you run banana with WSGI
+# settings below may be  required if you run debug toolbar with WSGI
 # http://stackoverflow.com/a/21005346/575524
-DEBUG_TOOLBAR_PATCH_SETTINGS = False
+#DEBUG_TOOLBAR_PATCH_SETTINGS = False
+#MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+
 
 #  always change the secret key of a django application!
 SECRET_KEY = 'changeme!@'
 
+
 # always set an ADMIN email adres. in case of problem used for error reporting
 ADMINS += [('Administrator', 'change@me.nl'), ]
+
 
 # also very important, change this to the hostname used for accessing banana
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'servername.nl',
 ]
+
 
 # below is an example autoconfigure setup. It will probe PostgreSQL and
 # MonetDB database servers, and will add all databases existing on these
@@ -58,7 +62,6 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'HOST': MONETDB_HOST,
         'PORT': MONETDB_PORT,
     }
-
 
 # mongodb is used for image storage.
 MONGODB = {
