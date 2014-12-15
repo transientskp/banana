@@ -21,22 +21,17 @@ To run the banana test suite run::
 Updating the fixtures
 ---------------------
 
-To make the test suite pass after a schema change you need to update the
-fixtures also:
+Always regenerate the fixtures when you altered the model. You should do this
+by populating a TKP database with Mock data.
 
-  - Populate the database with some dataset, not too big but make sure
-    all tables are populated (like transient).
-  - to serialize the data into the fixture run::
+    - (re)create a database
+    - initialise schema with tkp-manage.py initdb
+    - run **banana/util/create_content.py** to create mock data. Configure the
+      connection using the TKP_DB* environment variables
+    - configure the Banana project to use this database
+    - dump the db content::
 
-        $ ./manage.py dumpdata --database=postgres_gijs --indent=1 banana > testing/fixtures/initial_data.json
-
-  - Note that some libraries like **astropy** write things to stdout which ruins
-    the json output. Check  the json file to make sure there is no garbage at
-    the start of the file.
-  - Run the test suite and check if all tests are passing
-  - If not, fix
-  - Issue pull request
-
+      $ ./manage.py dumpdata --database=%{TK_DBNAME} --indent=1 banana > testing/fixtures/initial_data.json
 
 Travis
 ------
