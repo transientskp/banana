@@ -41,16 +41,3 @@ If you want a more permanent implementation and serve Banana so several users it
 is adviced to deploy your setup with a dedicated webserver. The Django
 project itself has `extended documentation
 <https://docs.djangoproject.com/en/1.6/howto/deployment/>`_ on how to do this.
-
-
-.. note::
-
-    It is possible (and advisable) to run banana in a virtualenv, but matplotlib
-    may complain about not being able to import the ``PyQT4`` or ``sip`` modules.
-    The solution to this is to use a non-interactive backend by default.
-    There is a one-liner matplotlibrc config file included which should be picked
-    up, at least when running the django-debug server.
-    For reference however, the necessary edit is to set::
-
-        backend      : agg
-

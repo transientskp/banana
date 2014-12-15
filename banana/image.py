@@ -1,5 +1,8 @@
-import numpy
+
+import matplotlib
+matplotlib.use('agg')
 import aplpy
+import numpy
 from matplotlib import pyplot
 from banana.mongo import get_hdu
 import logging
