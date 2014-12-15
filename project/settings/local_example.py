@@ -1,27 +1,36 @@
 from base import *
 from banana.db import monetdb_list, postgres_list
 
-
-DEBUG = True
+# use settings below to debug the application
+#DEBUG = True
+#MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+#INSTALLED_APPS += ['debug_toolbar']
 
 TEMPLATE_DEBUG = DEBUG
-
-MIDDLEWARE_CLASSES += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-
-INSTALLED_APPS += ['debug_toolbar']
 
 # settings below is required if you run banana with WSGI
 # http://stackoverflow.com/a/21005346/575524
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+#  always change the secret key of a django application!
 SECRET_KEY = 'changeme!@'
 
-# Change default flux display prefix / units
-# (Only applies to transients_detail page, currently)
-from banana.templatetags.units import units_map
-units_map[None]= units_map['unity'] #(Default)
-# units_map[None]=units_map['milli']
+# always set an ADMIN email adres. in case of problem used for error reporting
+ADMINS += [('Administrator', 'change@me.nl'), ]
 
+# also very important, change this to the hostname used for accessing banana
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'servername.nl',
+]
+
+# below is an example autoconfigure setup. It will probe PostgreSQL and
+# MonetDB database servers, and will add all databases existing on these
+# servers to the django database configuration. You don't have to configure
+# banana like this! You can also just add the database by hand.
+#
+# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
+#
 MONETDB_HOST = 'localhost'
 MONETDB_PORT = 50000
 MONETDB_PASSPHRASE = 'blablabla'
@@ -30,7 +39,6 @@ POSTGRES_HOST = 'localhost'
 POSTGRES_USERNAME = 'gijs'
 POSTGRES_PASSWORD = POSTGRES_USERNAME
 
-
 for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
     DATABASES["postgres_" + name] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -38,10 +46,7 @@ for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
         'NAME': name,
         'USER': name,
         'PASSWORD': name,
-        'CONSOLE': False,  # True if you you want sqlconsole queries
     }
-
-
 
 for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
     name = monetdb['name']
@@ -52,12 +57,10 @@ for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
         'PASSWORD': name,
         'HOST': MONETDB_HOST,
         'PORT': MONETDB_PORT,
-        'CONSOLE': True,
     }
 
 
-ADMINS += [('Gijs Molenaar', 'bill@microsoft.com'), ]
-
+# mongodb is used for image storage.
 MONGODB = {
     "enabled": True,
     "host": "localhost",
@@ -65,12 +68,12 @@ MONGODB = {
     "database": "tkp"
 }
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'servername.nl',
-]
 
-## to enable memcached, install memcached, python-memcached and python-pylibmc.
+# If page performance is slow, you can enable caching. to enable memcached,
+# install memcached, python-memcached and python-pylibmc.
+#
+# https://docs.djangoproject.com/en/1.7/topics/cache/
+#
 #CACHES = {
 #    'default': {
 #        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',

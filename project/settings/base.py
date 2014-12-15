@@ -96,6 +96,15 @@ INSTALLED_APPS = [
 
 INTERNAL_IPS = ['127.0.0.1']
 
+
+# Change default flux display prefix / units
+# (Only applies to transients_detail page, currently)
+from banana.templatetags.units import units_map
+units_map[None]= units_map['unity'] #(Default)
+# units_map[None]=units_map['milli']
+
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
