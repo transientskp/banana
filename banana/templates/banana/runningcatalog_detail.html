@@ -46,8 +46,10 @@
                         var aladin = A.aladin('#aladin-lite-div');
                         aladin.setZoom(0.18);
                         aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
-                        aladin.setImageSurvey(aladin.createImageSurvey('WENSS', 'WENSS', 'http://alasky.u-strasbg.fr/WENSS', 'equatorial', 5));
-                    </script> 
+                        var wenss = aladin.createImageSurvey('WENSS', 'WENSS', 'http://alasky.u-strasbg.fr/WENSS', 'equatorial', 5);
+                        var vlss = aladin.createImageSurvey('VLSSr', 'VLSSr', 'http://alasky.u-strasbg.fr/VLSSr', 'equatorial', 5);
+                        aladin.setImageSurvey(wenss);
+                    </script>
                 </div>
             </div>
 
