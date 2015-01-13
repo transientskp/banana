@@ -1,3 +1,4 @@
+import re
 from base import *
 from banana.db import monetdb_list, postgres_list
 
@@ -44,8 +45,8 @@ POSTGRES_USERNAME = 'gijs'
 POSTGRES_PASSWORD = POSTGRES_USERNAME
 
 for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
-    # django reverse url mapping can't handle dot in name
-    config_name = ("postgres_" + name).replace(".", "")
+    # django reverse url mapping can't handle non aplhanum chars
+    config_name = ("postgres_" + re.sub(r'\W+', '', name))
     DATABASES["postgres_" + name] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': POSTGRES_HOST,
@@ -54,9 +55,9 @@ for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
         'PASSWORD': name,
     }
 
-for name in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
-    # django reverse url mapping can't handle dot in name
-    config_name = ("monetdb_" + name).replace(".", "")
+for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
+    # django reverse url mapping can't handle non aplhanum chars
+    config_name = ("postgres_" + re.sub(r'\W+', '', monetdb["name"]))
     DATABASES[config_name] = {
         'ENGINE': 'djonet',
         'NAME': name,
