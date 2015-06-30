@@ -164,7 +164,8 @@ $(function () {
                 fillOpacity: 0.5
             },
 	        series: {
-	            animation: false
+	            animation: false,
+	            turboThreshold: 5000
 	        },
         }
     });
