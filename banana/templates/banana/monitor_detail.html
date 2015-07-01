@@ -26,16 +26,16 @@
                     <dt>Dataset</dt>
                     <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
 
-                    <dt>Ra(°)</dt>
+                    <dt>RA (°)</dt>
                     <dd>{{ object.ra|stringformat:".3f" }}</dd>
 
-                    <dt>Dec(°)</dt>
+                    <dt>Dec (°)</dt>
                     <dd>{{ object.decl|stringformat:".3f" }}</dd>
 
-                    <dt>Ra(h:m:s)</dt>
+                    <dt>RA (hh:mm:ss.s)</dt>
                     <dd>{{object.ra|format_angle:"time"}}</dd>
 
-                    <dt>Dec(d:m:s)</dt>
+                    <dt>Dec(dd:mm:ss.s)</dt>
                     <dd>{{object.decl|format_angle:"dms"}}</dd>
 
                     <dt>Running catalog</dt>
