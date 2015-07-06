@@ -1,3 +1,3 @@
-#id, runcat.wm_ra, runcat.wm_decl, runcat.datapoints, runcat
-{% for object in object_list %}{{ object.id }}, {{ object.runcat.wm_ra }}, {{ object.runcat.wm_decl }},  {{ object.runcat.datapoints }}, {{ object.runcat }}
+#id, runcat.wm_ra, runcat.wm_decl,runcat.taustart_ts, runcat.datapoints, runcat, runcat.trigger_source, runcat.source_type, runcat.limits_image
+{% for object in object_list %}{{ object.id }}, {{ object.runcat.wm_ra }}, {{ object.runcat.wm_decl }}, "{{object.trigger_xtrsrc.image.taustart_ts|date:"c" }}", {{ object.runcat.datapoints }}, {{ object.runcat }}, {{ object.trigger_xtrsrc }}, {{ object.newsource_type }}, {{ object.previous_limits_image.id }}
 {% endfor %}
