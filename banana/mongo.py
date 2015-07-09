@@ -16,6 +16,8 @@ def fetch(filename):
 
 
 def get_hdu(url):
+    if not url:
+        return None
     if hasattr(settings, 'MONGODB') and settings.MONGODB["enabled"]:
         try:
             mongo_file = fetch(url)
