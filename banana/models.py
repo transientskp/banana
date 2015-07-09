@@ -258,7 +258,8 @@ class Image(models.Model):
         db_table = 'image'
 
     def filename(self):
-        return self.url.split('/')[-1]
+        if self.url:
+            return self.url.split('/')[-1]
 
     def get_next_by_taustart_ts_only(self):
         """
