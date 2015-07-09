@@ -31,11 +31,13 @@ def flux_unit(value, unit_prefix):
     Should be passed a string matching a key in ``units_map``
     (or the empty string, which is treated equivalent to ``None``)
     """
+    if not value:
+        return
 
     # When getting a QueryDict value in a template,
     # None is annoyingly converted to empty string
     if unit_prefix == '':
-        unit_prefix=None
+        unit_prefix = None
     if unit_prefix in units_map:
         power = units_map[unit_prefix][1]
         return float(value) / (10.0 ** power)
