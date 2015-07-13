@@ -2,7 +2,7 @@ import logging
 import socket
 from django.conf import settings
 from django.http import Http404
-import monetdb.control
+import pymonetdb.control
 import datetime
 
 
