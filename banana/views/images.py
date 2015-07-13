@@ -22,7 +22,7 @@ class ImagePlot(DetailView):
         return context
 
     def render_to_response(self, context, **kwargs):
-        response = HttpResponse(mimetype="image/png")
+        response = HttpResponse(content_type="image/png")
         if context['hdu']:
             canvas = banana.image.image_plot(context['hdu'], context['size'],
                                              context['sources'])
@@ -41,7 +41,7 @@ class ExtractedSourcePlot(DetailView):
         return context
 
     def render_to_response(self, context, **kwargs):
-        response = HttpResponse(mimetype="image/png")
+        response = HttpResponse(content_type="image/png")
         if context['hdu']:
             canvas = banana.image.extractedsource(context['hdu'], self.object,
                                                   context['size'])
