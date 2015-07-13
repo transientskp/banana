@@ -63,7 +63,6 @@ class ViewTest(TestCase):
 
     def test_list_views_with_dataset(self):
         for list_view in self.list_views:
-            print list_view
             response = self.client.get(reverse(list_view,
                                                kwargs={'db': test_db}) +
                                        "?dataset=1")
