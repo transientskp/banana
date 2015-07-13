@@ -78,10 +78,10 @@ def format_angle(value, format_type="time"):
     """
     if format_type == "time":
         h, m, s = deg_to_hms(float(value))
-        result = "%d<sup>h</sup>%d<sup>m</sup>%.1f<sup>s</sup>" % (h, m, s)
+        result = "%02d<sup>h</sup> %02d<sup>m</sup> %02.1f<sup>s</sup>" % (h, m, s)
     if format_type == "dms":
         sign, d, m, s = deg_to_dms(float(value))
-        result = "%s%d&deg; %d&prime; %.1f&Prime;" % (sign, d, m, s)
+        result = "%s%02d&deg; %02d&prime; %04.1f&Prime;" % (sign, d, m, s)
     return mark_safe(result)
 
 

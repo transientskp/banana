@@ -65,10 +65,10 @@
                                 ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
                                 {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
 
-                            <dt>Ra(h:m:s)</dt>
+                            <dt>RA (hh:mm:ss.s)</dt>
                             <dd>{{object.wm_ra|format_angle:"time"}}</dd>
 
-                            <dt>Dec(d:m:s)</dt>
+                            <dt>Dec (dd:mm:ss.s)</dt>
                             <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
 
                             <dt>New source</dt>
@@ -102,13 +102,13 @@
                             <dt>Dataset</dt>
                             <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
 
-                            <dt>Max flux</dt>
+                            <dt>Max int. flux (Jy)</dt>
                             <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
 
-                            <dt>Mean flux</dt>
+                            <dt>Mean int. flux (Jy)</dt>
                             <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
 
-                            <dt>Median flux</dt>
+                            <dt>Median int. flux (Jy)</dt>
                             <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
                         </dl>
                     </div>
@@ -145,8 +145,8 @@
                     {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
                     {% tableheader 'xtrsrc__f_int' 'Int. flux (Jy)' %}
                     {% tableheader 'xtrsrc__f_int_err' 'Int. flux err (Jy)' %}
-                    {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy)' %}
-                    {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy)' %}
+                    {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy beam<sup>-1</sup>)' %}
+                    {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy beam<sup>-1</sup>)' %}
                     {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
                     {% tableheader 'xtrsrc__image' 'Image ID' %}
                     {% tableheader 'v_int' 'Vν' %}

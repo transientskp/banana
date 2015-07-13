@@ -29,13 +29,13 @@
             <dt>Position (decimal)</dt>
             <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}&Prime;)</dd>
 
-            <dt>Position (Sexagesimal)</dt>
+            <dt>Position (sexagesimal)</dt>
             <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</dd>
 
             <dt>Signal to noise</dt>
             <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
 
-            <dt>Peak flux (Jy)</dt>
+            <dt>Peak flux (Jy beam<sup>-1</sup>)</dt>
             <dd>{{ extractedsource.f_peak|scientific }} &pm; {{ extractedsource.f_peak_err|scientific }}</dd>
 
             <dt>Integrated flux (Jy)</dt>
@@ -56,10 +56,10 @@
             {% endfor %}
             </dd>
 
-            <dt>Semi-major axis (arcsec)</dt>
+            <dt style='white-space: normal'>Semi-major axis (arcsec)</dt>
             <dd>{{ extractedsource.semimajor|scientific }}</dd>
 
-            <dt>Semi-minor axis (arcsec)</dt>
+            <dt style='white-space: normal'>Semi-minor axis (arcsec)</dt>
             <dd>{{ extractedsource.semiminor|scientific }}</dd>
 
             <dt>Position angle (deg)</dt>
