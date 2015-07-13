@@ -2,9 +2,11 @@ import os.path
 from django.conf import settings
 from pymongo import Connection
 from gridfs import GridFS, NoFile
+from astropy import log as astro_log
 import astropy.io.fits
 import logging
 
+astro_log.setLevel('ERROR')
 logger = logging.getLogger(__name__)
 
 
