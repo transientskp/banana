@@ -1,6 +1,6 @@
 import os.path
 from django.conf import settings
-from pymongo import Connection
+from pymongo import MongoClient
 from gridfs import GridFS, NoFile
 import astropy.io.fits
 import logging
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def fetch(filename):
-    mongo_connection = Connection(host=settings.MONGODB["host"],
+    mongo_connection = MongoClient(host=settings.MONGODB["host"],
                                   port=settings.MONGODB["port"])
     gfs = GridFS(mongo_connection[settings.MONGODB["database"]])
     return gfs.get_last_version(filename)
