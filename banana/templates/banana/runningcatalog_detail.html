@@ -6,6 +6,7 @@
 {% load query_replace %}
 {% load flux_units_dropdown %}
 {% load floatmath %}
+{% load cycle from future %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
