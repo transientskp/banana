@@ -39,3 +39,6 @@ class InvalidVarException(object):
 
 TEMPLATE_DEBUG = True
 TEMPLATE_STRING_IF_INVALID = InvalidVarException()
+
+# settings this is required for surpressing 1_6.W001 warning
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
