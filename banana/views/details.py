@@ -65,7 +65,8 @@ class DatasetDetail(DetailView):
             annotate(num_extractedsources=Count('extractedsources')). \
             order_by('taustart_ts')
         images_per_band = {}
-        for image in images:
+        image_list = list(images.all())  # force a fetch
+        for image in image_list:
             label = str(image.band)
             images_per_band.setdefault(label, [])
             images_per_band[label].append(image.num_extractedsources)
@@ -74,7 +75,7 @@ class DatasetDetail(DetailView):
         context['dataset'] = self.object
         context['num_extractedsources'] = Extractedsource.objects.\
             using(self.request.SELECTED_DATABASE).\
-            filter(image__in=images.all()).count()
+            filter(image__in=image_list).count()
         context['images'] = images
         context['images_per_band'] = images_per_band
         return context
@@ -121,7 +122,7 @@ class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
 
     def get_queryset(self):
         qs = super(RunningcatalogDetail, self).get_queryset()\
-            .select_related('xtrsrc', 'assocxtrsources')
+            .select_related('xtrsrc')
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
         assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
         return Assocxtrsource.objects.using(qs.db)\
