@@ -153,11 +153,20 @@
                 },
                 plotOptions: {
                     series: {
-                        animation: false
+                        animation: false,
+                        turboThreshold: 0,
+                        point: {
+                            events: {
+                                click: function (e) {
+                                    location.href = e.point.url;
+                                }
+                            }
+                        },
                     },
                     area: {
+
                         fillColor: {
-                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
                             stops: [
                                 [0, Highcharts.getOptions().colors[0]],
                                 [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
@@ -177,19 +186,30 @@
                     }
                 },
                 series: [
-                    {% for freq, points in images_per_band.items %}
+                    {% for freq, images in images_per_band.items %}
                         {
                             type: 'area',
                             name: '{{ freq }}',
                             data: [
-                                {% for point in points %}
-                                    {{ point }}
-                                    {% if not forloop.last %}, {% endif %}
+                                {% for image in images %}
+                                    {
+                                        image_id: '{{ image.image_id }}',
+                                        y: {{ image.num_sources }},
+                                        url: '{% url 'image' db_name image.image_id %}'
+                                    }{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             ]
                         }{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                ]
+                ],
+
+                tooltip: {
+                    formatter: function () {
+                        return '<b>image id:</b> ' + this.point.image_id +
+                                '<br><b>frequency:</b> ' + this.series.name +
+                                '<br><b>source num:</b> ' + this.point.y;
+                    }
+                }
             });
         });
     </script>

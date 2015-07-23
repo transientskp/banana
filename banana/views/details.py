@@ -64,14 +64,18 @@ class DatasetDetail(DetailView):
             prefetch_related(*related). \
             annotate(num_extractedsources=Count('extractedsources')). \
             order_by('taustart_ts')
+
+        # gather data for lightcurve plot
         images_per_band = {}
         image_list = list(images.all())  # force a fetch
         for image in image_list:
             label = str(image.band)
             images_per_band.setdefault(label, [])
-            images_per_band[label].append(image.num_extractedsources)
+            images_per_band[label].append({'num_sources': image.num_extractedsources,
+                                           'image_id': image.id})
         images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
                                              key=lambda x: x[0]))
+
         context['dataset'] = self.object
         context['num_extractedsources'] = Extractedsource.objects.\
             using(self.request.SELECTED_DATABASE).\
