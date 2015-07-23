@@ -104,6 +104,9 @@
                 title: {
                     text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
                 },
+                subtitle: {
+                    text: 'disabled for now since way too slow'
+                },
                 tooltip: {
                     formatter: function () {
                         return '<b>ra:</b> ' + this.point.x.toFixed(3) +
@@ -114,9 +117,12 @@
                 series: [{
                     name: 'distance',
                     data: [
+                        {% comment %}
+                        TODO: disabled for now, too slow. see issue #90
                         {% for ra, decl, count in dataset.heatmap %}
                             [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
                         {% endfor %}
+                        {%  endcomment %}
                     ]
                 }]
             });
