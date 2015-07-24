@@ -7,10 +7,10 @@ from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import (Image, Dataset, Extractedsource,
-                           AugmentedRunningcatalog,
+                           AugmentedRunningcatalog, Runningcatalog,
                            Newsource, Assocxtrsource, Monitor, Skyregion)
 from banana.views.mixins import (HybridTemplateMixin,
-                                 DatasetMixin, SortListMixin,FluxViewMixin)
+                                 DatasetMixin, SortListMixin, FluxViewMixin)
 from collections import OrderedDict
 
 
@@ -137,7 +137,7 @@ class NewsourceDetail(SortListMixin, DatasetMixin,
 
 class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
                            HybridTemplateMixin, ListView):
-    model = AugmentedRunningcatalog
+    model = Runningcatalog
     paginate_by = 100
     default_order = 'xtrsrc__image__taustart_ts'
     template_name = "banana/runningcatalog_detail.html"
@@ -154,5 +154,28 @@ class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
 
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
+        context['object'] = self.object
+        return context
+
+
+class AugmentedRunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
+                                    HybridTemplateMixin, ListView):
+    model = AugmentedRunningcatalog
+    paginate_by = 100
+    default_order = 'xtrsrc__image__taustart_ts'
+    template_name = "banana/augmentedrunningcatalog_detail.html"
+
+    def get_queryset(self):
+        qs = super(AugmentedRunningcatalogDetail, self).get_queryset() \
+            .select_related('xtrsrc')
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
+        return Assocxtrsource.objects.using(qs.db) \
+            .filter(runcat=self.object.id) \
+            .select_related(*assoc_related) \
+            .order_by(self.get_order())
+
+    def get_context_data(self, **kwargs):
+        context = super(AugmentedRunningcatalogDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
         return context

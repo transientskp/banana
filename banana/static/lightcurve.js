@@ -165,7 +165,7 @@ $(function () {
             },
 	        series: {
 	            animation: false,
-	            turboThreshold: 5000
+	            turboThreshold: 0
 	        },
         }
     });
