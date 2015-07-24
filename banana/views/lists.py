@@ -8,9 +8,10 @@ from banana.filters import RunningcatalogFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
-                          AugmentedRunningcatalog, schema_version, Monitor)
+                           AugmentedRunningcatalog, schema_version, Monitor,
+                           Skyregion)
 from banana.views.mixins import (HybridTemplateMixin,
-                                SortListMixin, DatasetMixin, FluxViewMixin)
+                                 SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
 
 
@@ -59,6 +60,11 @@ class NewsourceList(SortListMixin, HybridTemplateMixin,
 
 class MonitorList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
     model = Monitor
+    paginate_by = 100
+
+
+class SkyregionList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
+    model = Skyregion
     paginate_by = 100
 
 

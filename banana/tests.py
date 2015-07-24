@@ -17,6 +17,7 @@ class ViewTest(TestCase):
         'extractedsources',
         'runningcatalogs',
         'monitors',
+        'skyregions',
     ]
 
     detail_views = [
@@ -27,6 +28,7 @@ class ViewTest(TestCase):
         'image',
         'bigimage',
         'monitor',
+        'skyregion',
     ]
 
     def test_database_view(self):

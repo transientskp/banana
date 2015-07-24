@@ -1,0 +1,17 @@
+[
+  {% for object in object_list%}
+  {
+    "id": {{ object.id }},
+    "dataset": "{{ object.dataset }}",
+    "centre_ra": {{ object.centre_ra }},
+    "centre_decl": {{ object.centre_decl }},
+    "xtc_radius": {{ object.xtr_radius }},
+    "x": {{ object.x }},
+    "y": {{ object.y }},
+    "z": {{ object.z }}
+  {% if not forloop.last %},{% endif %}
+  }
+
+  {% endfor %}
+
+  ]

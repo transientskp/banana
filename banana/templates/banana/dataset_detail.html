@@ -57,6 +57,7 @@
                             <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
                             <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
                             <a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitors</button></a>
+                            <a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Skyregions</button></a>
                         </div>
                     </div>
                 </div>
@@ -194,7 +195,7 @@
                                 {% for image in images %}
                                     {
                                         image_id: '{{ image.image_id }}',
-                                        y: {{ image.num_sources }},
+                                        y: {{ image.num_extractedsources }},
                                         url: '{% url 'image' db_name image.image_id %}'
                                     }{% if not forloop.last %}, {% endif %}
                                 {% endfor %}

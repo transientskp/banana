@@ -1,21 +1,21 @@
 """
 All views that visualise a model object (banana.models)
 """
-from django.db.models import Count, Max, Avg
+from django.db.models import Count
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
 import banana.image
 from banana.models import (Image, Dataset, Extractedsource,
-                            AugmentedRunningcatalog,
-                          Newsource, Assocxtrsource, Monitor)
+                           AugmentedRunningcatalog,
+                           Newsource, Assocxtrsource, Monitor, Skyregion)
 from banana.views.mixins import (HybridTemplateMixin,
-                                DatasetMixin, SortListMixin,FluxViewMixin)
+                                 DatasetMixin, SortListMixin,FluxViewMixin)
 from collections import OrderedDict
 
 
 class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
-                      HybridTemplateMixin, ListView):
+                  HybridTemplateMixin, ListView):
     model = Image
     paginate_by = 20
     template_name = "banana/image_detail.html"
@@ -33,7 +33,7 @@ class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
         context = super(ImageDetail, self).get_context_data(**kwargs)
         context['image_size'] = self.get_size()
         context['pixels'] = banana.image.extracted_sources_pixels(self.object,
-                                                               self.get_size())
+                                                                  self.get_size())
         context['object'] = self.object
         return context
 
@@ -47,7 +47,7 @@ class BigImageDetail(DatasetMixin, DetailView):
         context = super(BigImageDetail, self).get_context_data(**kwargs)
         context['image_size'] = self.image_size
         context['sources'] = banana.image.extracted_sources_pixels(self.object,
-                                                               self.image_size)
+                                                                   self.image_size)
         return context
 
 
@@ -71,14 +71,14 @@ class DatasetDetail(DetailView):
         for image in image_list:
             label = str(image.band)
             images_per_band.setdefault(label, [])
-            images_per_band[label].append({'num_sources': image.num_extractedsources,
+            images_per_band[label].append({'num_extractedsources': image.num_extractedsources,
                                            'image_id': image.id})
         images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
                                              key=lambda x: x[0]))
 
         context['dataset'] = self.object
-        context['num_extractedsources'] = Extractedsource.objects.\
-            using(self.request.SELECTED_DATABASE).\
+        context['num_extractedsources'] = Extractedsource.objects. \
+            using(self.request.SELECTED_DATABASE). \
             filter(image__in=image_list).count()
         context['images'] = images
         context['images_per_band'] = images_per_band
@@ -97,6 +97,24 @@ class ExtractedSourceDetail(DetailView):
 class MonitorDetail(DetailView):
     model = Monitor
 
+
+class SkyregionDetail(SortListMixin, DatasetMixin, HybridTemplateMixin,
+                      ListView):
+    model = Skyregion
+    paginate_by = 20
+    template_name = "banana/skyregion_detail.html"
+
+    def get_queryset(self):
+        qs = super(SkyregionDetail, self).get_queryset()
+        self.object = get_object_or_404(qs, id=self.kwargs['pk'])
+        return self.object.images.all(). \
+            order_by(self.get_order()). \
+            annotate(num_extractedsources=Count('extractedsources'))
+
+    def get_context_data(self, **kwargs):
+        context = super(SkyregionDetail, self).get_context_data(**kwargs)
+        context['object'] = self.object
+        return context
 
 
 class NewsourceDetail(SortListMixin, DatasetMixin,
@@ -125,13 +143,13 @@ class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
     template_name = "banana/runningcatalog_detail.html"
 
     def get_queryset(self):
-        qs = super(RunningcatalogDetail, self).get_queryset()\
+        qs = super(RunningcatalogDetail, self).get_queryset() \
             .select_related('xtrsrc')
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
         assoc_related = ['xtrsrc', 'xtrsrc__image', 'xtrsrc__image__band']
-        return Assocxtrsource.objects.using(qs.db)\
-            .filter(runcat=self.object.id)\
-            .select_related(*assoc_related)\
+        return Assocxtrsource.objects.using(qs.db) \
+            .filter(runcat=self.object.id) \
+            .select_related(*assoc_related) \
             .order_by(self.get_order())
 
     def get_context_data(self, **kwargs):

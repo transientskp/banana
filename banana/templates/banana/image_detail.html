@@ -70,6 +70,11 @@
                     <dt>Stokes</dt>
                     <dd>{{ object.stokes }}</dd>
 
+                    <dt>Skyregion</dt>
+                    <dd><a href="{%  url 'skyregion' db_name object.skyrgn_id %}">{{ object.skyrgn.id }}</a></dd>
+
+
+
 
                 </dl>
             </div>
@@ -123,7 +128,7 @@
                 </div>
             </div>
             <div class="col-md-7">
-                {% if object.extractedsources.all %}
+                {% if object_list %}
 
                     <div class="row">
                         <div class="col-md-6 text-right">

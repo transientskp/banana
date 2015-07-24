@@ -54,7 +54,7 @@ GROUP BY scaled_ra, scaled_decl
 
 class Assocskyrgn(models.Model):
     id = models.IntegerField(primary_key=True)
-    runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
+    runcat = models.ForeignKey('AugmentedRunningcatalog', db_column='runcat',
                                related_name='assocskyrgns')
     skyrgn = models.ForeignKey('Skyregion', db_column='skyrgn',
                                related_name='assocskyrgns')
@@ -387,8 +387,6 @@ class Runningcatalog(models.Model):
     mon_src = models.BooleanField(default=False)
     extractedsources = models.ManyToManyField(Extractedsource,
                                               through=Assocxtrsource)
-    skyregions = models.ManyToManyField('Skyregion',
-                                        through=Assocskyrgn)
 
     def __unicode__(self):
         return "%s" % self.id
@@ -432,6 +430,8 @@ class AugmentedRunningcatalog(models.Model):
     lightcurve_avg = models.FloatField(blank=True, null=True)
     lightcurve_max = models.FloatField(blank=True, null=True)
     lightcurve_median = models.FloatField(blank=True, null=True)
+
+    skyregions = models.ManyToManyField('Skyregion', through=Assocskyrgn)
 
     def __unicode__(self):
         return "%s" % self.id
