@@ -267,8 +267,7 @@ class Image(models.Model):
         sorted by time.
         """
         qs = Image.objects.using(self._state.db)\
-            .filter(dataset=self.dataset, band=self.band,stokes=self.stokes,
-                    skyrgn=self.skyrgn)\
+            .filter(dataset=self.dataset, band=self.band, stokes=self.stokes)\
             .order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
