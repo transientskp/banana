@@ -43,7 +43,10 @@
                     <!-- Aladin Lite viewer  -->
                     <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
                     <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+                    <script type="text/javascript" src="{{ STATIC_URL }}catalog.js" charset="utf-8"></script>
                     <script type="text/javascript">
+
+
                         var aladin = A.aladin('#aladin-lite-div');
                         aladin.setZoom(0.18);
                         aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
@@ -51,6 +54,19 @@
                         var vlss = aladin.createImageSurvey('VLSSr', 'VLSSr', 'http://alasky.u-strasbg.fr/VLSSr', 'equatorial', 5);
                         var nvss = aladin.createImageSurvey('NVSS', 'NVSS', 'http://alasky.u-strasbg.fr/NVSS/intensity/', 'equatorial', 5);
                         aladin.setImageSurvey(nvss);
+
+                        var cat = A.catalog({name: '3CR', sourceSize: 18, 'shape': 'triangle', sourceColor: 'blue'});
+                        aladin.addCatalog(cat);
+
+                        // catalog_3cr is defined in {{ STATIC_URL }}catalog.js
+                        for (source of catalog_3cr) {
+                            title = 'id: ' + source['id'] +
+                                    '\nflux: ' + source['flux'].toString() +
+                                    '\nra: ' + source['ra'].toString() +
+                                    '\ndecl: ' + source['decl'].toString()
+                          cat.addSources([A.marker(source['ra'], source['decl'], {popupTitle: title, popupDesc: ''})]);
+                        }
+
                     </script>
                 </div>
             </div>
