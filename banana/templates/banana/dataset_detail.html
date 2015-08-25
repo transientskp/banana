@@ -59,6 +59,7 @@
                             <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
                             <a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitors</button></a>
                             <a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Skyregions</button></a>
+                            <a href="{% url 'heatmap' db_name dataset.id %}"><button type="button" class="btn btn-default btn-sm">Heatmap</button></a>
                         </div>
                     </div>
                 </div>
@@ -67,17 +68,8 @@
                         <hr>
                         <div id='sources_chart'></div>
                     </div></div>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <hr>
-                        <div id='heatmap'></div>
-                    </div>
-                </div>
-
             </div>
         </div>
-
-
 
         <div class="row">
             <div class="col-md-8 offset4">
@@ -85,51 +77,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(function () {
-            $('#heatmap').highcharts({
-                chart: {
-                    type: 'bubble',
-                    zoomType: 'xy'
-                },
-                yAxis: {
-                    title: {
-                        text: 'DEC (arcsec)'
-                    }
-                },
-                xAxis: {
-                    title: {
-                        text: 'RA (arcsec)'
-                    }
-                },
-                title: {
-                    text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
-                },
-                subtitle: {
-                    text: 'disabled for now since way too slow'
-                },
-                tooltip: {
-                    formatter: function () {
-                        return '<b>ra:</b> ' + this.point.x.toFixed(3) +
-                                '<br><b>decl:</b> ' + this.point.y.toFixed(3) +
-                                '<br><b>count:</b> ' + this.point.z;
-                    }
-                },
-                series: [{
-                    name: 'distance',
-                    data: [
-                        {% comment %}
-                        TODO: disabled for now, too slow. see issue #90
-                        {% for ra, decl, count in dataset.heatmap %}
-                            [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                        {%  endcomment %}
-                    ]
-                }]
-            });
-        });
-    </script>
 
 
     <script>

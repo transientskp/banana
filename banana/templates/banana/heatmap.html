@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Banana  · Dataset {{ dataset.id }} heatmap {% endblock title %}
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}<li><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset }}</a></li>{% endblock navdataset %}
+
+{% block navdeep %}<li class="active"><a href="#">Heatmap</a></li>{% endblock navdeep %}
+
+<!-- required for error bars -->
+{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div id='heatmap'></div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        $(function () {
+            $('#heatmap').highcharts({
+                chart: {
+                    type: 'bubble',
+                    zoomType: 'xy'
+                },
+                yAxis: {
+                    title: {
+                        text: 'DEC (arcsec)'
+                    }
+                },
+                xAxis: {
+                    title: {
+                        text: 'RA (arcsec)'
+                    }
+                },
+                title: {
+                    text: 'dataset {{ dataset }} (id {{ dataset.id }}) heatmap'
+                },
+                subtitle: {
+                    text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
+                },
+                tooltip: {
+                    formatter: function () {
+                        return '<b>ra:</b> ' + this.point.x.toFixed(3) +
+                                '<br><b>decl:</b> ' + this.point.y.toFixed(3) +
+                                '<br><b>count:</b> ' + this.point.z;
+                    }
+                },
+                series: [{
+                    name: 'distance',
+                    data: [
+                        {% for ra, decl, count in dataset.heatmap %}
+                            [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    ]
+                }]
+            });
+        });
+    </script>
+
+
+    <script>
+        $(function () {
+            $('#sources_chart').highcharts({
+                chart: {
+
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'number of sources'
+                },
+                xAxis: {
+                    title: {
+                        text: 'Image'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'number of sources'
+                    },
+                    min: 0
+                },
+                plotOptions: {
+                    series: {
+                        animation: false,
+                        turboThreshold: 0,
+                        point: {
+                            events: {
+                                click: function (e) {
+                                    location.href = e.point.url;
+                                }
+                            }
+                        },
+                    },
+                    area: {
+
+                        fillColor: {
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        lineWidth: 1,
+                        marker: {
+                            enabled: false
+                        },
+                        shadow: false,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+                series: [
+                    {% for freq, images in images_per_band.items %}
+                        {
+                            type: 'area',
+                            name: '{{ freq }}',
+                            data: [
+                                {% for image in images %}
+                                    {
+                                        image_id: '{{ image.image_id }}',
+                                        y: {{ image.num_extractedsources }},
+                                        url: '{% url 'image' db_name image.image_id %}'
+                                    }{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            ]
+                        }{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+
+                tooltip: {
+                    formatter: function () {
+                        return '<b>image id:</b> ' + this.point.image_id +
+                                '<br><b>frequency:</b> ' + this.series.name +
+                                '<br><b>source num:</b> ' + this.point.y;
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock content %}
+

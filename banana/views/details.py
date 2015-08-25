@@ -82,6 +82,18 @@ class DatasetDetail(DetailView):
         return context
 
 
+class HeatmapView(DetailView):
+    """
+    Only shows the heatmap.
+
+    The heatmap is a 2D histogram of offsets between running catalog and
+    extracted source positions.
+    """
+    model = Dataset
+
+    template_name = 'banana/heatmap.html'
+
+
 class ExtractedSourceDetail(DetailView):
     model = Extractedsource
 
