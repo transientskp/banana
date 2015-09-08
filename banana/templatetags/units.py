@@ -31,11 +31,13 @@ def flux_unit(value, unit_prefix):
     Should be passed a string matching a key in ``units_map``
     (or the empty string, which is treated equivalent to ``None``)
     """
+    if not value:
+        return
 
     # When getting a QueryDict value in a template,
     # None is annoyingly converted to empty string
     if unit_prefix == '':
-        unit_prefix=None
+        unit_prefix = None
     if unit_prefix in units_map:
         power = units_map[unit_prefix][1]
         return float(value) / (10.0 ** power)
@@ -76,10 +78,10 @@ def format_angle(value, format_type="time"):
     """
     if format_type == "time":
         h, m, s = deg_to_hms(float(value))
-        result = "%d<sup>h</sup>%d<sup>m</sup>%.1f<sup>s</sup>" % (h, m, s)
+        result = "%02d<sup>h</sup> %02d<sup>m</sup> %02.1f<sup>s</sup>" % (h, m, s)
     if format_type == "dms":
         sign, d, m, s = deg_to_dms(float(value))
-        result = "%s%d&deg; %d&prime; %.1f&Prime;" % (sign, d, m, s)
+        result = "%s%02d&deg; %02d&prime; %04.1f&Prime;" % (sign, d, m, s)
     return mark_safe(result)
 
 

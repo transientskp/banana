@@ -8,7 +8,7 @@
 {% load addcss %}
 
 
-{% block title %}Running Catalogs · Banana{% endblock title %}
+{% block title %}Augmented Running Catalogs · Banana{% endblock title %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block navdeep %}
-    <li class="active"><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Running Catalogs</a></li>
+    <li class="active"><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Augmented Running Catalogs</a></li>
 {% endblock %}
 
 
@@ -50,6 +50,34 @@
                     <div class="form-group col-md-4">
                         <div class="row">
                             <div class="col-md-4">
+                                <label for="id_v_int_0" class="col-xs-1 control-label">V<sub>ν</sub>:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_v_int_0" name="v_int_0" type="text" {% if filter.form.v_int.value.0 %}value="{{ filter.form.v_int.value.0 }}"{% endif %} placeholder="min"/>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_v_int_1" name="v_int_1" type="text" {% if filter.form.v_int.value.1 %}value="{{ filter.form.v_int.value.1 }}"{% endif %} placeholder="max"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="id_sigma_rms_min_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>min</sub></sub>:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_sigma_rms_min_0" name="sigma_rms_min_0" type="text" {% if filter.form.sigma_rms_min.value.0 %}value="{{ filter.form.sigma_rms_min.value.0 }}"{% endif %}  placeholder="min"/>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_sigma_rms_min_1" name="sigma_rms_min_1" type="text" {% if filter.form.sigma_rms_min.value.1 %}value="{{ filter.form.sigma_rms_min.value.1 }}"{% endif %}  placeholder="max"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="row">
+                            <div class="col-md-4">
                                 <label for="id_wm_decl_0" class="col-xs-1 control-label">Dec(°):</label>
                             </div>
                             <div class="col-md-4">
@@ -61,6 +89,33 @@
                         </div>
                     </div>
 
+                    <div class="form-group col-md-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="id_eta_int_0" class="col-xs-1 control-label">η<sub>ν</sub>:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_eta_int_0" name="eta_int_0" type="text" {% if filter.form.eta_int.value.0 %}value="{{ filter.form.eta_int.value.0 }}"{% endif %} placeholder="min"/>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_eta_int_1" name="eta_int_1" type="text" {% if filter.form.eta_int.value.1 %}value="{{ filter.form.eta_int.value.1 }}"{% endif %} placeholder="max"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="id_sigma_rms_max_0" class="col-xs-1 control-label">Σ<sub>RMS<sub>max</sub></sub>:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_sigma_rms_max_0" name="sigma_rms_max_0" type="text" {% if filter.form.sigma_rms_max.value.0 %}value="{{ filter.form.sigma_rms_max.value.0 }}"{% endif %} placeholder="min"/>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" id="id_sigma_rms_max_1" name="sigma_rms_max_1" type="text" {% if filter.form.sigma_rms_max.value.1 %}value="{{ filter.form.sigma_rms_max.value.1 }}"{% endif %} placeholder="max"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                <div class="row">
                    <div class="form-group pull-right ">
@@ -91,7 +146,7 @@
                 </div>
                 <div class="col-md-3 text-right">
                     {% flux_units_dropdown %}
-                    <a href="{%  url 'augmentedrunningcatalogs' db_name %}"><button class="btn btn-default">Augmented runningcatalog</button></a>
+                    <a href="{%  url 'runningcatalogs' db_name %}"><button class="btn btn-default">Normal runningcatalog</button></a>
                     <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default">CSV format</button></a>
                 </div>
 
@@ -108,6 +163,13 @@
                             {% tableheader 'wm_decl' 'Dec (dd:mm:ss.s)' %}
                             {% tableheader 'datapoints' '# points' %}
                             {% tableheader 'newsource' 'New source' %}
+                            {% tableheader 'sigma_rms_min' 'Σ<sub>RMS<sub>min</sub></sub>' %}
+                            {% tableheader 'sigma_rms_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
+                            {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub> (Jy)' %}
+                            {% tableheader 'lightcurve_max' 'flux<sub>max</sub> (Jy)' %}
+                            {% tableheader 'lightcurve_median' 'flux<sub>median</sub> (Jy)' %}
+                            {% tableheader 'v_int' 'V<sub>ν</sub>' %}
+                            {% tableheader 'eta_int' 'η<sub>ν</sub>' %}
                         </tr>
                         </thead>
 
@@ -128,7 +190,13 @@
                                 {% else %}
                                     <td> - </td>
                                 {% endif %}
-
+                                <td>{{ object.sigma_rms_min|scientific }}</td>
+                                <td>{{ object.sigma_rms_max|scientific }}</td>
+                                <td>{{ object.lightcurve_avg|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ object.lightcurve_max|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ object.lightcurve_median|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ object.v_int|stringformat:".3f" }}</td>
+                                <td>{{ object.eta_int|stringformat:".3f" }}</td>
 
                             </tr>
                         {% endfor %}

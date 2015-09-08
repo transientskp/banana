@@ -15,14 +15,14 @@
 {% endblock %}
 
 {% block navdeep %}
-    <li><a href="{% url 'runningcatalogs' db_name %}?dataset={{ object.dataset.id }}">Running Catalogs</a></li>
+    <li><a href="{% url 'augmentedrunningcatalogs' db_name %}?dataset={{ object.dataset.id }}">Augmented Running Catalogs</a></li>
 {% endblock %}
 
 {% block navdeeper %}
-    <li class="active"><a href="{% url 'runningcatalog' db_name object.id%}">Running Catalog {{ object.id }}</a></li>
+    <li class="active"><a href="{% url 'augmentedrunningcatalog' db_name object.id%}">Augmented Running Catalog {{ object.id }}</a></li>
 {% endblock %}
 
-{% block title %}Running Catalog · Banana{% endblock title %}
+{% block title %}Augmented Running Catalog · Banana{% endblock title %}
 
 {% block morehead %}
     <!-- required for error bars -->
@@ -43,30 +43,13 @@
                     <!-- Aladin Lite viewer  -->
                     <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
                     <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
-                    <script type="text/javascript" src="{{ STATIC_URL }}catalog.js" charset="utf-8"></script>
                     <script type="text/javascript">
-
-
                         var aladin = A.aladin('#aladin-lite-div');
                         aladin.setZoom(0.18);
                         aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
                         var wenss = aladin.createImageSurvey('WENSS', 'WENSS', 'http://alasky.u-strasbg.fr/WENSS', 'equatorial', 5);
                         var vlss = aladin.createImageSurvey('VLSSr', 'VLSSr', 'http://alasky.u-strasbg.fr/VLSSr', 'equatorial', 5);
-                        var nvss = aladin.createImageSurvey('NVSS', 'NVSS', 'http://alasky.u-strasbg.fr/NVSS/intensity/', 'equatorial', 5);
-                        aladin.setImageSurvey(nvss);
-
-                        var cat = A.catalog({name: '3CR', sourceSize: 18, 'shape': 'triangle', sourceColor: 'blue'});
-                        aladin.addCatalog(cat);
-
-                        // catalog_3cr is defined in {{ STATIC_URL }}catalog.js
-                        for (source of catalog_3cr) {
-                            title = 'id: ' + source['id'] +
-                                    '\nflux: ' + source['flux'].toString() +
-                                    '\nra: ' + source['ra'].toString() +
-                                    '\ndecl: ' + source['decl'].toString()
-                          cat.addSources([A.marker(source['ra'], source['decl'], {popupTitle: title, popupDesc: ''})]);
-                        }
-
+                        aladin.setImageSurvey(wenss);
                     </script>
                 </div>
             </div>
@@ -92,6 +75,18 @@
                             <dt>New source</dt>
                             <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
+                            <dt>ην</dt>
+                            <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                            <dt>Vν</dt>
+                            <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                            <dt>Σ<sub>RMS<sub>min</sub></sub></dt>
+                            <dd>{% if object.sigma_rms_min %}{{  object.sigma_rms_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                            <dt>Σ<sub>RMS<sub>max</sub></sub></dt>
+                            <dd>{% if object.sigma_rms_max %}{{  object.sigma_rms_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
                             <dt>Skyregions</dt>
                             <dd>{% for skyregion in object.skyregions.all %}<a href="{% url 'skyregion' db_name skyregion.id %}">{{skyregion.id }}</a>{% if not forloop.last %},{% endif %}{% empty %}None{% endfor %}</dd>
 
@@ -110,6 +105,16 @@
 
                             <dt>Dataset</dt>
                             <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+
+                            <dt>Max int. flux (Jy)</dt>
+                            <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
+
+                            <dt>Mean int. flux (Jy)</dt>
+                            <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
+
+                            <dt>Median int. flux (Jy)</dt>
+                            <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
+                        </dl>
                     </div>
                 </div>
             </div>
@@ -125,7 +130,7 @@
                 </div>
                 <div class="col-md-6 text-right">
                     <div class="btn-group">
-                        <a href="{%  url 'augmentedrunningcatalog' db_name object.id %}"><button class="btn btn-default">Augmented runningcatalog</button></a>
+                        <a href="{%  url 'runningcatalog' db_name object.id %}"><button class="btn btn-default">Normal runningcatalog</button></a>
                         <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
                         <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
                         <a href="?{% query_invert_bool 'thumb' %}"><button class="btn btn-default">Thumbnails</button></a>

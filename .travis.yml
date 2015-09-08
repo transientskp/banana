@@ -1,17 +1,22 @@
 language: python
+sudo: false
 python:
 - '2.7'
-before_install:
-- sudo apt-get install python-psycopg2 python-pywcs python-matplotlib python-numpy
-- pip install astropy
+addons:
+  apt:
+    packages:
+      - python-psycopg2
+      - python-pywcs
+      - python-matplotlib
+      - python-numpy
 install:
-- pip install -r requirements.txt --use-mirrors
+  - pip install -r requirements.txt --use-mirrors
 script:
-- touch project/settings/local.py
-- ./manage.py test --settings=testing.settings
+  - touch project/settings/local.py
+  - ./manage.py test --settings=testing.settings
 branches:
   only:
-  - master
+    - master
 notifications:
   hipchat:
     rooms:

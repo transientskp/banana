@@ -15,4 +15,7 @@ def extract_type(value):
     Returns a string format for the extract_type column in the
     extracted source table.
     """
+    if not value:
+        return
+
     return extract_types[value]

@@ -1,0 +1,4 @@
+#id, source.ra, source.decl, source.ra_err, source.decl_err, source.f_peak, source.f_peak_err, source.f_int, source.f_int_err
+{% for source in object_list %}{{ source.id }}, {{ source.ra }}, {{ source.decl }}, {{ source.ra_err}}, {{ source.decl_err }}, {{ source.f_peak }}, {{ source.f_peak_err }}, {{ source.f_int }}, {{ source.f_int_err }}
+{% endfor %}
+

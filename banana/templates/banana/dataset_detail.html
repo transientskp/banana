@@ -54,9 +54,12 @@
                         <div class="btn-group">
                             <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Images</button></a>
                             <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Running Catalogs</button></a>
+                            <a href="{% url 'augmentedrunningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Augmented Running Catalogs</button></a>
                             <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
                             <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
                             <a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitors</button></a>
+                            <a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Skyregions</button></a>
+                            <a href="{% url 'heatmap' db_name dataset.id %}"><button type="button" class="btn btn-default btn-sm">Heatmap</button></a>
                         </div>
                     </div>
                 </div>
@@ -65,17 +68,8 @@
                         <hr>
                         <div id='sources_chart'></div>
                     </div></div>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <hr>
-                        <div id='heatmap'></div>
-                    </div>
-                </div>
-
             </div>
         </div>
-
-
 
         <div class="row">
             <div class="col-md-8 offset4">
@@ -83,45 +77,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(function () {
-            $('#heatmap').highcharts({
-                chart: {
-                    type: 'bubble',
-                    zoomType: 'xy'
-                },
-                yAxis: {
-                    title: {
-                        text: 'DEC (arcsec)'
-                    }
-                },
-                xAxis: {
-                    title: {
-                        text: 'RA (arcsec)'
-                    }
-                },
-                title: {
-                    text: '2D Histogram of position offset between Running Catalogs and Extracted Sources'
-                },
-                tooltip: {
-                    formatter: function () {
-                        return '<b>ra:</b> ' + this.point.x.toFixed(3) +
-                                '<br><b>decl:</b> ' + this.point.y.toFixed(3) +
-                                '<br><b>count:</b> ' + this.point.z;
-                    }
-                },
-                series: [{
-                    name: 'distance',
-                    data: [
-                        {% for ra, decl, count in dataset.heatmap %}
-                            [{{ ra }}, {{ decl }}, {{ count }}]{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-                    ]
-                }]
-            });
-        });
-    </script>
 
 
     <script>
@@ -147,11 +102,20 @@
                 },
                 plotOptions: {
                     series: {
-                        animation: false
+                        animation: false,
+                        turboThreshold: 0,
+                        point: {
+                            events: {
+                                click: function (e) {
+                                    location.href = e.point.url;
+                                }
+                            }
+                        },
                     },
                     area: {
+
                         fillColor: {
-                            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
                             stops: [
                                 [0, Highcharts.getOptions().colors[0]],
                                 [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
@@ -171,19 +135,30 @@
                     }
                 },
                 series: [
-                    {% for freq, points in images_per_band.items %}
+                    {% for freq, images in images_per_band.items %}
                         {
                             type: 'area',
                             name: '{{ freq }}',
                             data: [
-                                {% for point in points %}
-                                    {{ point }}
-                                    {% if not forloop.last %}, {% endif %}
+                                {% for image in images %}
+                                    {
+                                        image_id: '{{ image.image_id }}',
+                                        y: {{ image.num_extractedsources }},
+                                        url: '{% url 'image' db_name image.image_id %}'
+                                    }{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             ]
                         }{% if not forloop.last %}, {% endif %}
                     {% endfor %}
-                ]
+                ],
+
+                tooltip: {
+                    formatter: function () {
+                        return '<b>image id:</b> ' + this.point.image_id +
+                                '<br><b>frequency:</b> ' + this.series.name +
+                                '<br><b>source num:</b> ' + this.point.y;
+                    }
+                }
             });
         });
     </script>

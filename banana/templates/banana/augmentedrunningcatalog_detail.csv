@@ -1,0 +1,3 @@
+#id, taustart_ts, tau_time, freq_central, f_int, f_int_err, f_peak, f_peak_err, extract_type, eta_nu, V_nu
+{% for point in object_list %}{{ point.id }}, "{{ point.xtrsrc.image.taustart_ts|date:"c" }}", {{ point.xtrsrc.image.tau_time }}, {{ point.xtrsrc.image.band.freq_central }}, {{ point.xtrsrc.f_int }}, {{ point.xtrsrc.f_int_err }}, {{ point.xtrsrc.f_peak }}, {{ point.xtrsrc.f_peak_err }},{{point.xtrsrc.extract_type}}, {{ point.eta_int }}, {{ point.v_int }}
+{% endfor %}

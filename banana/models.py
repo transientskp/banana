@@ -180,7 +180,7 @@ class Extractedsource(models.Model):
     y = models.FloatField()
     z = models.FloatField()
     racosdecl = models.FloatField()
-    margin = models.BooleanField()
+    margin = models.BooleanField(default=False)
     det_sigma = models.FloatField()
     semimajor = models.FloatField(blank=True, null=True)
     semiminor = models.FloatField(blank=True, null=True)
@@ -258,7 +258,8 @@ class Image(models.Model):
         db_table = 'image'
 
     def filename(self):
-        return self.url.split('/')[-1]
+        if self.url:
+            return self.url.split('/')[-1]
 
     def get_next_by_taustart_ts_only(self):
         """
@@ -266,8 +267,7 @@ class Image(models.Model):
         sorted by time.
         """
         qs = Image.objects.using(self._state.db)\
-            .filter(dataset=self.dataset, band=self.band,stokes=self.stokes,
-                    skyrgn=self.skyrgn)\
+            .filter(dataset=self.dataset, band=self.band, stokes=self.stokes)\
             .order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
@@ -382,12 +382,12 @@ class Runningcatalog(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
-    inactive = models.BooleanField()
-    mon_src = models.BooleanField()
+    inactive = models.BooleanField(default=False)
+    mon_src = models.BooleanField(default=False)
     extractedsources = models.ManyToManyField(Extractedsource,
                                               through=Assocxtrsource)
-    skyregions = models.ManyToManyField('Skyregion',
-                                        through=Assocskyrgn)
+
+    skyregions = models.ManyToManyField('Skyregion', through=Assocskyrgn)
 
     def __unicode__(self):
         return "%s" % self.id
@@ -431,6 +431,8 @@ class AugmentedRunningcatalog(models.Model):
     lightcurve_avg = models.FloatField(blank=True, null=True)
     lightcurve_max = models.FloatField(blank=True, null=True)
     lightcurve_median = models.FloatField(blank=True, null=True)
+
+
 
     def __unicode__(self):
         return "%s" % self.id
@@ -517,8 +519,8 @@ class Temprunningcatalog(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     z = models.FloatField()
-    margin = models.BooleanField()
-    inactive = models.BooleanField()
+    margin = models.BooleanField(default=False)
+    inactive = models.BooleanField(default=False)
     beam_semimaj = models.FloatField(blank=True, null=True)
     beam_semimin = models.FloatField(blank=True, null=True)
     beam_pa = models.FloatField(blank=True, null=True)

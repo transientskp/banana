@@ -8,9 +8,10 @@ from banana.filters import RunningcatalogFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
-                          AugmentedRunningcatalog, schema_version, Monitor)
+                           AugmentedRunningcatalog, Runningcatalog,
+                           schema_version, Monitor, Skyregion)
 from banana.views.mixins import (HybridTemplateMixin,
-                                SortListMixin, DatasetMixin, FluxViewMixin)
+                                 SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
 
 
@@ -62,6 +63,11 @@ class MonitorList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
     paginate_by = 100
 
 
+class SkyregionList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
+    model = Skyregion
+    paginate_by = 100
+
+
 class ExtractedsourcesList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
                            DatasetMixin, ListView):
     model = Extractedsource
@@ -74,10 +80,11 @@ class ExtractedsourcesList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
         qs = qs.prefetch_related(*related)
         return qs
 
+
 class RunningcatalogList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
                          DatasetMixin, FilterView):
 
-    model = AugmentedRunningcatalog
+    model = Runningcatalog
     template_name = "banana/runningcatalog_filter.html"
     filterset_class = RunningcatalogFilter
     paginate_by = 100
@@ -87,3 +94,16 @@ class RunningcatalogList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
         qs = qs.prefetch_related('newsource')
         return qs
 
+
+class AugmentedRunningcatalogList(FluxViewMixin, SortListMixin,
+                                  HybridTemplateMixin, DatasetMixin, FilterView):
+
+    model = AugmentedRunningcatalog
+    template_name = "banana/augmentedrunningcatalog_filter.html"
+    filterset_class = RunningcatalogFilter
+    paginate_by = 100
+
+    def get_queryset(self):
+        qs = super(AugmentedRunningcatalogList, self).get_queryset()
+        qs = qs.prefetch_related('newsource')
+        return qs

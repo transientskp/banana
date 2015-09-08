@@ -147,3 +147,6 @@ LOGGING = {
     }
 }
 
+
+# settings this is required for surpressing 1_6.W001 warning
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'

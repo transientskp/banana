@@ -1,3 +1,3 @@
-#id, skyrgn__centre_ra, skyrgn__centre_decl, taustart_ts, tau_time, freq_eff, freq_bw, num_extractedsources, rejections, url
-{% for image in image_list %}{{ image.id }}, {{ image.skyrgn.centre_ra }}, {{ image.skyrgn.centre_decl }}, "{{ image.taustart_ts|date:"c" }}", {{ image.tau_time }}, {{ image.freq_eff }}, {{ image.freq_bw }}, {{ image.num_extractedsources }}, "{{ image.rejections.all|join:" and " }}", "{{ image.url }}"
+#id, skyrgn__centre_ra, skyrgn__centre_decl, taustart_ts, tau_time, freq_eff, freq_bw, num_extractedsources, rejections, url, rms_qc, rms_min, rms_max
+{% for image in image_list %}{{ image.id }}, {{ image.skyrgn.centre_ra }}, {{ image.skyrgn.centre_decl }}, "{{ image.taustart_ts|date:"c" }}", {{ image.tau_time }}, {{ image.freq_eff }}, {{ image.freq_bw }}, {{ image.num_extractedsources }}, "{{ image.rejections.all|join:" and " }}", "{{ image.url }}", {{ image.rms_qc }}, {{ image.rms_min }}, {{ image.rms_max }}
 {% endfor %}
