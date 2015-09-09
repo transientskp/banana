@@ -260,6 +260,22 @@ class Image(models.Model):
     def filename(self):
         if self.url:
             return self.url.split('/')[-1]
+            
+    def blind_extractedsources(self):
+        """
+        returns only the blindly extracted sources for the image (extract_type 0)
+        """
+        return Extractedsource.objects.using(self._state.db). \
+            filter(image=self). \
+            filter(extract_type=0)
+            
+    def forced_extractedsources(self):
+        """
+        returns only the forcefully extracted sources for the image (extract_type 1)
+        """
+        return Extractedsource.objects.using(self._state.db). \
+            filter(image=self). \
+            filter(extract_type=1)
 
     def get_next_by_taustart_ts_only(self):
         """

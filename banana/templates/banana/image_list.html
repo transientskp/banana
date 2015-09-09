@@ -40,7 +40,9 @@
                             {% tableheader 'tau_time' 'Integration time <small>s</small>' %}
                             {% tableheader 'freq_eff' 'Frequency <small>Hz</small>' %}
                             {% tableheader 'freq_bw' 'Bandwidth <small>Hz</small>' %}
-                            {% tableheader 'num_extractedsources' '# sources' %}
+                            {% tableheader 'num_extractedsources' '# of sources' %}
+                            {% tableheader 'num_blind_extractedsources' 'blind src #' %}
+                            {% tableheader 'num_forced_extractedsources' 'forced src #' %}
                             <th>Rejection</th>
                             {% tableheader 'url' 'Filename' %}
                             {% tableheader 'rms_qc' 'RMS<sub>qc</sub>' %}
@@ -58,6 +60,8 @@
                                 <td>{{ image.freq_eff|scientific  }}</td>
                                 <td>{{ image.freq_bw|scientific  }}</td>
                                 <td>{{ image.num_extractedsources }}</td>
+                                <td>{{ image.num_blind_extractedsources }}</td>
+                                <td>{{ image.num_forced_extractedsources }}</td>
                                 <td>{{ image.rejections.all|join:" and " }}</td>
                                 <td>{{ image.filename }}</td>
                                 <td>{{ image.rms_qc|floatformat:3 }}</td>
