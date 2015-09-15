@@ -16,7 +16,7 @@ class ViewTest(TestCase):
         'newsources',
         'extractedsources',
         'runningcatalogs',
-        'augmentedrunningcatalogs',
+        'varmetrics',
         'monitors',
         'skyregions',
     ]
@@ -26,7 +26,7 @@ class ViewTest(TestCase):
         'dataset',
         'extractedsource',
         'runningcatalog',
-        'augmentedrunningcatalog',
+        'varmetric',
         'image',
         'bigimage',
         'monitor',

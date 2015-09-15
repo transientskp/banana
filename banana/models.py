@@ -422,50 +422,6 @@ class Runningcatalog(models.Model):
         db_table = 'runningcatalog'
 
 
-class AugmentedRunningcatalog(models.Model):
-    id = models.IntegerField(primary_key=True)
-
-    # we don't create a reverse mapping here, since this is only the first
-    # extracted source
-    xtrsrc = models.ForeignKey(Extractedsource, db_column='xtrsrc',
-                               related_name='+', blank=True, null=True)
-    dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='augmented_runningcatalogs',
-                                blank=True, null=True)
-    datapoints = models.IntegerField(blank=True, null=True)
-    wm_ra = models.FloatField(blank=True, null=True)
-    wm_decl = models.FloatField(blank=True, null=True)
-    wm_uncertainty_ew = models.FloatField(blank=True, null=True)
-    wm_uncertainty_ns = models.FloatField(blank=True, null=True)
-    newsource = models.ForeignKey(Newsource, db_column='newsource',
-                                  related_name='augmented_runningcatalogs')
-
-    v_int = models.FloatField(blank=True, null=True)
-    eta_int = models.FloatField(blank=True, null=True)
-    sigma_rms_min = models.FloatField(blank=True, null=True)
-    sigma_rms_max = models.FloatField(blank=True, null=True)
-    lightcurve_avg = models.FloatField(blank=True, null=True)
-    lightcurve_max = models.FloatField(blank=True, null=True)
-    lightcurve_median = models.FloatField(blank=True, null=True)
-
-
-
-    def __unicode__(self):
-        return "%s" % self.id
-
-    @property
-    def ra_err(self):
-        return alpha(self.wm_uncertainty_ew, self.wm_decl)
-
-    @property
-    def decl_err(self):
-        return self.wm_uncertainty_ns
-
-    class Meta:
-        managed = False
-        db_table = 'augmented_runningcatalog'
-
-
 class RunningcatalogFlux(models.Model):
     id = models.IntegerField(primary_key=True)
     runcat = models.ForeignKey(Runningcatalog, db_column='runcat')
@@ -555,6 +511,24 @@ class Temprunningcatalog(models.Model):
     class Meta:
         managed = False
         db_table = 'temprunningcatalog'
+
+
+class Varmetric(models.Model):
+    id = models.IntegerField(primary_key=True)
+    runcat = models.ForeignKey(Runningcatalog, db_column='runcat')
+    v_int = models.FloatField(blank=True, null=True)
+    eta_int = models.FloatField(blank=True, null=True)
+    band = models.ForeignKey(Frequencyband, db_column='band')
+    newsource = models.IntegerField(blank=True, null=True)
+    sigma_rms_max = models.FloatField(blank=True, null=True)
+    sigma_rms_min = models.FloatField(blank=True, null=True)
+    lightcurve_max = models.FloatField(blank=True, null=True)
+    lightcurve_avg = models.FloatField(blank=True, null=True)
+    lightcurve_median = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'varmetric'
 
 
 class Version(models.Model):

@@ -53,8 +53,8 @@
                     <div class="col-md-12 text-center">
                         <div class="btn-group">
                             <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Images</button></a>
+                            <a href="{% url 'varmetrics' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Variability Metrics</button></a>
                             <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Running Catalogs</button></a>
-                            <a href="{% url 'augmentedrunningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Augmented Running Catalogs</button></a>
                             <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
                             <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
                             <a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitors</button></a>

@@ -8,7 +8,7 @@
 {% load addcss %}
 
 
-{% block title %}Augmented Running Catalogs · Banana{% endblock title %}
+{% block title %}Variablity Metrics · Banana{% endblock title %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block navdeep %}
-    <li class="active"><a href="{% url 'runningcatalogs' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Augmented Running Catalogs</a></li>
+    <li class="active"><a href="{% url 'varmetrics' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Variablity Metrics</a></li>
 {% endblock %}
 
 
@@ -39,10 +39,10 @@
                                 <label for="id_wm_ra" class="col-xs-1 control-label">RA(°):</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" id="id_wm_ra_0" name="wm_ra_0" type="text" {% if filter.form.wm_ra.value.0 %}value="{{ filter.form.wm_ra.value.0 }}"{% endif %} placeholder="min"/>
+                                <input class="form-control" id="id_wm_ra_0" name="runcat__wm_ra_0" type="text" {% if filter.form.runcat__wm_ra.value.0 %}value="{{ filter.form.runcat__wm_ra.value.0 }}"{% endif %} placeholder="min"/>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" id="id_wm_ra_1" name="wm_ra_1" type="text" {% if filter.form.wm_ra.value.1 %}value="{{ filter.form.wm_ra.value.1 }}"{% endif %} placeholder="max"/>
+                                <input class="form-control" id="id_wm_ra_1" name="runcat__wm_ra_1" type="text" {% if filter.form.runcat__wm_ra.value.1 %}value="{{ filter.form.runcat__wm_ra.value.1 }}"{% endif %} placeholder="max"/>
                             </div>
                         </div>
                     </div>
@@ -81,10 +81,10 @@
                                 <label for="id_wm_decl_0" class="col-xs-1 control-label">Dec(°):</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control " id="id_wm_decl_0" name="wm_decl_0" type="text" {% if filter.form.wm_decl.value.0 %}value="{{ filter.form.wm_decl.value.0 }}"{% endif %}  placeholder="min"/>
+                                <input class="form-control " id="id_wm_decl_0" name="runcat__wm_decl_0" type="text" {% if filter.form.runcat__wm_decl.value.0 %}value="{{ filter.form.runcat__wm_decl.value.0 }}"{% endif %}  placeholder="min"/>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" id="id_wm_decl_1" name="wm_decl_1" type="text" {% if filter.form.wm_decl.value.1 %}value="{{ filter.form.wm_decl.value.1 }}"{% endif %}  placeholder="max"/>
+                                <input class="form-control" id="id_wm_decl_1" name="runcat__wm_decl_1" type="text" {% if filter.form.runcat__wm_decl.value.1 %}value="{{ filter.form.runcat__wm_decl.value.1 }}"{% endif %}  placeholder="max"/>
                             </div>
                         </div>
                     </div>
@@ -154,15 +154,15 @@
                     <table class="table table-bordered table-striped responsive-utilities table-condensed " >
                         <thead>
                         <tr>
-                            {% tableheader 'id' '#' %}
-                            {% tableheader 'wm_ra' 'RA (°)' %}
-                            {% tableheader 'wm_decl' 'Dec (°)' %}
+                            {% tableheader 'runcat__id' 'runcat' %}
+                            {% tableheader 'runcat__wm_ra' 'RA (°)' %}
+                            {% tableheader 'runcat__wm_decl' 'Dec (°)' %}
                             <th>RA Error (″)</th>
                             <th>Dec Error (″)</th>
-                            {% tableheader 'wm_ra' 'RA (hh:mm:ss.s)' %}
-                            {% tableheader 'wm_decl' 'Dec (dd:mm:ss.s)' %}
-                            {% tableheader 'datapoints' '# points' %}
-                            {% tableheader 'newsource' 'New source' %}
+                            {% tableheader 'runcat__wm_ra' 'RA (hh:mm:ss.s)' %}
+                            {% tableheader 'runcat__wm_decl' 'Dec (dd:mm:ss.s)' %}
+                            {% tableheader 'runcat__datapoints' '# points' %}
+                            {% tableheader 'runcat__newsource' 'New source' %}
                             {% tableheader 'sigma_rms_min' 'Σ<sub>RMS<sub>min</sub></sub>' %}
                             {% tableheader 'sigma_rms_max' 'Σ<sub>RMS<sub>max</sub></sub>' %}
                             {% tableheader 'lightcurve_avg' 'flux<sub>mean</sub> (Jy)' %}
@@ -177,16 +177,16 @@
                         <tbody>
                         {% for object in object_list %}
                             <tr>
-                                <td><a href="{% url 'runningcatalog' db_name object.id %}">{{ object.id }}</a></td>
-                                <td>{{ object.wm_ra|stringformat:".3f" }}</td>
-                                <td>{{ object.wm_decl|stringformat:".3f" }}</td>
-                                <td>{{ object.ra_err|deg2asec|stringformat:".3f" }}</td>
-                                <td>{{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
-                                <td>{{object.wm_ra|format_angle:"time"}}</td>
-                                <td>{{object.wm_decl|format_angle:"dms"}}</td>
-                                <td>{{ object.datapoints }}</td>
-                                {% if object.newsource.id %}
-                                <td><a href="{% url 'newsource' db_name object.newsource.id %}">{{ object.newsource.id }}</a></td>
+                                <td><a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat.id }}</a></td>
+                                <td>{{ object.runcat.wm_ra|stringformat:".3f" }}</td>
+                                <td>{{ object.runcat.wm_decl|stringformat:".3f" }}</td>
+                                <td>{{ object.runcat.ra_err|deg2asec|stringformat:".3f" }}</td>
+                                <td>{{ object.runcat.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}</td>
+                                <td>{{object.runcat.wm_ra|format_angle:"time"}}</td>
+                                <td>{{object.runcat.wm_decl|format_angle:"dms"}}</td>
+                                <td>{{ object.runcat.datapoints }}</td>
+                                {% if object.runcat.newsource.id %}
+                                <td><a href="{% url 'newsource' db_name object.runcat.newsource.id %}">{{ object.runcat.newsource.id }}</a></td>
                                 {% else %}
                                     <td> - </td>
                                 {% endif %}

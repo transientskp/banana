@@ -4,7 +4,7 @@ import django_filters
 from django_filters.filters import Filter
 from django.utils.safestring import mark_safe
 from django.forms import BooleanField
-from banana.models import AugmentedRunningcatalog
+from banana.models import Varmetric, Runningcatalog
 
 
 class NotNullFilter(Filter):
@@ -27,10 +27,23 @@ class RunningcatalogFilter(django_filters.FilterSet):
     """
     the django-filter logic used in the runningcatalog view.
     """
-    sigma_rms_min = django_filters.RangeFilter(name='sigma_rms_min')
-    sigma_rms_max = django_filters.RangeFilter(name='sigma_rms_max')
     wm_ra = django_filters.RangeFilter(label='Ra(°)')
     wm_decl = django_filters.RangeFilter(label='Dec(°)')
+    newsource = NotNullFilter(name='newsource')
+
+    class Meta:
+        model = Runningcatalog
+        fields = ['wm_ra', 'wm_decl', 'newsource']
+
+
+class VarmetricFilter(django_filters.FilterSet):
+    """
+    the django-filter logic used in the Varmetric view.
+    """
+    sigma_rms_min = django_filters.RangeFilter(name='sigma_rms_min')
+    sigma_rms_max = django_filters.RangeFilter(name='sigma_rms_max')
+    runcat__wm_ra = django_filters.RangeFilter(label='Ra(°)', name='runcat__wm_ra')
+    runcat__wm_decl = django_filters.RangeFilter(label='Dec(°)', name='runcat__wm_decl')
     v_int = django_filters.RangeFilter(name='v_int',
                                        label=mark_safe('V<sub>ν</sub>'))
     eta_int = django_filters.RangeFilter(name='eta_int',
@@ -38,5 +51,5 @@ class RunningcatalogFilter(django_filters.FilterSet):
     newsource = NotNullFilter(name='newsource')
 
     class Meta:
-        model = AugmentedRunningcatalog
-        fields = ['wm_ra', 'wm_decl', 'newsource', 'v_int', 'eta_int']
+        model = Varmetric
+        fields = ['runcat__wm_ra', 'runcat__wm_decl', 'newsource', 'v_int', 'eta_int']
