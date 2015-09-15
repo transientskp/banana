@@ -1,6 +1,6 @@
 import re
 from base import *
-from banana.db import postgres_list
+from banana.db import monetdb_list, postgres_list
 
 
 # use settings below to debug the application
@@ -51,6 +51,17 @@ for name in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
         'NAME': name,
         'USER': name,
         'PASSWORD': name,
+    }
+
+for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
+    name = monetdb["name"]
+    DATABASES[name] = {
+        'ENGINE': 'djonet',
+        'NAME': name,
+        'USER': name,
+        'PASSWORD': name,
+        'HOST': MONETDB_HOST,
+        'PORT': MONETDB_PORT,
     }
 
 
