@@ -305,7 +305,7 @@ class Monitor(models.Model):
     decl = models.FloatField()
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
                                blank=True, null=True, related_name='monitors')
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -314,7 +314,8 @@ class Monitor(models.Model):
 
 class Newsource(models.Model):
     id = models.IntegerField(primary_key=True)
-    runcat = models.OneToOneField('Runningcatalog', db_column='runcat')
+    runcat = models.OneToOneField('Runningcatalog', db_column='runcat',
+                                  related_name='newsource')
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc')
     newsource_type = models.SmallIntegerField()

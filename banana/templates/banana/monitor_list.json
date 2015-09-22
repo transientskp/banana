@@ -6,7 +6,7 @@
         "dataset": {{ object.dataset.id }},
         "ra": {{ object.ra }},
         "decl": {{ object.decl }},
-        "runcat": {{ object.runcat }},
+        {% if object.runcat %}"runcat": {{ object.runcat }},{% endif %}
         "name": "{{ object.name }}"
     }{% if not forloop.last %},{% endif %}
  {% endfor %}

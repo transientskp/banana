@@ -58,7 +58,7 @@
                                 <td>{{ object.decl|stringformat:".3f" }}</td>
                                 <td>{{object.ra|format_angle:"time"}}</td>
                                 <td>{{object.decl|format_angle:"dms"}}</td>
-                                <td><a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a></td>
+                                <td>{% if  object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a>{%  endif %}</td>
                                 <td>{{ object.name }}</td>
                             </tr>
                         {% endfor %}

@@ -6,7 +6,7 @@
 
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a></li>{% endblock %}
+{% block navdataset %}<li>{% if object.runcat %}<a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a>{%  endif %}</li>{% endblock %}
 {% block navdeeper %}<li class="active"><a href="{% url 'monitor' db_name object.id %}">Monitor {{ object.id }}</a></li>{% endblock %}
 
 {% block title %}Monitor {{ object.id }} · Banana{% endblock title %}
@@ -39,7 +39,7 @@
                     <dd>{{object.decl|format_angle:"dms"}}</dd>
 
                     <dt>Running catalog</dt>
-                    <dd><a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a></dd>
+                    <dd>{% if object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a>{%  endif %}</dd>
 
                     <dt>Name</dt>
                     <dd>{{ object.name }}</dd>

@@ -116,5 +116,5 @@ class VarmetricList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
 
     def get_queryset(self):
         qs = super(VarmetricList, self).get_queryset()
-        qs = qs.prefetch_related('newsource')
+        qs = qs.prefetch_related('runcat__newsource')
         return qs

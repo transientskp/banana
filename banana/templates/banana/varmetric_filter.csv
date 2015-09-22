@@ -1,5 +1,4 @@
 {% load units %}#id, wm_ra (deg), ra_err (arcsec), wm_decl (deg), wm_uncertainty_ns (arcsec), datapoints, newsource.id, sigma min, sigma max, flux mean, flux max, v_int, eta_int
-{% for object in object_list %}{{ object.id }}, {{ object.wm_ra|stringformat:".3f" }}, {{ object.ra_err|deg2asec|stringformat:".3f" }}, {{ object.wm_decl|stringformat:".3f" }}, {{ object.wm_uncertainty_ns|deg2asec }}, {{ object.datapoints }}, {{ object.newsource.id }}, {{ object.sigma_rms_min|stringformat:".3f" }}, {{ object.sigma_rms_max|stringformat:".3f" }}, {{ object.lightcurve_avg|stringformat:".3f" }}, {{ object.lightcurve_max|stringformat:".3f" }}, {{ object.v_int|stringformat:".3f" }}, {{ object.eta_int|stringformat:".3f" }}
+{% for object in object_list %}{{ object.id }}, {{ object.runcat.wm_ra|stringformat:".3f" }}, {{ object.runcat.ra_err|deg2asec|stringformat:".3f" }}, {{ object.runcat.wm_decl|stringformat:".3f" }}, {{ object.runcat.wm_uncertainty_ns|deg2asec }}, {{ object.runcat.datapoints }}, {{ object.runcat.newsource.id }}, {{ object.sigma_rms_min|stringformat:".3f" }}, {{ object.sigma_rms_max|stringformat:".3f" }}, {{ object.lightcurve_avg|stringformat:".3f" }}, {{ object.lightcurve_max|stringformat:".3f" }}, {{ object.v_int|stringformat:".3f" }}, {{ object.eta_int|stringformat:".3f" }}
 {% endfor %}
-
 

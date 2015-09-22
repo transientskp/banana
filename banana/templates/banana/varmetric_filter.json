@@ -1,13 +1,21 @@
 {% load units %}
 [
-{% for runningcatalog in runningcatalog_list %}
+{% for object in object_list %}
     {
-        "id": {{ runningcatalog.id }},
-        "wm_ra": {{ runningcatalog.wm_ra }},
-        "ra_err": {{ runningcatalog.ra_err|deg2asec }},
-        "wm_decl": {{ runningcatalog.wm_decl }},
-        "wm_uncertainty_ns": {{ runningcatalog.wm_uncertainty_ns|deg2asec }},
-        "datapoints": {{ runningcatalog.datapoints }}
+        "id": {{ object.runcat.id }},
+        "wm_ra": {{ object.runcat.wm_ra|stringformat:".3f" }},
+        "wm_decl": {{ object.runcat.wm_decl|stringformat:".3f" }},
+        "ra_err": {{ object.runcat.ra_err|deg2asec|stringformat:".3f" }},
+        "wm_uncertainty_ns": {{ object.runcat.wm_uncertainty_ns|deg2asec|stringformat:".3f" }},
+        "datapoints": {{ object.runcat.datapoints }},
+        {% if object.runcat.newsource.id %}"newsource": {{ object.runcat.newsource.id }},{% endif %}
+        {% if object.sigma_rms_min %}"sigma_rms_min": {{ object.sigma_rms_min|scientific }},{% endif %}
+        {% if object.sigma_rms_max %}"sigma_rms_max": {{ object.sigma_rms_max|scientific }},{% endif %}
+        "lightcurve_avg": {{ object.lightcurve_avg|flux_unit:flux_prefix|scientific }},
+        "lightcurve_max": {{ object.lightcurve_max|flux_unit:flux_prefix|scientific }},
+        "lightcurve_median": {{ object.lightcurve_median|flux_unit:flux_prefix|scientific }},
+        "v_int": {{ object.v_int|stringformat:".3f" }},
+        "eta_int": {{ object.eta_int|stringformat:".3f" }}
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
 ]
