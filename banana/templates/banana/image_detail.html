@@ -19,7 +19,6 @@
 {% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ object.dataset_id }}">Images</a></li>{% endblock %}
 {% block navdeeper %}<li class="active"><a href="{% url 'image' db_name object.id %}">Image {{ object.id }}</a></li>{% endblock %}
 
-
 {% block content %}
     <div class="container-fluid">
         <div class="row">
@@ -45,18 +44,24 @@
 
                     <dt>Filename</dt>
                     <dd>{{ object.filename }}</dd>
+                    
+                    <dt>Rejections</dt>
+                    <dd>{{ object.rejections.all|yesno }} </dd>
 
 
                 </dl>
             </div>
             <div class="col-md-4">
                 <dl class="dl-horizontal">
-                    <dt>Rejections</dt>
-                    <dd>{{ object.rejections.all|yesno }} </dd>
 
-                    <dt>Number of sources</dt>
+                    <dt># of sources</dt>
                     <dd>{{ object.extractedsources.count }}</dd>
 
+                    <dt># of blind extractions</dt>
+                    <dd>{{ object.blind_extractedsources.count }}</dd>
+
+                    <dt># of forced extractions</dt>
+                    <dd>{{ object.forced_extractedsources.count }}</dd>
 
                     <dt>Frequency <small>Hz</small></dt>
                     <dd>{{ object.freq_eff|scientific  }}</dd>
@@ -157,6 +162,7 @@
                             {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
                             {% tableheader 'f_int' 'Int. flux (Jy)'  %}
                             {% tableheader 'f_int_err' 'Int. flux err (Jy)' %}
+                            {% tableheader 'extract_type' 'Extract Type' %}
                         </tr>
                         </thead>
                         <tbody>
@@ -172,6 +178,7 @@
                                 <td>{{ source.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
                                 <td>{{ source.f_int|flux_unit:flux_prefix|scientific }}</td>
                                 <td>{{ source.f_int_err|flux_unit:flux_prefix|scientific }}</td>
+                                <td>{{ source.extract_type }}</td>
 
                             </tr>
                             </a>

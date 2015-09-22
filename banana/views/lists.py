@@ -1,7 +1,7 @@
 """
 All views that generate lists of model objects
 """
-from django.db.models import Count
+from django.db.models import Count, Case, When
 from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
 from banana.filters import RunningcatalogFilter
@@ -48,7 +48,17 @@ class ImageList(SortListMixin, HybridTemplateMixin,
         related = ['skyrgn', 'dataset', 'band', 'rejections',
                    'rejections__rejectreason']
         return qs.prefetch_related(*related).\
-            annotate(num_extractedsources=Count('extractedsources'))
+            annotate(num_extractedsources=Count('extractedsources')).\
+            annotate(num_blind_extractedsources=Count(
+                    Case(
+                        When(extractedsources__extract_type=0,then=1)
+                        )
+                    )).\
+            annotate(num_forced_extractedsources=Count(
+                    Case(
+                        When(extractedsources__extract_type=1,then=1)
+                        )
+                    ))
 
 
 class NewsourceList(SortListMixin, HybridTemplateMixin,
