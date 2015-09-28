@@ -19,6 +19,7 @@ class ViewTest(TestCase):
         'augmentedrunningcatalogs',
         'monitors',
         'skyregions',
+        'configs',
     ]
 
     detail_views = [

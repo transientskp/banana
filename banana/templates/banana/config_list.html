@@ -1,0 +1,65 @@
+
+{% extends "base.html" %}
+
+{% load units %}
+{% load paginator %}
+{% load tableheader %}
+
+{% block title %}Configuration · Banana{% endblock title %}
+
+
+{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+
+{% block navdataset %}
+    {% if dataset %}
+        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
+    {% endif %}
+{% endblock %}
+
+{% block navdeep %}
+    <li class="active"><a href="#">Config</a></li>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        {% if object_list %}
+            <div class="row">
+
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    {% paginatorizer %}
+                </div>
+
+                <div class="col-md-2 text-center">
+                    <a href="?format=csv&dataset={{ dataset }}"><button class="btn btn-default" type="button">CSV format</button></a>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                        <thead>
+
+
+                        <tr>
+                            {% tableheader 'section'  %}
+                            {% tableheader 'key'  %}
+                            {% tableheader 'value' %}
+                            {% tableheader 'type'  %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for object in object_list %}
+                            <tr>
+                                <td>{{ object.section }} </td>
+                                <td>{{ object.key }}</td>
+                                <td>{{ object.value }} </td>
+                                <td>{{ object.type }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <h1 class="text-center">No configuration in database</h1>
+        {% endif %}
+    </div>
+{% endblock content %}
