@@ -162,6 +162,7 @@
                                         {% tableheader 'lightcurve_median' 'flux<sub>median</sub> (Jy)' %}
                                         {% tableheader 'v_int' 'V<sub>ν</sub>' %}
                                         {% tableheader 'eta_int' 'η<sub>ν</sub>' %}
+                                        {% tableheader 'forcedfits_count' 'forcedfits count' %}
                                     </tr>
                                     </thead>
 
@@ -189,6 +190,7 @@
                                             <td>{{ object.lightcurve_median|flux_unit:flux_prefix|scientific }}</td>
                                             <td>{{ object.v_int|stringformat:".3f" }}</td>
                                             <td>{{ object.eta_int|stringformat:".3f" }}</td>
+                                            <td>{{ object.runcat.forcedfits_count }}</td>
 
                                         </tr>
                                     {% endfor %}

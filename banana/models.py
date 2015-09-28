@@ -405,6 +405,7 @@ class Runningcatalog(models.Model):
                                               through=Assocxtrsource)
 
     skyregions = models.ManyToManyField('Skyregion', through=Assocskyrgn)
+    forcedfits_count = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "%s" % self.id
