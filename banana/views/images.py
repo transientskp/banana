@@ -4,7 +4,7 @@ All views that generate images
 from django.http import HttpResponse
 import banana.image
 from banana.models import Extractedsource, Image
-from banana.mongo import get_hdu
+from banana.mongo import get_hdu, fetch
 from django.views.generic import DetailView
 
 
@@ -48,3 +48,11 @@ class ExtractedSourcePlot(DetailView):
             canvas.print_figure(response, format='png', bbox_inches='tight',
                                 pad_inches=0, dpi=100)
         return response
+
+
+class RawImage(DetailView):
+    model = Image
+
+    def render_to_response(self, context, **kwargs):
+        handler = fetch(self.object.url)
+        return HttpResponse(handler, content_type="application/octet-stream")
