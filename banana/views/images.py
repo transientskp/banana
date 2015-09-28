@@ -55,4 +55,6 @@ class RawImage(DetailView):
 
     def render_to_response(self, context, **kwargs):
         handler = fetch(self.object.url)
-        return HttpResponse(handler, content_type="application/octet-stream")
+        response = HttpResponse(handler, content_type="application/octet-stream")
+        response['Content-Disposition'] = 'attachment; filename="banana.fits"'
+        return response

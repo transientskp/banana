@@ -7,11 +7,11 @@
 {% load units %}
 {% load flux_units_dropdown %}
 {% block morehead %}
-    <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
-    <script type="text/javascript">$(function() {
-        $('.map').maphilight();
-    });</script>
-
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/js9/js9support.css">
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/js9/js9.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9support.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9plugins.js"></script>
 {% endblock %}
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
@@ -44,7 +44,7 @@
 
                     <dt>Filename</dt>
                     <dd>{{ object.filename }}</dd>
-                    
+
                     <dt>Rejections</dt>
                     <dd>{{ object.rejections.all|yesno }} </dd>
 
@@ -127,9 +127,15 @@
                             {% if next %}
                                 <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
                             {% endif %}
+
                         {% endwith %}
+                    <a href="{%  url 'rawimage' db_name object.id %}"><button class="btn btn-default">download image</button></a>
                     </div>
-                    <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
+                    <div>
+                        <div class="JS9Menubar"></div>
+                        <div class="JS9"></div>
+
+                    </div>
                 </div>
             </div>
             <div class="col-md-7">
@@ -141,8 +147,8 @@
                         </div>
                         <div class="col-md-6 text-right">
                             <div class="btn-group">
-                            {% flux_units_dropdown %}
-                            <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default">CSV format</button></a>
+                                {% flux_units_dropdown %}
+                                <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default">CSV format</button></a>
                             </div>
                         </div>
                     </div>
@@ -201,20 +207,8 @@
     </div>
 
     <script>
-        {% for source in object_list %}
-            $('#row{{ source.id }}').mouseover(function(e) {
-                $('#{{ source.id }}').mouseover();
-            }).mouseout(function(e) {
-                $('#{{ source.id }}').mouseout();
-            });
-        {% endfor %}
+        JS9.Load("{%  url 'rawimage' db_name object.id %}");
     </script>
-
-    <map name="simple">
-        {% for id, x, y, size in pixels %}
-            <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
-        {% endfor %}
-    </map>
 
 
 
