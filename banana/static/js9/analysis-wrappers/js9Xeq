@@ -1,0 +1,326 @@
+#!/bin/sh
+# set -x
+
+# make sure we have minimum arg count
+if [ $# -lt 1 ]; then
+    echo "$0 [cmd] [args ...]"
+    exit 1
+fi
+
+# on entry, the following JS9 environment variables will be available:
+# JS9_DIR		top level directory of js9 helper
+# JS9_WORKDIR		working directory, if configured
+# JS9_WORKDIR_QUOTA	quota for working directory, if configured
+# JS9_HOST		host ip of client
+# JS9_ID		id (from js9 div) of client
+
+# if we are being called via CGI, send stderr to stdout
+if [ x"$QUERY_STRING" != x ]; then
+  exec 2>&1
+fi
+
+# error handler: send to stderr (which will go to stdout for CGI)
+error() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+xsed() {
+  sed 's#'${JS9_DIR}'#${JS9_DIR}#g;'
+}
+
+# regcnts is preferred
+hash regcnts 1>/dev/null 2>&1
+if [ $? = 0 ]; then
+  CNTS=regcnts
+else
+  hash funcnts 1>/dev/null 2>&1
+  if [ $? = 0 ]; then
+    CNTS=funcnts
+  else
+    CNTS="error requires regcnts or funcnts ..."
+  fi
+fi
+
+# process standard arguments
+CMD="$1";     shift;
+case $CMD in
+counts)
+    if [ $# -eq 1 ]; then
+      ${CNTS} "$1" "$2" | xsed
+    else
+      ${CNTS} "$1" "$2" "$3" | xsed
+    fi
+    exit 0
+    ;;
+
+fits2png)
+    fits2png $*
+    exit 0
+    ;;
+
+fitshead)
+    funhead -a "$1" | xsed
+    exit 0
+    ;;
+
+hist)
+    if [ $# -lt 4 ]; then
+      error "funhist filename norm width [column] [bin] [$#]"
+    fi
+    ARGS=""
+    FILE="$1"; shift
+    FILE=`echo $FILE | sed 's/\]\[/,/g'`
+    NORM="$1"; shift;
+    if [ $NORM = "true" ]; then
+      ARGS="$ARGS -n"
+    fi
+    WIDTH=$1; shift;
+    if [ $WIDTH = "true" ]; then
+      ARGS="$ARGS -w"
+    fi
+    if [ $# -eq 1 ]; then
+	funhist $ARGS "$FILE" "$1" | xsed
+    else
+	funhist $ARGS "$FILE" "$1" "$2" | xsed
+    fi
+    exit 0
+    ;;
+
+radialplot)
+    if [ $# = 0 ]; then
+      error "${CNTS} filename [source] [bkgd] [$#]"
+    fi
+    if [ $# -eq 1 ]; then
+      ${CNTS} -rG "$1" "$2" | funcnts2flot -title "$TITLE" -file "$1" | xsed
+    else
+      ${CNTS} -rG "$1" "$2" "$3" | funcnts2flot -title "$TITLE" -file "$1" | \
+      xsed
+    fi
+    exit 0
+    ;;
+
+histplot)
+    if [ $# -lt 4 ]; then
+      error "funhist filename norm width [column] [bin] [$#]"
+    fi
+    ARGS=""
+    FILE="$1"; shift;
+    FILE=`echo $FILE | sed 's/\]\[/,/g'`
+    NORM="$1"; shift;
+    if [ $NORM = "true" ]; then
+      ARGS="$ARGS -n"
+    fi
+    WIDTH=$1; shift
+    if [ $WIDTH = "true" ]; then
+      if [ "x$2" = x0 ]; then
+        error "please don't use a bin width of 0"
+      fi
+      ARGS="$ARGS -w"
+    fi
+    TITLE="`echo "$FILE" | tr [a-z] [A-Z]` Plot"
+    if [ $# -eq 1 ]; then
+	funhist $ARGS "$FILE" "$1" | 
+	funhist2flot -title "$TITLE" -file "$FILE" | xsed
+    else
+	funhist $ARGS "$FILE" "$1" "$2" |
+	funhist2flot -title "$TITLE" -file "$FILE" | xsed
+    fi
+    exit 0
+    ;;
+
+evfilter)
+    # required args
+    if [ "$#" -lt 3 ]; then
+	error "evfilter ifile ext filter [$*]"
+    fi
+    if [ x"${JS9_WORKDIR}" = x ]; then
+	error "evfilter requires configuration of a temporary work directory"
+    fi
+    mb=`du -sk . | awk '{printf("%d", ($1 + 500) / 1000)}'`
+    if [ ${JS9_WORKDIR_QUOTA:-0} -gt 0 ]; then
+      if [ ${mb:-0} -ge ${JS9_WORKDIR_QUOTA} ]; then
+       error "disk quota exceeded. Please close one or more displayed images."
+      fi
+    fi
+    OTYPE="png"
+    IFILE="$1"; shift
+    EXT="$1"; shift
+    if [ x"$EXT" = xnull ]; then
+      EXT=""
+    fi
+    # remove spaces
+    FILTER=`echo $* | sed 's/ //g'`
+    # try to get a base name for output
+    XBASE=`basename $IFILE`
+    IBASE=`basename $IFILE .fits`
+    if [ x"$XBASE" = x"$IBASE" ]; then
+	IBASE=`basename $IFILE .fits.gz`
+    fi
+    # make up unique output file base
+    OBASE=`echo ${IBASE}_${FILTER} | awk -F/ '{print $NF}' | sed 's/[,]/_/g'`
+    # create the filtered FITS file
+    if [ x$OTYPE = xfits ]; then
+	# create the filtered FITS file for analysis
+	funimage $IFILE"[EVENTS+,${FILTER}]" $OBASE.fits
+	# sending as binary will result in high bit being stripped! why??
+	# cat $OBASE.fits
+	base64 < $OBASE.fits
+    else
+	# create the filtered FITS file for analysis
+	funtable $IFILE"[EVENTS+,${FILTER}]" $OBASE.fits
+	# created the associated PNG file for display (using original ext)
+	fits2png $OBASE.fits"$EXT" $OBASE.png
+	# send back relative path to the PNG file
+	echo "${JS9_WORKDIR}/$OBASE.png"
+    fi
+    exit 0
+    ;;
+
+imsection)
+    # required args
+    if [ "$#" -lt 2 ]; then
+	error "imsection file section [mode]"
+    fi
+    if [ x"${JS9_WORKDIR}" = x ]; then
+	error "imsection requires configuration of a temporary work directory"
+    fi
+    mb=`du -sk . | awk '{printf("%d", ($1 + 500) / 1000)}'`
+    if [ ${JS9_WORKDIR_QUOTA:-0} -gt 0 ]; then
+      if [ ${mb:-0} -ge ${JS9_WORKDIR_QUOTA} ]; then
+       error "disk quota exceeded. Please close one or more displayed images."
+      fi
+    fi
+    IFILE="$1"
+    SECTION="$2"
+    if [ $# -ge 3 ]; then
+      MODE="$3"
+    fi
+    # try to get a base name for output
+    XBASE=`basename $IFILE`
+    IBASE=`basename $IFILE .fits`
+    if [ x"$XBASE" = x"$IBASE" ]; then
+	IBASE=`basename $IFILE .fits.gz`
+    fi
+    # output FITS file
+    OBASE=`echo ${IBASE}_${SECTION} | awk -F/ '{print $NF}' | sed 's/[,]/_/g'`
+    OFILE=${OBASE}.fits
+    js9helper -i ${IFILE} imsection ${SECTION} ${MODE} > ${OFILE}
+    # send back relative path to the output file
+    echo "${JS9_WORKDIR}/${OFILE}"
+    exit 0
+    ;;
+
+loadproxy)
+    # required args
+    if [ "$#" -lt 1 ]; then
+	error "loadproxy url"
+    fi
+    if [ x"${JS9_WORKDIR}" = x ]; then
+	error "loadproxy requires configuration of a temporary work directory"
+    fi
+    mb=`du -sk . | awk '{printf("%d", ($1 + 500) / 1000)}'`
+    if [ ${JS9_WORKDIR_QUOTA:-0} -gt 0 ]; then
+      if [ ${mb:-0} -ge ${JS9_WORKDIR_QUOTA} ]; then
+       error "disk quota exceeded. Please close one or more displayed images."
+      fi
+    fi
+    URL=`echo $1 | sed 's/__ampersand__/\&/g'`
+    OFILE=`basename $URL | sed 's/\?.*//g'`
+    # hack for google drive
+    if [ x"$OFILE" = xuc ]; then
+      OFILE="google_"$RANDOM".fits"
+    fi
+    # proxy
+    if [ x"$JS9_PROXY" != x ]; then
+      export http_proxy="$JS9_PROXY"
+      export https_proxy="$http_proxy"
+      export ftp_proxy="$http_proxy"
+    fi
+    # retrieve the FITS file via URL
+    hash wget 1>/dev/null 2>&1
+    if [ $? = 0 ]; then
+      wget -q --output-document="$OFILE" "$URL"
+    else
+      hash curl 1>/dev/null 2>&1
+      if [ $? = 0 ]; then
+        curl -s -o "$OFILE" "$URL"
+      else
+        error "requires either wget or curl"
+      fi
+    fi
+    if [ $? != 0 ]; then
+      error "could not retrieve: $URL"
+    else
+      # look for a compressed file (and add .gz extension, if necessary)
+      s=`file $OFILE`
+      f=`echo $s | egrep "HTML document text" 1>/dev/null 2>&1`
+      if [ $? = 0 ]; then
+	f=`cat $OFILE | sed -n 's/.*\(The document has moved\) <A HREF="\([^"]*\)".*/\1 to: \2/gp'`
+        if [ x"$f" != x ]; then
+          error "$f"
+        else
+	  error `cat $OFILE`
+        fi
+      fi
+      f=`echo $s | sed -n 's/.*gzip compressed data, was "\([^"]*\)".*/\1/gp'`
+      if [ x"$f" != x ]; then
+	ext="${f##*.}"
+        if [ x"$ext" = xgz ]; then
+          NFILE="$f"
+        else
+          NFILE="$f".gz
+        fi
+        if [ x"$NFILE" != x"$OFILE" ]; then
+          mv $OFILE $NFILE && OFILE="$NFILE"
+        fi
+      fi
+      # tell JS9 the new file name to load
+      echo "${JS9_WORKDIR}/$OFILE"
+    fi
+    exit 0
+    ;;
+
+removeproxy)
+    # required args
+    if [ "$#" -lt 1 ]; then
+	error "removeproxy file"
+    else
+      PROXY=`echo $1 | sed 's/__ampersand__/\&/g'`
+      FILE=`basename $PROXY`
+      DIR=`dirname $PROXY`
+    fi
+    if [ x"${JS9_WORKDIR}" = x ]; then
+	error "removeproxy requires configuration of a temporary work directory"
+    fi
+    if [ x"$DIR" != x"$JS9_WORKDIR" ]; then
+      error "can't remove proxy file from someone else's working directory"
+    fi
+    # remove files that match a template of the input file (without extension),
+    # but avoid removing files with a similar name
+    TMPL=`echo $FILE | rev | cut -f 2- -d '.' | rev`
+    rm -rf `ls ${TMPL}.* | egrep -v "${TMPL}\..*\..*"`
+    if [ $? != 0 ]; then
+      error "can't remove proxy file: $FILE"
+    fi
+    exit 0
+    ;;
+
+macros)
+    echo "
+    image     [$1]
+    filename: [$2]
+    id:       [$3]
+    foo:      [$4] (not expanded)
+    sregions: [$5]
+    bregions: [$6]
+    reg(wcs): [$7]
+    reg(phy): [$8]
+    string1:  [$9] (passed on command line)"
+    exit 0
+    ;;
+
+*)
+    error "unknown function: $CMD"
+    ;;
+esac

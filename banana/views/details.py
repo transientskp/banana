@@ -45,9 +45,8 @@ class BigImageDetail(DatasetMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BigImageDetail, self).get_context_data(**kwargs)
-        context['image_size'] = self.image_size
-        context['sources'] = banana.image.extracted_sources_pixels(self.object,
-                                                                   self.image_size)
+        context['lightcurve'] = self.object.extractedsources.all()
+        context['object'] = self.object
         return context
 
 

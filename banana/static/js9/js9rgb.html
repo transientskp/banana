@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" > 
+  <link type="image/x-icon" rel="shortcut icon" href="./favicon.ico">
+  <link type="text/css" rel="stylesheet" href="js9support.css">
+  <link type="text/css" rel="stylesheet" href="js9.css">
+  <script type="text/javascript" src="js9support.min.js"></script>
+  <script type="text/javascript" src="js9.min.js"></script>
+  <script type="text/javascript" src="js9plugins.js"></script>
+  <style type="text/css">
+      #centerdiv {
+      width: 512px;
+      margin-left: auto ;
+      margin-right: auto ;
+      }
+      .arrow {
+        visibility: hidden;
+      }
+      .arrow-up {
+	width: 0; 
+	height: 0; 
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-bottom: 20px solid blue;
+      }
+      .arrow-down {
+	width: 0; 
+	height: 0; 
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid blue;
+      }
+      .arrow-right {
+	width: 0; 
+	height: 0; 
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+	border-left: 20px solid blue;
+      }
+      .arrow-left {
+	width: 0; 
+	height: 0; 
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent; 
+	border-right:20px solid blue; 
+      }
+  </style>
+  <title>JS9 rgb</title>
+</head>
+<body>
+    <center><font size="+1">
+    <b>JS9 Demo: RGB composites </b>
+    </font></center>
+    <p>
+    Clicking on the Kes 75 supernova remnant below will load three
+    energy cuts of a single Chandra observation. Because these three
+    images have the same size, scale, and pointing direction, you can
+    assign them the <b>red, green, or blue</b> colormaps. Then, if you
+    then select the menu option <b>Color->rgbMode</b>, they will be
+    displayed as one RGB composite image.
+
+    <p>
+    In RGB mode, the <b>current</b> image (as shown in the <b>File</b>
+    menu) still determines which of the three independent colormaps is
+    changed by contrast/bias mouse manipulation, available for data
+    analysis, etc. To remove an image from the RGB composite, give it
+    a different colormap. Re-join (or add a new image) by assigning
+    one of the RGB colormaps. Turn off rgbMode to display the images
+    separately.
+
+    <p>
+    Clicking the Orion Nebula below will load three images with the
+    same size and scale, but slightly different pointing directions.
+    Thus, when you display them in RGB mode, the images will be
+    slightly offset from one another. To perform a manual alignment,
+    use the arrow keys that are displayed with Orion. Pressing a key
+    will call the <b>JS9.ShiftData()</b> public routine to shift the
+    image (as well as its underlying data) up, down, left, or right.
+    <p>
+    <div id="centerdiv">
+    <ul>
+    <li> <a href='javascript:Load("kes75")'>Kes 75, 3 energy ranges (Chandra)</a>
+    <li> <a href='javascript:Load("orion")'>Orion Nebula, 3 offset images (MicroObservatory)</a>
+    </ul>
+
+    <table>
+    <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+    <center>
+    <div class="arrow-up arrow" onclick="javascript:Shift('up');"></div>
+    </center>
+    </td>
+    <td>
+      &nbsp;
+    </td>
+    </tr>
+    <tr>
+    <td>
+    <div class="arrow-left arrow" onclick="javascript:Shift('left');"></div>
+    </td>
+    <td>
+    <div class="JS9Menubar"></div>
+    <div class="JS9"></div>
+    <div style="margin-top: 2px;">
+    <div class="JS9Colorbar"></div>
+    </div>
+    </td>
+    <td>
+    <div class="arrow-right arrow" onclick="javascript:Shift('right');"></div>
+    </td>
+    </tr>
+    <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+    <center>
+    <div class="arrow-down arrow" onclick="javascript:Shift('down');"></div>
+    </center>
+    </td>
+    <td>
+      &nbsp;
+    </td>
+    </tr>
+    </table>
+    </div>
+    <script type="text/javascript">
+    var Load = function(name){
+      for(i=0; i<JS9.images.length; i++){
+        JS9.images[i].closeImage();
+      }
+      switch(name){
+      case 'kes75':
+        $(".arrow").css("visibility", "hidden");
+        JS9.Load("kes75/kes75_e1.png", {scale: "log", colormap: "red"});
+        JS9.Load("kes75/kes75_e2.png", {scale: "log", colormap: "green"});
+        JS9.Load("kes75/kes75_e3.png", {scale: "log", colormap: "blue"});
+        break;
+      case 'orion':
+        $(".arrow").css("visibility", "visible");
+        JS9.Load("orion/orion_1.fits", {scale: "linear", colormap: "red"});
+        JS9.Load("orion/orion_2.fits", {scale: "linear", colormap: "green"});
+        JS9.Load("orion/orion_3.fits", {scale: "linear", colormap: "blue"});
+        break;
+      }
+    }
+    var Shift = function(dir){
+        var im = JS9.GetImage();
+        if( !im ){
+          JS9.error("please load an image");
+        }
+        switch(dir){
+          case "up":
+            im.shiftData(0,1);
+          break;
+          case "down":
+            im.shiftData(0,-1);
+          break;
+          case "left":
+            im.shiftData(-1,0);
+          break;
+          case "right":
+            im.shiftData(1,0);
+          break;
+        }
+    };
+    </script>
+<p>
+JS9 Demos:
+<ul>
+<li><a href='js9basics.html'>JS9 Demo: the basics</a>
+<li><a href='js9bespoke.html'>JS9 Demo: web page control of JS9</a>
+<li><a href='js9sizes.html'>JS9 Demo: setting the size of the JS9 display</a>
+<li><a href='js9plugins.html'>JS9 Demo: adding plugins to JS9</a> 
+<li><a href='js9imexam.html'>JS9 Demo: the imexam plugin for JS9</a> 
+<li><a href='js9blend.html'>JS9 Demo: image blending</a> 
+<li><a href='js9cat.html'>JS9 Demo: overlaying catalogs</a>
+<li><a href='js9panzoom.html'>JS9 Demo: pan and zoom</a> 
+<li><a href='js9rgb.html'>JS9 Demo: RGB composite images</a> 
+<li><a href='js9multi.html'>JS9 Demo: independent instances of JS9</a> 
+<li><a href='js9analysis.html'>JS9 Demo: remote data analysis</a> 
+<li><a href='js9onchange.html'>JS9 Demo: running tasks when a region changes</a>
+<li><a href='js9create.html'>JS9 Demo: creating a JS9 instance dynamically</a> 
+<li><a href='js9preload.html'>JS9 Demo: preloading images into JS9</a>
+<li><a href='js9bitpix.html'>JS9 Demo: displaying different FITS datatypes</a> 
+<li><a href='js9pngvsfits.html'>JS9 Demo: PNG representation files vs FITS files</a> 
+</ul>
+</body>
+</html>

@@ -1,0 +1,19 @@
+#!/bin/bash
+# set -x
+
+JS9_SRCDIR=$(pwd)
+if [ x"$1" != x ]; then
+  JS9_INSTALLDIR="$1"
+fi
+
+# js9: message script
+IMSGSCR="js9.in"
+OMSGSCR="js9"
+
+echo "generating $OMSGSCR for JS9 messaging ..."
+X="s#^ *JS9_SRCDIR=\".*\"#export JS9_SRCDIR=\"$JS9_SRCDIR\"#"
+X="$X;s#^ *JS9_INSTALLDIR=\".*\"#export JS9_INSTALLDIR=\"$JS9_INSTALLDIR\"#"
+sed "$X" < $IMSGSCR > $OMSGSCR
+chmod +x $OMSGSCR
+
+exit 0

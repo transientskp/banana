@@ -1,0 +1,54 @@
+#!/bin/bash
+#set -x
+
+# values will be filled in by mkjs9
+if [ x${JS9_SRCDIR} = x ]; then
+  JS9_SRCDIR=""
+fi
+if [ x${JS9_INSTALLDIR} = x ]; then
+  JS9_INSTALLDIR=""
+fi
+
+# make sure js9Msg sees these, if possible
+if [ x${JS9_SRCDIR} != x ]; then
+  export JS9_SRCDIR
+fi
+if [ x${JS9_INSTALLDIR} != x ]; then
+  export JS9_INSTALLDIR
+fi
+
+# error routine
+error () {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+# sanity check: node must be present
+hash node 1>/dev/null 2>&1
+if [ $? != 0 ]; then
+  error "JS9 messaging requires Node.js (see: https://nodejs.org/)"
+fi
+
+# add to node module path (is this still necessary?)
+if [ -d ./node_modules ]; then
+  NODE_PATH="./node_modules:${NODE_PATH}"
+elif [ -d ${JS9_INSTALLDIR}/node_modules ]; then
+  NODE_PATH="${JS9_INSTALLDIR}/node_modules:${NODE_PATH}"
+elif [ -d ${JS9_SRCDIR}/node_modules ]; then
+  NODE_PATH="${JS9_SRCDIR}/node_modules:${NODE_PATH}"
+fi
+export NODE_PATH
+
+# make sure we can find the JS9 messaging script
+if [ -r ./js9Msg.js ]; then
+  JS9_MSGSCRIPT="./js9Msg.js"
+elif [ -r ${JS9_INSTALLDIR}/js9Msg.js ]; then
+  JS9_MSGSCRIPT="${JS9_INSTALLDIR}/js9Msg.js"
+elif [ -r ${JS9_SRCDIR}/js9Msg.js ]; then
+  JS9_MSGSCRIPT="${JS9_SRCDIR}/js9Msg.js"
+else
+  error "ERROR: can't find js9Msg.js script (install JS9, or set \$JS9_SRCDIR )"
+fi
+
+# run node with the msg script
+exec node $JS9_MSGSCRIPT $*
