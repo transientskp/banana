@@ -156,6 +156,8 @@
                                         {% tableheader 'xtrsrc__f_int_err' 'Int. flux err (Jy)' %}
                                         {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy beam<sup>-1</sup>)' %}
                                         {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy beam<sup>-1</sup>)' %}
+                    {% tableheader 'xtrsrc__chisq' 'χ<sup>2</sup>' %}
+                    {% tableheader 'xtrsrc__reduced_chisq' 'reduced χ<sup>2</sup>' %}
                                         {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
                                         {% tableheader 'xtrsrc__image' 'Image ID' %}
                                         {% tableheader 'v_int' 'Vν' %}
@@ -175,6 +177,8 @@
                                                 <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:flux_prefix|scientific }}</td>
                                                 <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:flux_prefix|scientific }}</td>
                                                 <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.chisq|scientific }}</td>
+                            <td>{{ assocxtrsource.xtrsrc.reduced_chisq|scientific }}</td>
                                                 <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
                                                 <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
                                                 <td>{{ assocxtrsource.v_int|scientific }}</td>
