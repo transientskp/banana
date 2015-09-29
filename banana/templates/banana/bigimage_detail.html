@@ -3,11 +3,15 @@
 {% block title %}Image {{ image.id }} · Banana{% endblock title %}
 
 {% block morehead %}
-    <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.maphilight.min.js"></script>
-    <script type="text/javascript">$(function() {
-        $('.map').maphilight();
-    });</script>
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/js9/js9support.css">
+    <link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}/js9/js9.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9support.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9plugins.js"></script>
 {% endblock %}
+
+{% block bodytag %}<body onload="load()">{% endblock %}
+
 
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name image.dataset_id %}">Dataset {{ image.dataset_id }}</a></li>{% endblock %}
@@ -17,20 +21,41 @@
 
 {% block content %}
     <div class="container-fluid">
-        <img src="{% url 'image_plot' db_name image.id %}?size={{ image_size }}" class="map" usemap="#simple">
 
-        <b>yellow:</b> blind fit
-        <b>lightgreen:</b> forced fit
-        <b>cyan:</b> manual monitored
-        <b>blue:</b> transient
-
-        <map name="simple">
-            {% for id, x, y, size in sources %}
-                <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
-            {% endfor %}
-        </map>
-
+        <div id="size1024">
+            <div class="JS9Menubar" id="JS9-1024_Menubar" data-width="1024px"></div>
+            <div class="JS9" id="JS9-1024" data-width="1024px" data-height="1024px"></div>
+        </div>
     </div>
+
+    <script>
+        function draw_circles() {
+            blind = [];
+            forced = [];
+            monitor = [];
+
+            {% for point in lightcurve  %}
+            pix = JS9.WCSToPix({{ point.ra }}, {{ point.decl }});
+            {%  if point.extract_type == 0 %}blind.push({x: pix.x, y: pix.y, shape: "circle", color: "red", radius: 5});
+            {% elif point.extract_type == 1 %}forced.push({x: pix.x, y: pix.y, shape: "circle", color: "green", radius: 5});
+            {% elif point.extract_type == 2 %}monitor.push({x: pix.x, y: pix.y, shape: "circle", color: "yellow", radius: 5});
+            {% endif %}{% endfor %}
+            JS9.NewShapeLayer("blind", JS9.Catalogs.opts);
+            JS9.NewShapeLayer("forced", JS9.Catalogs.opts);
+            JS9.NewShapeLayer("monitor", JS9.Catalogs.opts);
+            JS9.AddShapes("blind", blind);
+            JS9.AddShapes("forced", forced);
+            JS9.AddShapes("monitor", monitor);
+            JS9.ShowShapeLayer("blind", "show");
+            JS9.ShowShapeLayer("forced", "show");
+            JS9.ShowShapeLayer("monitor", "show");
+        }
+
+        function load() {
+            JS9.Load("{%  url 'rawimage' db_name object.id %}", {});
+            setTimeout(draw_circles, 1000);
+        }
+    </script>
 
 {% endblock content %}
 
