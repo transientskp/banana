@@ -14,6 +14,8 @@
     <script type="text/javascript" src="{{ STATIC_URL }}/js9/js9plugins.js"></script>
 {% endblock %}
 
+{% block bodytag %}<body onload="load()">{% endblock %}
+
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset_id %}">Dataset {{ object.dataset_id }}</a></li>{% endblock %}
 {% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ object.dataset_id }}">Images</a></li>{% endblock %}
@@ -129,12 +131,11 @@
                             {% endif %}
 
                         {% endwith %}
-                    <a href="{%  url 'rawimage' db_name object.id %}"><button class="btn btn-default">download image</button></a>
+                        <a href="{%  url 'rawimage' db_name object.id %}"><button class="btn btn-default">download image</button></a>
                     </div>
                     <div>
                         <div class="JS9Menubar"></div>
                         <div class="JS9"></div>
-
                     </div>
                 </div>
             </div>
@@ -207,7 +208,32 @@
     </div>
 
     <script>
-        JS9.Load("{%  url 'rawimage' db_name object.id %}");
+        function draw_circles() {
+            blind = [];
+            forced = [];
+            monitor = [];
+
+            {% for point in lightcurve  %}
+            pix = JS9.WCSToPix({{ point.ra }}, {{ point.decl }});
+            {%  if point.extract_type == 0 %}blind.push({x: pix.x, y: pix.y, shape: "circle", color: "red", radius: 5});
+            {% elif point.extract_type == 1 %}forced.push({x: pix.x, y: pix.y, shape: "circle", color: "green", radius: 5});
+            {% elif point.extract_type == 2 %}monitor.push({x: pix.x, y: pix.y, shape: "circle", color: "yellow", radius: 5});
+            {% endif %}{% endfor %}
+            JS9.NewShapeLayer("blind", JS9.Catalogs.opts);
+            JS9.NewShapeLayer("forced", JS9.Catalogs.opts);
+            JS9.NewShapeLayer("monitor", JS9.Catalogs.opts);
+            JS9.AddShapes("blind", blind);
+            JS9.AddShapes("forced", forced);
+            JS9.AddShapes("monitor", monitor);
+            JS9.ShowShapeLayer("blind", "show");
+            JS9.ShowShapeLayer("forced", "show");
+            JS9.ShowShapeLayer("monitor", "show");
+        }
+
+        function load() {
+            JS9.Load("{%  url 'rawimage' db_name object.id %}", {});
+            setTimeout(draw_circles, 1000);
+        }
     </script>
 
 

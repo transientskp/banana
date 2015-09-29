@@ -20,10 +20,6 @@ class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
     paginate_by = 20
     template_name = "banana/image_detail.html"
 
-    def get_size(self):
-        image_size = 4  # in inches
-        return image_size
-
     def get_queryset(self):
         qs = super(ImageDetail, self).get_queryset()
         self.object = get_object_or_404(qs, id=self.kwargs['pk'])
@@ -31,9 +27,7 @@ class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
 
     def get_context_data(self, **kwargs):
         context = super(ImageDetail, self).get_context_data(**kwargs)
-        context['image_size'] = self.get_size()
-        context['pixels'] = banana.image.extracted_sources_pixels(self.object,
-                                                                  self.get_size())
+        context['lightcurve'] = self.object.extractedsources.all()
         context['object'] = self.object
         return context
 
@@ -45,9 +39,8 @@ class BigImageDetail(DatasetMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BigImageDetail, self).get_context_data(**kwargs)
-        context['image_size'] = self.image_size
-        context['sources'] = banana.image.extracted_sources_pixels(self.object,
-                                                                   self.image_size)
+        context['lightcurve'] = self.object.extractedsources.all()
+        context['object'] = self.object
         return context
 
 
