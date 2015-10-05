@@ -1,6 +1,4 @@
 from django.db import models
-from django.shortcuts import get_object_or_404
-from banana.models import Dataset
 
 
 class HybridTemplateMixin(object):
@@ -104,8 +102,7 @@ class DatasetMixin(object):
 
     def get_context_data(self, *args, **kwargs):
         context = super(DatasetMixin, self).get_context_data(*args, **kwargs)
-        context['dataset'] = get_object_or_404(Dataset,
-                                               id=self.get_dataset_id)
+        context['dataset'] = self.get_dataset_id()
         return context
 
     def filter_queryset(self, qs):

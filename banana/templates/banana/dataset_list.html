@@ -5,58 +5,52 @@
 
 {% block title %}Datasets · Banana{% endblock title %}
 
-{% block header %}List of datasets{% endblock %}
-{% block description %}in database {{ db_name }}{% endblock %}
-
+{% block navdatabase %}<li class="active"><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <div class="box box-solid">
-                <div class="box-body">
-                    {% if not dataset_list %}
-                        <div class="col-md-12 text-center">
-                            <h1 class="text-center">No datasets are available</h1>
-                        </div>
-                    {% else %}
-                        <div class="col-md-12 text-center">
-                            {% paginatorizer %}
-                        </div>
-
-                        <div class="col-md-12">
-                            <table class="table table-striped table-condensed table-hover" >
-                                <thead>
-                                <tr>
-                                    {% tableheader 'id' %}
-                                    {% tableheader 'description' %}
-                                    {% tableheader 'rerun' %}
-                                    {% tableheader 'num_images' 'Number of Images' %}
-                                    {% tableheader 'process_start_ts' 'Start time' %}
-                                    {% tableheader 'process_end_ts' 'End time' %}
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for dataset in dataset_list %}
-                                    <tr>
-                                        <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
-                                        <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.description }}</a></td>
-                                        <td>{{ dataset.rerun }}</td>
-                                        <td>{{ dataset.num_images }}</td>
-                                        <td>{{ dataset.process_start_ts }}</td>
-                                        <td>{{ dataset.process_end_ts }}</td>
-                                    </tr>
-                                    </a>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="col-md-12 text-center">
-                            {% paginatorizer %}
-                        </div>
-                    {% endif %}
+            {% if not dataset_list %}
+                <div class="col-md-12 text-center">
+                    <h1 class="text-center">No datasets are available</h1>
                 </div>
-            </div>
+            {% else %}
+                <div class="col-md-12 text-center">
+                    {% paginatorizer %}
+                </div>
+
+                <div class="col-md-12">
+                    <table class="table table-striped table-condensed table-hover" >
+                        <thead>
+                        <tr>
+                            {% tableheader 'id' %}
+                            {% tableheader 'description' %}
+                            {% tableheader 'rerun' %}
+                            {% tableheader 'num_images' 'Number of Images' %}
+                            {% tableheader 'process_start_ts' 'Start time' %}
+                            {% tableheader 'process_end_ts' 'End time' %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for dataset in dataset_list %}
+                            <tr>
+                                <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.id }}</a></td>
+                                <td><a href="{% url 'dataset' db_name dataset.id %}">{{ dataset.description }}</a></td>
+                                <td>{{ dataset.rerun }}</td>
+                                <td>{{ dataset.num_images }}</td>
+                                <td>{{ dataset.process_start_ts }}</td>
+                                <td>{{ dataset.process_end_ts }}</td>
+                            </tr>
+                            </a>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    {% paginatorizer %}
+                </div>
+            {% endif %}
         </div>
 
     </div>

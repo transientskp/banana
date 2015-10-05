@@ -14,7 +14,8 @@ from banana.views.mixins import (HybridTemplateMixin,
 from collections import OrderedDict
 
 
-class ImageDetail(FluxViewMixin, SortListMixin, HybridTemplateMixin, ListView):
+class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
+                  HybridTemplateMixin, ListView):
     model = Image
     paginate_by = 20
     template_name = "banana/image_detail.html"
@@ -33,7 +34,6 @@ class ImageDetail(FluxViewMixin, SortListMixin, HybridTemplateMixin, ListView):
         context['image_size'] = self.get_size()
         context['pixels'] = banana.image.extracted_sources_pixels(self.object,
                                                                   self.get_size())
-        context['dataset'] = self.object.dataset
         context['object'] = self.object
         return context
 
