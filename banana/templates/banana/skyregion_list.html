@@ -5,65 +5,65 @@
 {% load units %}
 {% load tableheader %}
 
-{% block title %}Skyregion · Banana{% endblock title %}
+{% block title %}Skyregions{% endblock title %}
+{% block header %}Skyregions{% endblock %}
 
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}
-    {% if dataset %}
-        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-    {% endif %}
-{% endblock %}
-
-{% block navdeep %}
-    <li class="active"><a href="{% url 'skyregions' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Skyregions</a></li>
-{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
         {% if object_list %}
             <div class="row">
-
-                <div class="col-md-8 col-md-offset-2 text-center">
-                    {% paginatorizer %}
-                </div>
-
-                <div class="col-md-2 text-center">
-                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default" type="button">CSV format</button></a>
-                </div>
                 <div class="col-md-12">
-                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
-                        <thead>
-                        <tr>
-                            {% tableheader 'id' %}
-                            {% tableheader 'dataset' %}
-                            {% tableheader 'centre_ra' 'RA (°)' %}
-                            {% tableheader 'centre_decl' 'Dec (°)' %}
-                            {% tableheader 'xtr_radius)' %}
-                            {% tableheader 'x' %}
-                            {% tableheader 'y' %}
-                            {% tableheader 'z'  %}
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2 text-center">
+                                    {% paginatorizer %}
+                                </div>
+
+
+                                <div class="col-md-2 text-center">
+                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default" type="button">CSV format</button></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                                        <thead>
+                                        <tr>
+                                            {% tableheader 'id' %}
+                                            {% tableheader 'dataset' %}
+                                            {% tableheader 'centre_ra' 'RA (°)' %}
+                                            {% tableheader 'centre_decl' 'Dec (°)' %}
+                                            {% tableheader 'xtr_radius)' %}
+                                            {% tableheader 'x' %}
+                                            {% tableheader 'y' %}
+                                            {% tableheader 'z'  %}
 
 
 
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for object in object_list %}
-                            <tr>
-                                <td><a href="{% url 'skyregion' db_name object.id %}">{{ object.id }}</a></td>
-                                <td><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></td>
-                                <td>{{ object.centre_ra|stringformat:".3f" }}</td>
-                                <td>{{ object.centre_decl|stringformat:".3f" }}</td>
-                                <td>{{ object.xtr_radius }}</td>
-                                <td>{{ object.x }}</td>
-                                <td>{{ object.y }}</td>
-                                <td>{{ object.z }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in object_list %}
+                                            <tr>
+                                                <td><a href="{% url 'skyregion' db_name object.id %}">{{ object.id }}</a></td>
+                                                <td><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></td>
+                                                <td>{{ object.centre_ra|stringformat:".3f" }}</td>
+                                                <td>{{ object.centre_decl|stringformat:".3f" }}</td>
+                                                <td>{{ object.xtr_radius }}</td>
+                                                <td>{{ object.x }}</td>
+                                                <td>{{ object.y }}</td>
+                                                <td>{{ object.z }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% else %}
