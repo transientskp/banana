@@ -8,21 +8,11 @@
 {% load floatmath %}
 {% load cycle from future %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 
-{% block navdataset %}
-    <li><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></li>
-{% endblock %}
+{% block title %}Running Catalog #{{ object.id }}{% endblock title %}
 
-{% block navdeep %}
-    <li><a href="{% url 'runningcatalogs' db_name %}?dataset={{ object.dataset.id }}">Running Catalogs</a></li>
-{% endblock %}
-
-{% block navdeeper %}
-    <li class="active"><a href="{% url 'runningcatalog' db_name object.id%}">Running Catalog {{ object.id }}</a></li>
-{% endblock %}
-
-{% block title %}Running Catalog · Banana{% endblock title %}
+{% block header %}Running Catalog #{{ object.id }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
 
 {% block morehead %}
     <!-- required for error bars -->
@@ -33,155 +23,180 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-5">
-                <h2>Running Catalog #{{ object.id }}</h2>
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <div class="text-center">
+                            <!-- Aladin Lite viewer  -->
+                            <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
+                            <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
+                            <script type="text/javascript" src="{{ STATIC_URL }}catalog.js" charset="utf-8"></script>
+                            <script type="text/javascript">
 
-                <div class="text-center">
-                    <!-- Aladin Lite viewer  -->
-                    <div id="aladin-lite-div" style="width:400px;height:400px;"></div>
-                    <script type="text/javascript" src="http://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
-                    <script type="text/javascript" src="{{ STATIC_URL }}catalog.js" charset="utf-8"></script>
-                    <script type="text/javascript">
 
+                                var aladin = A.aladin('#aladin-lite-div');
+                                aladin.setZoom(0.18);
+                                aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
+                                var wenss = aladin.createImageSurvey('WENSS', 'WENSS', 'http://alasky.u-strasbg.fr/WENSS', 'equatorial', 5);
+                                var vlss = aladin.createImageSurvey('VLSSr', 'VLSSr', 'http://alasky.u-strasbg.fr/VLSSr', 'equatorial', 5);
+                                var nvss = aladin.createImageSurvey('NVSS', 'NVSS', 'http://alasky.u-strasbg.fr/NVSS/intensity/', 'equatorial', 5);
+                                aladin.setImageSurvey(nvss);
 
-                        var aladin = A.aladin('#aladin-lite-div');
-                        aladin.setZoom(0.18);
-                        aladin.gotoPosition({{ object.wm_ra }}, {{ object.wm_decl }});
-                        var wenss = aladin.createImageSurvey('WENSS', 'WENSS', 'http://alasky.u-strasbg.fr/WENSS', 'equatorial', 5);
-                        var vlss = aladin.createImageSurvey('VLSSr', 'VLSSr', 'http://alasky.u-strasbg.fr/VLSSr', 'equatorial', 5);
-                        var nvss = aladin.createImageSurvey('NVSS', 'NVSS', 'http://alasky.u-strasbg.fr/NVSS/intensity/', 'equatorial', 5);
-                        aladin.setImageSurvey(nvss);
+                                var cat = A.catalog({name: '3CR', sourceSize: 18, 'shape': 'triangle', sourceColor: 'blue'});
+                                aladin.addCatalog(cat);
 
-                        var cat = A.catalog({name: '3CR', sourceSize: 18, 'shape': 'triangle', sourceColor: 'blue'});
-                        aladin.addCatalog(cat);
+                                // catalog_3cr is defined in {{ STATIC_URL }}catalog.js
+                                for (source of catalog_3cr) {
+                                    title = 'id: ' + source['id'] +
+                                            '\nflux: ' + source['flux'].toString() +
+                                            '\nra: ' + source['ra'].toString() +
+                                            '\ndecl: ' + source['decl'].toString()
+                                    cat.addSources([A.marker(source['ra'], source['decl'], {popupTitle: title, popupDesc: ''})]);
+                                }
 
-                        // catalog_3cr is defined in {{ STATIC_URL }}catalog.js
-                        for (source of catalog_3cr) {
-                            title = 'id: ' + source['id'] +
-                                    '\nflux: ' + source['flux'].toString() +
-                                    '\nra: ' + source['ra'].toString() +
-                                    '\ndecl: ' + source['decl'].toString()
-                          cat.addSources([A.marker(source['ra'], source['decl'], {popupTitle: title, popupDesc: ''})]);
-                        }
-
-                    </script>
+                            </script>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="col-md-7">
-                <div id='lightcurve'></div>
-
-                <div class="row well well-sm">
-                    <div class="col-md-6">
-                        <dl class="dl-horizontal">
-                            <dt>Position</dt>
-                            <dd>({{ object.wm_ra|stringformat:".3f" }}°,
-                                {{ object.wm_decl|stringformat:".3f" }}°) &pm;
-                                ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
-                                {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
-
-                            <dt>RA (hh:mm:ss.s)</dt>
-                            <dd>{{object.wm_ra|format_angle:"time"}}</dd>
-
-                            <dt>Dec (dd:mm:ss.s)</dt>
-                            <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
-
-                            <dt>New source</dt>
-                            <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
-
-                            <dt>Skyregions</dt>
-                            <dd>{% for skyregion in object.skyregions.all %}<a href="{% url 'skyregion' db_name skyregion.id %}">{{skyregion.id }}</a>{% if not forloop.last %},{% endif %}{% empty %}None{% endfor %}</dd>
-
-                        </dl>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div id='lightcurve'></div>
                     </div>
-                    <div class="col-md-6">
-                        <dl class="dl-horizontal">
-                            <dt>Trigger source</dt>
-                            <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-7 col-md-offset-5">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal">
+                                <dt>Position</dt>
+                                <dd>({{ object.wm_ra|stringformat:".3f" }}°,
+                                    {{ object.wm_decl|stringformat:".3f" }}°) &pm;
+                                    ({{ object.ra_err|deg2asec|stringformat:".3f" }}″,
+                                    {{ object.wm_uncertainty_ns|deg2asec|stringformat:".3f" }}″)</dd>
 
-                            <dt>Previous limits image</dt>
-                            <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image.id }}</a>{% else %}No{% endif %}</dd>
+                                <dt>RA (hh:mm:ss.s)</dt>
+                                <dd>{{object.wm_ra|format_angle:"time"}}</dd>
 
-                            <dt># of datapoints</dt>
-                            <dd>{{ object.datapoints }}</dd>
+                                <dt>Dec (dd:mm:ss.s)</dt>
+                                <dd>{{object.wm_decl|format_angle:"dms"}}</dd>
 
-                            <dt>Dataset</dt>
-                            <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+                                <dt>New source</dt>
+                                <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
+
+                                <dt>Skyregions</dt>
+                                <dd>{% for skyregion in object.skyregions.all %}<a href="{% url 'skyregion' db_name skyregion.id %}">{{skyregion.id }}</a>{% if not forloop.last %},{% endif %}{% empty %}None{% endfor %}</dd>
+
+                            </dl>
+                        </div>
+
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal">
+                                <dt>Trigger source</dt>
+                                <dd>{% if object.newsource %}<a href="{% url 'extractedsource' db_name object.newsource.trigger_xtrsrc %}">{{  object.newsource.trigger_xtrsrc }}</a>{% else %}No{% endif %}</dd>
+
+                                <dt>Previous limits image</dt>
+                                <dd>{% if object.newsource %}<a href="{% url 'image' db_name object.newsource.previous_limits_image.id %}">{{  object.newsource.previous_limits_image.id }}</a>{% else %}No{% endif %}</dd>
+
+                                <dt># of datapoints</dt>
+                                <dd>{{ object.datapoints }}</dd>
+
+                                <dt>Dataset</dt>
+                                <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+                            </dl>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+
         {% if object_list %}
             <div class="row">
-                <div class="col-md-3">
-                    <h2>Lightcurve</h2>
-                </div>
-                <div class="col-md-3 text-center">
-                    {% paginatorizer %}
-                </div>
-                <div class="col-md-6 text-right">
-                    <div class="btn-group">
-                        <a href="{%  url 'augmentedrunningcatalog' db_name object.id %}"><button class="btn btn-default">Augmented runningcatalog</button></a>
-                        <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
-                        <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
-                        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn btn-default">Thumbnails</button></a>
-                        {% flux_units_dropdown %}
-                        <a href="{% url 'runningcatalogs' db_name %}?wm_ra_0={{ object.wm_ra|float_substract:"0.03"|scientific }}&wm_ra_1={{ object.wm_ra|float_add:"0.03"|scientific }}&wm_decl_0={{ object.wm_decl|float_substract:"0.03"|scientific }}&wm_decl_1={{ object.wm_decl|float_add:"0.03"|scientific }}&dataset={{ object.dataset_id }}">
-                            <button class="btn btn-default">Possible Associations</button>
-                        </a>
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <i class="fa  fa-star"></i>
+                            <h3 class="box-title">Lightcurve</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-3 col-md-offset-3">
+                                    {% paginatorizer %}
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <div class="btn-group">
+                                        <a href="{%  url 'augmentedrunningcatalog' db_name object.id %}"><button class="btn btn-default">Augmented runningcatalog</button></a>
+                                        <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
+                                        <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
+                                        <a href="?{% query_invert_bool 'thumb' %}"><button class="btn btn-default">Thumbnails</button></a>
+                                        {% flux_units_dropdown %}
+                                        <a href="{% url 'runningcatalogs' db_name %}?wm_ra_0={{ object.wm_ra|float_substract:"0.03"|scientific }}&wm_ra_1={{ object.wm_ra|float_add:"0.03"|scientific }}&wm_decl_0={{ object.wm_decl|float_substract:"0.03"|scientific }}&wm_decl_1={{ object.wm_decl|float_add:"0.03"|scientific }}&dataset={{ object.dataset_id }}">
+                                            <button class="btn btn-default">Possible Associations</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-striped responsive-utilities table-condensed ">
+                                        <thead>
+                                        {% tableheader 'xtrsrc__id' 'ID' %}
+                                        {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
+                                        {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
+                                        {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
+                                        {% tableheader 'xtrsrc__f_int' 'Int. flux (Jy)' %}
+                                        {% tableheader 'xtrsrc__f_int_err' 'Int. flux err (Jy)' %}
+                                        {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy beam<sup>-1</sup>)' %}
+                                        {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy beam<sup>-1</sup>)' %}
+                                        {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
+                                        {% tableheader 'xtrsrc__image' 'Image ID' %}
+                                        {% tableheader 'v_int' 'Vν' %}
+                                        {% tableheader 'eta_int' 'ην' %}
+                                        {% if request.GET.thumb == "1" %}
+                                            {% tableheader 'thumbnail' %}
+                                        {% endif %}
+                                        </thead>
+                                        <tbody>
+                                        {% for assocxtrsource in object_list %}
+                                            <tr class="{% cycle 'odd' 'even' %}">
+                                                <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
+                                                <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:flux_prefix|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:flux_prefix|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:flux_prefix|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
+                                                <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
+                                                <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
+                                                <td>{{ assocxtrsource.v_int|scientific }}</td>
+                                                <td>{{ assocxtrsource.eta_int|scientific }}</td>
+                                                {% if request.GET.thumb == "1" %}
+                                                    <td><img src="{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1"></td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    {% paginatorizer %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <table class="table table-bordered table-striped responsive-utilities table-condensed ">
-                    <thead>
-                    {% tableheader 'xtrsrc__id' 'ID' %}
-                    {% tableheader 'xtrsrc__image__taustart_ts' 'Date (UTC)' %}
-                    {% tableheader 'xtrsrc__image__tau_time' 'Integration time (s)' %}
-                    {% tableheader 'xtrsrc__image__band__freq_central' 'Frequency (Hz)' %}
-                    {% tableheader 'xtrsrc__f_int' 'Int. flux (Jy)' %}
-                    {% tableheader 'xtrsrc__f_int_err' 'Int. flux err (Jy)' %}
-                    {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy beam<sup>-1</sup>)' %}
-                    {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy beam<sup>-1</sup>)' %}
-                    {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
-                    {% tableheader 'xtrsrc__image' 'Image ID' %}
-                    {% tableheader 'v_int' 'Vν' %}
-                    {% tableheader 'eta_int' 'ην' %}
-                    {% if request.GET.thumb == "1" %}
-                        {% tableheader 'thumbnail' %}
-                    {% endif %}
-                    </thead>
-                    <tbody>
-                    {% for assocxtrsource in object_list %}
-                        <tr class="{% cycle 'odd' 'even' %}">
-                            <td><a href="{% url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}">{{ assocxtrsource.xtrsrc.id }}</a></td>
-                            <td>{{ assocxtrsource.xtrsrc.image.taustart_ts|date:"c" }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.tau_time|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.image.band.freq_central|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int|flux_unit:flux_prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_int_err|flux_unit:flux_prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_peak|flux_unit:flux_prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
-                            <td>{{ assocxtrsource.xtrsrc.extract_type }}</td>
-                            <td><a href="{% url 'image' db_name assocxtrsource.xtrsrc.image.id %}">{{ assocxtrsource.xtrsrc.image.id }}</a></td>
-                            <td>{{ assocxtrsource.v_int|scientific }}</td>
-                            <td>{{ assocxtrsource.eta_int|scientific }}</td>
-                            {% if request.GET.thumb == "1" %}
-                                <td><img src="{% url 'extractedsource_plot' db_name assocxtrsource.xtrsrc.id %}?size=1"></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-12 text-center">
-                {% paginatorizer %}
-            </div>
-
 
             <script>
                 imgs = {
@@ -198,7 +213,7 @@
                 }
             </script>
         {% endif %}
-
+    </div>
     </div>
     <script>
         // get data from django template

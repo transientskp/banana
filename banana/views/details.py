@@ -14,8 +14,7 @@ from banana.views.mixins import (HybridTemplateMixin,
 from collections import OrderedDict
 
 
-class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
-                  HybridTemplateMixin, ListView):
+class ImageDetail(FluxViewMixin, SortListMixin, HybridTemplateMixin, ListView):
     model = Image
     paginate_by = 20
     template_name = "banana/image_detail.html"
@@ -34,6 +33,7 @@ class ImageDetail(FluxViewMixin, SortListMixin, DatasetMixin,
         context['image_size'] = self.get_size()
         context['pixels'] = banana.image.extracted_sources_pixels(self.object,
                                                                   self.get_size())
+        context['dataset'] = self.object.dataset
         context['object'] = self.object
         return context
 
@@ -100,11 +100,17 @@ class ExtractedSourceDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ExtractedSourceDetail, self).get_context_data(**kwargs)
         context['extractedsource'] = self.object
+        context['dataset'] = self.object.image.dataset
         return context
 
 
 class MonitorDetail(DetailView):
     model = Monitor
+
+    def get_context_data(self, **kwargs):
+        context = super(MonitorDetail, self).get_context_data(**kwargs)
+        context['dataset'] = self.object.dataset
+        return context
 
 
 class SkyregionDetail(SortListMixin, DatasetMixin, HybridTemplateMixin,
@@ -123,6 +129,7 @@ class SkyregionDetail(SortListMixin, DatasetMixin, HybridTemplateMixin,
     def get_context_data(self, **kwargs):
         context = super(SkyregionDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
+        context['dataset'] = self.object.dataset
         return context
 
 
@@ -141,6 +148,7 @@ class NewsourceDetail(SortListMixin, DatasetMixin,
     def get_context_data(self, **kwargs):
         context = super(NewsourceDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
+        context['dataset'] = self.object.runcat.dataset
         return context
 
 
@@ -164,6 +172,7 @@ class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
     def get_context_data(self, **kwargs):
         context = super(RunningcatalogDetail, self).get_context_data(**kwargs)
         context['object'] = self.object
+        context['dataset'] = self.object.dataset
         return context
 
 

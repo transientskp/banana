@@ -4,108 +4,115 @@
 {% load tableheader %}
 {% load units %}
 
+{% block title %}Skyregion #{{ object.id }}{% endblock title %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset_id %}">Dataset {{ object.dataset_id }}</a></li>{% endblock %}
-{% block navdeeper %}<li class="active"><a href="{% url 'skyregion' db_name object.id %}">Skyregion {{ object.id }}</a></li>{% endblock %}
-
-{% block title %}Skyregion {{ object.id }} · Banana{% endblock title %}
+{% block header %}Skyregion #{{ object.id }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
 
 
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <h2>Skyregion #{{ object.id }}</h2>
-            <div class="col-md-2">
-                <div id='lightcurve'></div>
-                <dl class="dl-horizontal">
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <dl class="dl-horizontal">
 
-                    <dt>ID</dt>
-                    <dd><a href="{% url 'skyregion' db_name object.id %}">{{ object.id }}</a></dd>
+                            <dt>ID</dt>
+                            <dd><a href="{% url 'skyregion' db_name object.id %}">{{ object.id }}</a></dd>
 
-                    <dt>Dataset</dt>
-                    <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+                            <dt>Dataset</dt>
+                            <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
 
-                    <dt>Centre RA (°)</dt>
-                    <dd>{{ object.centre_ra|stringformat:".3f" }}</dd>
+                            <dt>Centre RA (°)</dt>
+                            <dd>{{ object.centre_ra|stringformat:".3f" }}</dd>
 
-                    <dt>Centre Dec (°)</dt>
-                    <dd>{{ object.centre_decl|stringformat:".3f" }}</dd>
+                            <dt>Centre Dec (°)</dt>
+                            <dd>{{ object.centre_decl|stringformat:".3f" }}</dd>
 
-                    <dt>xtr_radius</dt>
-                    <dd>{{object.xtr_radius}}</dd>
+                            <dt>xtr_radius</dt>
+                            <dd>{{object.xtr_radius}}</dd>
 
-                    <dt>x</dt>
-                    <dd>{{ object.x|stringformat:".3f" }}</dd>
+                            <dt>x</dt>
+                            <dd>{{ object.x|stringformat:".3f" }}</dd>
 
-                    <dt>y</dt>
-                    <dd>{{ object.x|stringformat:".3f" }}</dd>
+                            <dt>y</dt>
+                            <dd>{{ object.x|stringformat:".3f" }}</dd>
 
-                    <dt>z</dt>
-                    <dd>{{ object.x|stringformat:".3f" }}</dd>
+                            <dt>z</dt>
+                            <dd>{{ object.x|stringformat:".3f" }}</dd>
 
-                </dl>
+                        </dl>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <i class="fa fa-files-o"></i>
+                        <h3 class="box-title">Images in skyregion</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        {% if object_list %}
 
-            <div class="col-md-10">
-                {% if object_list %}
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    {% paginatorizer %}
+                                </div>
+                            </div>
 
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            {% paginatorizer %}
+                            <div class="row">
+                            <div class="col-md-12">
+                            <table class="table table-bordered table-striped responsive-utilities table-condensed" >
+                                <thead>
+                                <tr>
+                                    {% tableheader 'id' 'Id' %}
+                                    {% tableheader 'skyrgn__centre_ra' 'Center' %}
+                                    {% tableheader 'taustart_ts' 'Start time' %}
+                                    {% tableheader 'tau_time' 'Integration time <small>s</small>' %}
+                                    {% tableheader 'freq_eff' 'Frequency <small>Hz</small>' %}
+                                    {% tableheader 'freq_bw' 'Bandwidth <small>Hz</small>' %}
+                                    {% tableheader 'num_extractedsources' '# sources' %}
+                                    <th>Rejection</th>
+                                    {% tableheader 'url' 'Filename' %}
+                                    {% tableheader 'rms_qc' 'RMS<sub>qc</sub>' %}
+                                    {% tableheader 'rms_min' 'RMS<sub>min</sub>' %}
+                                    {% tableheader 'rms_max' 'RMS<sub>max</sub>' %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for image in object_list %}
+                                    <tr{% if image.rejections.all %} class="error"{% endif %}>
+                                        <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
+                                        <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
+                                        <td>{{ image.taustart_ts }}</td>
+                                        <td>{{ image.tau_time|scientific }}</td>
+                                        <td>{{ image.freq_eff|scientific  }}</td>
+                                        <td>{{ image.freq_bw|scientific  }}</td>
+                                        <td>{{ image.num_extractedsources }}</td>
+                                        <td>{{ image.rejections.all|join:" and " }}</td>
+                                        <td>{{ image.filename }}</td>
+                                        <td>{{ image.rms_qc|floatformat:3 }}</td>
+                                        <td>{{ image.rms_min|floatformat:3 }}</td>
+                                        <td>{{ image.rms_max|floatformat:3 }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    {% paginatorizer %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <h1 class="text-center">No images</h1>
+                        {% endif %}
+                        </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                    <div class="col-md-12">
-                    <table class="table table-bordered table-striped responsive-utilities table-condensed" >
-                        <thead>
-                        <tr>
-                            {% tableheader 'id' 'Id' %}
-                            {% tableheader 'skyrgn__centre_ra' 'Center' %}
-                            {% tableheader 'taustart_ts' 'Start time' %}
-                            {% tableheader 'tau_time' 'Integration time <small>s</small>' %}
-                            {% tableheader 'freq_eff' 'Frequency <small>Hz</small>' %}
-                            {% tableheader 'freq_bw' 'Bandwidth <small>Hz</small>' %}
-                            {% tableheader 'num_extractedsources' '# sources' %}
-                            <th>Rejection</th>
-                            {% tableheader 'url' 'Filename' %}
-                            {% tableheader 'rms_qc' 'RMS<sub>qc</sub>' %}
-                            {% tableheader 'rms_min' 'RMS<sub>min</sub>' %}
-                            {% tableheader 'rms_max' 'RMS<sub>max</sub>' %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for image in object_list %}
-                            <tr{% if image.rejections.all %} class="error"{% endif %}>
-                                <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
-                                <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
-                                <td>{{ image.taustart_ts }}</td>
-                                <td>{{ image.tau_time|scientific }}</td>
-                                <td>{{ image.freq_eff|scientific  }}</td>
-                                <td>{{ image.freq_bw|scientific  }}</td>
-                                <td>{{ image.num_extractedsources }}</td>
-                                <td>{{ image.rejections.all|join:" and " }}</td>
-                                <td>{{ image.filename }}</td>
-                                <td>{{ image.rms_qc|floatformat:3 }}</td>
-                                <td>{{ image.rms_min|floatformat:3 }}</td>
-                                <td>{{ image.rms_max|floatformat:3 }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            {% paginatorizer %}
-                        </div>
-                    </div>
-                {% else %}
-                    <h1 class="text-center">No images</h1>
-                {% endif %}
                 </div>
-                </div>
-
-
             </div>
         </div>
     </div>
