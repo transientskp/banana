@@ -68,9 +68,14 @@ class ViewTest(TestCase):
 
     def test_list_views_with_dataset(self):
         for list_view in self.list_views:
-            response = self.client.get(reverse(list_view,
-                                               kwargs={'db': test_db}) +
-                                       "?dataset=1")
+            try:
+                response = self.client.get(reverse(list_view,
+                                                   kwargs={'db': test_db}) +
+                                           "?dataset=1")
+            except Exception as e:
+                print "problem with " + list_view
+                raise
+
             self.assertEqual(response.status_code, 200)
 
     def test_detail_views(self):

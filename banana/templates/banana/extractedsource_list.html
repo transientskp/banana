@@ -23,7 +23,7 @@
                             <div class="col-md-4 text-center">
                                 <div class="btn-group">
                                     {% flux_units_dropdown %}
-                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default">CSV format</button></a>
+                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default">CSV format</button></a>
                                 </div>
                             </div>
                         </div>

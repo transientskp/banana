@@ -21,7 +21,7 @@
                                 {% paginatorizer %}
                             </div>
                             <div class="col-md-2 text-center">
-                                <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
+                                <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
                             </div>
                         </div>
                         <div class="row">
