@@ -157,11 +157,11 @@
                                         {% tableheader 'xtrsrc__f_peak' 'Peak flux (Jy beam<sup>-1</sup>)' %}
                                         {% tableheader 'xtrsrc__f_peak_err' 'Peak flux err (Jy beam<sup>-1</sup>)' %}
                     {% tableheader 'xtrsrc__chisq' 'χ<sup>2</sup>' %}
-                    {% tableheader 'xtrsrc__reduced_chisq' 'reduced χ<sup>2</sup>' %}
+                    {% tableheader 'xtrsrc__reduced_chisq' 'χ<sup>2</sup><sub>red</sub>' %}
                                         {% tableheader 'xtrsrc__extract_type' 'Extract type' %}
                                         {% tableheader 'xtrsrc__image' 'Image ID' %}
-                                        {% tableheader 'v_int' 'Vν' %}
-                                        {% tableheader 'eta_int' 'ην' %}
+                    {% tableheader 'v_int' 'V<sub>ν</sub>' %}
+                    {% tableheader 'eta_int' 'η<sub>ν</sub>' %}
                                         {% if request.GET.thumb == "1" %}
                                             {% tableheader 'thumbnail' %}
                                         {% endif %}
