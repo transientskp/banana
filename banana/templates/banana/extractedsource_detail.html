@@ -2,94 +2,102 @@
 
 {% load units %}
 
-{% block title %}Extracted Source · Banana{% endblock title %}
+{% block title %}Extracted Source #{{ object.id }}{% endblock title %}
 
-
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}
-<li><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">Dataset {{ extractedsource.image.dataset }}</a></li>
-{% endblock %}
-
-{% block navdeep %}
-<li><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
-{% endblock %}
-
-{% block navdeeper %}
-<li class="active"><a href="{% url 'extractedsource' db_name extractedsource.id%}">Extracted Source {{ extractedsource.id }}</a></li>
-{% endblock %}
+{% block header %}Extracted source #{{ object.id }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
 
 {% block content %}
-<h1>Extractedsource #{{ extractedsource.id }}</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa fa-info-circle"></i>
+                    <h3 class="box-title">Running catalog properties</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <dl class="dl-horizontal">
+                        <dt>Position (decimal)</dt>
+                        <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}&Prime;)</dd>
+
+                        <dt>Position (sexagesimal)</dt>
+                        <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</dd>
+
+                        <dt>Signal to noise</dt>
+                        <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
+
+                        <dt>Peak flux (Jy beam<sup>-1</sup>)</dt>
+                        <dd>{{ extractedsource.f_peak|scientific }} &pm; {{ extractedsource.f_peak_err|scientific }}</dd>
+
+                        <dt>Integrated flux (Jy)</dt>
+                        <dd>{{ extractedsource.f_int|scientific }} &pm; {{ extractedsource.f_int_err|scientific }}</dd>
+
+                        <dt>Dataset</dt>
+                        <dd><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></dd>
+
+                        <dt>Image</dt>
+                        <dd><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></dd>
+
+                        <dt>Running Catalogs</dt>
+                        <dd>
+                            {% for assocxtrsource in extractedsource.assocxtrsources.all %}
+                                <a href="{% url 'runningcatalog' db_name assocxtrsource.runcat.id %}">{{ assocxtrsource.runcat.id }}</a>
+                            {% empty %}
+                                None
+                            {% endfor %}
+                        </dd>
+
+                        <dt style='white-space: normal'>Semi-major axis (arcsec)</dt>
+                        <dd>{{ extractedsource.semimajor|scientific }}</dd>
+
+                        <dt style='white-space: normal'>Semi-minor axis (arcsec)</dt>
+                        <dd>{{ extractedsource.semiminor|scientific }}</dd>
+
+                        <dt>Position angle (deg)</dt>
+                        <dd>{{ extractedsource.pa|scientific }}</dd>
+
+                        <dt>extract_type</dt>
+                        <dd>{{ extractedsource.extract_type }}</dd>
+
+                        <dt>zone</dt>
+                        <dd>{{ extractedsource.zone }}</dd>
+
+                        <dt>x</dt>
+                        <dd>{{ extractedsource.x|scientific }}</dd>
+
+                        <dt>y</dt>
+                        <dd>{{ extractedsource.y|scientific }}</dd>
+
+                        <dt>z</dt>
+                        <dd>{{ extractedsource.z|scientific }}</dd>
+
+                        <dt>Margin</dt>
+                        <dd>{{ extractedsource.margin }}</dd>
+
+            <dt>χ<sup>2</sup></dt>
+            <dd>{{ extractedsource.chisq }}</dd>
+
+            <dt>χ<sup>2</sup><sub>red</sub></dt>
+            <dd>{{ extractedsource.reduced_chisq }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
 
-<div class="row">
-    <div class="col-md-6">
-        <dl class="dl-horizontal">
-            <dt>Position (decimal)</dt>
-            <dd>({{ extractedsource.ra|stringformat:".3f" }}&deg;, {{ extractedsource.decl|stringformat:".3f" }}&deg;) &pm; ({{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}&Prime;, {{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}&Prime;)</dd>
+        <div class="col-md-6">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <i class="fa  fa-television"></i>
+                    <h3 class="box-title">Extracted source sneak preview</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <img src="{% url 'extractedsource_plot' db_name extractedsource.id %}?size=3">
+                </div>
+            </div>
+        </div>
 
-            <dt>Position (sexagesimal)</dt>
-            <dd>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</dd>
-
-            <dt>Signal to noise</dt>
-            <dd>{{ extractedsource.det_sigma|stringformat:".3f" }}</dd>
-
-            <dt>Peak flux (Jy beam<sup>-1</sup>)</dt>
-            <dd>{{ extractedsource.f_peak|scientific }} &pm; {{ extractedsource.f_peak_err|scientific }}</dd>
-
-            <dt>Integrated flux (Jy)</dt>
-            <dd>{{ extractedsource.f_int|scientific }} &pm; {{ extractedsource.f_int_err|scientific }}</dd>
-
-            <dt>Dataset</dt>
-            <dd><a href="{% url 'dataset' db_name extractedsource.image.dataset.id %}">{{ extractedsource.image.dataset.id }}</a></dd>
-
-            <dt>Image</dt>
-            <dd><a href="{% url 'image' db_name extractedsource.image.id %}">{{ extractedsource.image.id }}</a></dd>
-
-            <dt>Running Catalogs</dt>
-            <dd>
-            {% for assocxtrsource in extractedsource.assocxtrsources.all %}
-            <a href="{% url 'runningcatalog' db_name assocxtrsource.runcat.id %}">{{ assocxtrsource.runcat.id }}</a>
-            {% empty %}
-                None
-            {% endfor %}
-            </dd>
-
-            <dt style='white-space: normal'>Semi-major axis (arcsec)</dt>
-            <dd>{{ extractedsource.semimajor|scientific }}</dd>
-
-            <dt style='white-space: normal'>Semi-minor axis (arcsec)</dt>
-            <dd>{{ extractedsource.semiminor|scientific }}</dd>
-
-            <dt>Position angle (deg)</dt>
-            <dd>{{ extractedsource.pa|scientific }}</dd>
-
-            <dt>extract_type</dt>
-            <dd>{{ extractedsource.extract_type }}</dd>
-
-            <dt>zone</dt>
-            <dd>{{ extractedsource.zone }}</dd>
-
-            <dt>x</dt>
-            <dd>{{ extractedsource.x|scientific }}</dd>
-
-            <dt>y</dt>
-            <dd>{{ extractedsource.y|scientific }}</dd>
-
-            <dt>z</dt>
-            <dd>{{ extractedsource.z|scientific }}</dd>
-
-            <dt>Margin</dt>
-            <dd>{{ extractedsource.margin }}</dd>
-
-        </dl>
     </div>
-
-    <div class="col-md-6">
-        <img src="{% url 'extractedsource_plot' db_name extractedsource.id %}?size=3">
-    </div>
-</div>
-
 {% endblock content %}
 

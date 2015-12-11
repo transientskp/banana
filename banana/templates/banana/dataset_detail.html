@@ -1,83 +1,68 @@
 {% extends "base.html" %}
 
-{% block title %}Dataset  {{ dataset.id }} · Banana{% endblock title %}
-
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}<li class="active"><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset }}</a></li>{% endblock navdataset %}
+{% block title %}Overview{% endblock title %}
 
 <!-- required for error bars -->
 {% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
+{% block header %}Dataset: {{ dataset.description }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
+
 
 {% block content %}
 
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-4">
-                <h2 class="text-center">{{ dataset.description }}</h2>
-                <dl class="dl-horizontal">
-                    <dt>Dataset ID</dt>
-                    <dd>{{ dataset.id }}</dd>
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <i class="glyphicon glyphicon-info-sign"></i>
+                        <h3 class="box-title">Dataset properties</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body">
+                        <dl class="dl-horizontal">
+                            <dt>Dataset ID</dt>
+                            <dd>{{ dataset.id }}</dd>
 
-                    <dt>Description</dt>
-                    <dd>{{ dataset.description }}</dd>
+                            <dt>Description</dt>
+                            <dd>{{ dataset.description }}</dd>
 
-                    <dt>Reprocessing step</dt>
-                    <dd>{{ dataset.rerun }}</dd>
+                            <dt>Reprocessing step</dt>
+                            <dd>{{ dataset.rerun }}</dd>
 
-                    <dt>Processing started</dt>
-                    <dd>{{ dataset.process_start_ts }}</dd>
+                            <dt>Processing started</dt>
+                            <dd>{{ dataset.process_start_ts }}</dd>
 
-                    <dt>Processing Finished</dt>
-                    <dd>{{ dataset.process_end_ts }}</dd>
+                            <dt>Processing Finished</dt>
+                            <dd>{{ dataset.process_end_ts }}</dd>
 
-                    <dt>New Sources</dt>
-                    <dd><a href="{% url 'newsources' db_name%}?dataset={{ dataset.id }}">{{ dataset.newsources.all.count }}</a></dd>
+                            <dt>New Sources</dt>
+                            <dd><a href="{% url 'newsources' db_name%}?dataset={{ dataset.id }}">{{ dataset.newsources.all.count }}</a></dd>
 
-                    <dt>Total image count</dt>
-                    <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
+                            <dt>Total image count</dt>
+                            <dd><a href="{% url 'images' db_name%}?dataset={{ dataset.id }}">{{ dataset.images.all.count }}</a></dd>
 
-                    <dt>Rejected image count</dt>
-                    <dd>{{ dataset.rejected_images.count }}</dd>
+                            <dt>Rejected image count</dt>
+                            <dd>{{ dataset.rejected_images.count }}</dd>
 
-                    <dt>running catalogs</dt>
-                    <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
+                            <dt>running catalogs</dt>
+                            <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
 
-                    <dt>extracted sources</dt>
-                    <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>
-                </dl>
-            </div>
+                            <dt>extracted sources</dt>
+                            <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>
+                        </dl>
+                    </div>
+                </div></div>
 
             <div class="col-md-8">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <div class="btn-group">
-                            <a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Images</button></a>
-                            <a href="{% url 'varmetrics' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Variability Metrics</button></a>
-                            <a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Running Catalogs</button></a>
-                            <a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Extracted Sources</button></a>
-                            <a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">New Sources</button></a>
-                            <a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Monitors</button></a>
-                            <a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><button type="button" class="btn btn-default btn-sm">Skyregions</button></a>
-                            <a href="{% url 'heatmap' db_name dataset.id %}"><button type="button" class="btn btn-default btn-sm">Heatmap</button></a>
-                        </div>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div id='sources_chart'></div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <hr>
-                        <div id='sources_chart'></div>
-                    </div></div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-8 offset4">
-
             </div>
         </div>
     </div>
-
 
     <script>
         $(function () {

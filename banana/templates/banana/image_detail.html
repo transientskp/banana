@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Image {{ object.id }} · Banana{% endblock title %}
+{% block title %}Image {{ object.id }}{% endblock title %}
 
 {% load tableheader %}
 {% load paginator %}
@@ -14,190 +14,202 @@
 
 {% endblock %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li><a href="{% url 'dataset' db_name object.dataset_id %}">Dataset {{ object.dataset_id }}</a></li>{% endblock %}
-{% block navdeep %}<li><a href="{% url 'images' db_name %}?dataset={{ object.dataset_id }}">Images</a></li>{% endblock %}
-{% block navdeeper %}<li class="active"><a href="{% url 'image' db_name object.id %}">Image {{ object.id }}</a></li>{% endblock %}
+{% block header %}Image {{ object.id }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <dl class="dl-horizontal">
-                    <dt>Image ID</dt>
-                    <dd>{{ object.id }}</dd>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+                            <dt>Image ID</dt>
+                            <dd>{{ object.id }}</dd>
 
-                    <dt>Dataset</dt>
-                    <dd>{{ object.dataset }}</dd>
+                            <dt>Dataset</dt>
+                            <dd>{{ object.dataset }}</dd>
 
-                    <dt>Centre</dt>
-                    <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
+                            <dt>Centre</dt>
+                            <dd>{{ object.skyrgn.centre_ra|floatformat:3 }}, {{ object.skyrgn.centre_decl|floatformat:3 }}</dd>
 
-                    <dt>start date (UT)</dt>
-                    <dd>{{ object.taustart_ts }}</dd>
+                            <dt>start date (UT)</dt>
+                            <dd>{{ object.taustart_ts }}</dd>
 
-                    <dt>Integration time</dt>
-                    <dd>{{ object.tau_time|floatformat:3 }}</dd>
+                            <dt>Integration time</dt>
+                            <dd>{{ object.tau_time|floatformat:3 }}</dd>
 
-                    <dt>Tau</dt>
-                    <dd>{{ object.tau }}</dd>
+                            <dt>Tau</dt>
+                            <dd>{{ object.tau }}</dd>
 
-                    <dt>Filename</dt>
-                    <dd>{{ object.filename }}</dd>
-                    
-                    <dt>Rejections</dt>
-                    <dd>{{ object.rejections.all|yesno }} </dd>
+                            <dt>Filename</dt>
+                            <dd>{{ object.filename }}</dd>
 
-
-                </dl>
-            </div>
-            <div class="col-md-4">
-                <dl class="dl-horizontal">
-
-                    <dt># of sources</dt>
-                    <dd>{{ object.extractedsources.count }}</dd>
-
-                    <dt># of blind extractions</dt>
-                    <dd>{{ object.blind_extractedsources.count }}</dd>
-
-                    <dt># of forced extractions</dt>
-                    <dd>{{ object.forced_extractedsources.count }}</dd>
-
-                    <dt>Frequency <small>Hz</small></dt>
-                    <dd>{{ object.freq_eff|scientific  }}</dd>
-
-                    <dt>Assigned Band</dt>
-                    <dd>{{ object.band }}</dd>
-
-                    <dt>Bandwidth <small>Hz</small></dt>
-                    <dd>{{ object.freq_bw|scientific }}</dd>
-
-                    <dt>Stokes</dt>
-                    <dd>{{ object.stokes }}</dd>
-
-                    <dt>Skyregion</dt>
-                    <dd><a href="{%  url 'skyregion' db_name object.skyrgn_id %}">{{ object.skyrgn.id }}</a></dd>
-
-
-
-
-                </dl>
-            </div>
-            <div class="col-md-4">
-                <dl class="dl-horizontal">
-
-                    <dt>rb_smaj</dt>
-                    <dd>{{ object.rb_smaj|floatformat:3 }}</dd>
-
-                    <dt>rb_smin</dt>
-                    <dd>{{ object.rb_smin|floatformat:3 }}</dd>
-
-                    <dt>rb_pa</dt>
-                    <dd>{{ object.rb_pa|floatformat:3 }}</dd>
-
-                    <dt>Delta X</dt>
-                    <dd>{{ object.deltax|floatformat:3 }}</dd>
-
-                    <dt>Delta Y</dt>
-                    <dd>{{ object.deltay|floatformat:3 }}</dd>
-
-                    <!--<dt>fwhm_arcsec</dt>-->
-                    <!--<dd>{{ object.fwhm_arcsec }}</dd>-->
-
-                    <!--<dt>fov_degrees</dt>-->
-                    <!--<dd>{{ object.fov_degrees }}</dd>-->
-
-                    <dt>RMS<sub>qc</sub></dt>
-                    <dd>{{ object.rms_qc|floatformat:3 }}</dd>
-
-                    <dt>RMS<sub>min</sub></dt>
-                    <dd>{{ object.rms_min|floatformat:3 }}</dd>
-
-                    <dt>RMS<sub>max</sub></dt>
-                    <dd>{{ object.rms_max|floatformat:3 }}</dd>
-                </dl>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-5">
-                <div data-spy="affix" >
-                    <div class="btn-group">
-                        <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
-                        {% with object.get_next_by_taustart_ts_only as next %}
-                            {% if next %}
-                                <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
-                            {% endif %}
-                        {% endwith %}
+                            <dt>Rejections</dt>
+                            <dd>{{ object.rejections.all|yesno }} </dd>
+                        </dl>
                     </div>
-                    <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+
+                            <dt># of sources</dt>
+                            <dd>{{ object.extractedsources.count }}</dd>
+
+                            <dt># of blind extractions</dt>
+                            <dd>{{ object.blind_extractedsources.count }}</dd>
+
+                            <dt># of forced extractions</dt>
+                            <dd>{{ object.forced_extractedsources.count }}</dd>
+
+                            <dt>Frequency <small>Hz</small></dt>
+                            <dd>{{ object.freq_eff|scientific  }}</dd>
+
+                            <dt>Assigned Band</dt>
+                            <dd>{{ object.band }}</dd>
+
+                            <dt>Bandwidth <small>Hz</small></dt>
+                            <dd>{{ object.freq_bw|scientific }}</dd>
+
+                            <dt>Stokes</dt>
+                            <dd>{{ object.stokes }}</dd>
+
+                            <dt>Skyregion</dt>
+                            <dd><a href="{%  url 'skyregion' db_name object.skyrgn_id %}">{{ object.skyrgn.id }}</a></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+
+                            <dt>rb_smaj</dt>
+                            <dd>{{ object.rb_smaj|floatformat:3 }}</dd>
+
+                            <dt>rb_smin</dt>
+                            <dd>{{ object.rb_smin|floatformat:3 }}</dd>
+
+                            <dt>rb_pa</dt>
+                            <dd>{{ object.rb_pa|floatformat:3 }}</dd>
+
+                            <dt>Delta X</dt>
+                            <dd>{{ object.deltax|floatformat:3 }}</dd>
+
+                            <dt>Delta Y</dt>
+                            <dd>{{ object.deltay|floatformat:3 }}</dd>
+
+                            <!--<dt>fwhm_arcsec</dt>-->
+                            <!--<dd>{{ object.fwhm_arcsec }}</dd>-->
+
+                            <!--<dt>fov_degrees</dt>-->
+                            <!--<dd>{{ object.fov_degrees }}</dd>-->
+
+                            <dt>RMS<sub>qc</sub></dt>
+                            <dd>{{ object.rms_qc|floatformat:3 }}</dd>
+
+                            <dt>RMS<sub>min</sub></dt>
+                            <dd>{{ object.rms_min|floatformat:3 }}</dd>
+
+                            <dt>RMS<sub>max</sub></dt>
+                            <dd>{{ object.rms_max|floatformat:3 }}</dd>
+                        </dl>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-7">
-                {% if object_list %}
-
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
                     <div class="row">
-                        <div class="col-md-6 text-right">
-                            {% paginatorizer %}
+                        <div class="col-md-5">
+
+                            <div  data-spy="affix">
+                                <div class="btn-group">
+                                    <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
+                                    {% with object.get_next_by_taustart_ts_only as next %}
+                                        {% if next %}
+                                            <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <img src="{% url 'image_plot' db_name object.id %}?size={{ image_size }}" class="map" usemap="#simple">
+                            </div>
                         </div>
-                        <div class="col-md-6 text-right">
-                            <div class="btn-group">
-                            {% flux_units_dropdown %}
-                            <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default">CSV format</button></a>
+
+                        <div class="col-md-7">
+                            <div class="box box-solid">
+                                <div class="box-body">
+                                    {% if object_list %}
+
+                                        <div class="row">
+                                            <div class="col-md-6 text-right">
+                                                {% paginatorizer %}
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <div class="btn-group">
+                                                    {% flux_units_dropdown %}
+                                                    <a href="?format=csv&{{ request.GET.urlencode }}"><button class="btn btn-default">CSV format</button></a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-bordered table-striped responsive-utilities table-condensed" >
+                                                    <thead>
+                                                    <tr>
+                                                        {% tableheader 'id' %}
+                                                        {% tableheader 'ra' 'Ra(°)'%}
+                                                        {% tableheader 'decl' 'Dec(°)' %}
+                                                        {% tableheader 'ra_err' 'Ra Error(″)'%}
+                                                        {% tableheader 'decl_err' 'Dec Error(″)' %}
+                                                        {% tableheader 'ra' 'Sexagesimal' %}
+                                                        {% tableheader 'f_peak' 'Peak Flux (Jy)' %}
+                                                        {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
+                                                        {% tableheader 'f_int' 'Int. flux (Jy)'  %}
+                                                        {% tableheader 'f_int_err' 'Int. flux err (Jy)' %}
+                                                        {% tableheader 'extract_type' 'Extract Type' %}
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for source in object_list %}
+                                                        <tr id="row{{ source.id }}">
+                                                            <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
+                                                            <td>{{ source.ra|floatformat:3 }}</td>
+                                                            <td>{{ source.decl|floatformat:3 }}</td>
+                                                            <td>{{ source.ra_err|deg2asec|floatformat:3 }}</td>
+                                                            <td>{{ source.decl_err|deg2asec|floatformat:3 }}</td>
+                                                            <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
+                                                            <td>{{ source.f_peak|flux_unit:flux_prefix|scientific }}</td>
+                                                            <td>{{ source.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
+                                                            <td>{{ source.f_int|flux_unit:flux_prefix|scientific }}</td>
+                                                            <td>{{ source.f_int_err|flux_unit:flux_prefix|scientific }}</td>
+                                                            <td>{{ source.extract_type }}</td>
+
+                                                        </tr>
+                                                        </a>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                {% paginatorizer %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <h1 class="text-center">No sources</h1>
+                                    {% endif %}
+
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                    <div class="col-md-12">
-                    <table class="table table-bordered table-striped responsive-utilities table-condensed" >
-                        <thead>
-                        <tr>
-                            {% tableheader 'id' %}
-                            {% tableheader 'ra' 'Ra(°)'%}
-                            {% tableheader 'decl' 'Dec(°)' %}
-                            {% tableheader 'ra_err' 'Ra Error(″)'%}
-                            {% tableheader 'decl_err' 'Dec Error(″)' %}
-                            {% tableheader 'ra' 'Sexagesimal' %}
-                            {% tableheader 'f_peak' 'Peak Flux (Jy)' %}
-                            {% tableheader 'f_peak_err' 'Peak Flux err (Jy)' %}
-                            {% tableheader 'f_int' 'Int. flux (Jy)'  %}
-                            {% tableheader 'f_int_err' 'Int. flux err (Jy)' %}
-                            {% tableheader 'extract_type' 'Extract Type' %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for source in object_list %}
-                            <tr id="row{{ source.id }}">
-                                <td><a href="{% url 'extractedsource' db_name source.id %}">{{ source.id }}</a></td>
-                                <td>{{ source.ra|floatformat:3 }}</td>
-                                <td>{{ source.decl|floatformat:3 }}</td>
-                                <td>{{ source.ra_err|deg2asec|floatformat:3 }}</td>
-                                <td>{{ source.decl_err|deg2asec|floatformat:3 }}</td>
-                                <td>{% sexagesimal source.ra source.decl source.ra_err source.decl_err %}</td>
-                                <td>{{ source.f_peak|flux_unit:flux_prefix|scientific }}</td>
-                                <td>{{ source.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
-                                <td>{{ source.f_int|flux_unit:flux_prefix|scientific }}</td>
-                                <td>{{ source.f_int_err|flux_unit:flux_prefix|scientific }}</td>
-                                <td>{{ source.extract_type }}</td>
-
-                            </tr>
-                            </a>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            {% paginatorizer %}
-                        </div>
-                    </div>
-                {% else %}
-                    <h1 class="text-center">No sources</h1>
-                {% endif %}
-                </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -215,8 +227,6 @@
             <area shape="circle" id="{{ id }}" coords="{{ x }}, {{ y }}, {{ size }}" href="{% url 'extractedsource' db_name id %}" alt="{{ id }}" title="{{ id }}" >
         {% endfor %}
     </map>
-
-
 
 {% endblock content %}
 

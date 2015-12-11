@@ -4,47 +4,58 @@
 {% load tableheader %}
 {% load units %}
 
+{% block title %}Monitoringlist #{{ object.id }}{% endblock title %}
 
+<<<<<<< HEAD
 {% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
 {% block navdataset %}<li>{% if object.runcat %}<a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a>{%  endif %}</li>{% endblock %}
 {% block navdeeper %}<li class="active"><a href="{% url 'monitor' db_name object.id %}">Monitor {{ object.id }}</a></li>{% endblock %}
 
 {% block title %}Monitor {{ object.id }} · Banana{% endblock title %}
 
+=======
+{% block header %}Monitoringlist #{{ object.id }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
+>>>>>>> master
 
 {% block content %}
     <div class="container-fluid">
         <div class="row">
-            <h2>Monitor #{{ object.id }}</h2>
-            <div class="col-md-7">
-                <div id='lightcurve'></div>
-                <dl class="dl-horizontal">
+            <div class="col-md-4">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <dl class="dl-horizontal">
+                            <dt>ID</dt>
+                            <dd><a href="{% url 'monitor' db_name object.id %}">{{ object.id }}</a></dd>
 
-                    <dt>ID</dt>
-                    <dd><a href="{% url 'monitor' db_name object.id %}">{{ object.id }}</a></dd>
+                            <dt>Dataset</dt>
+                            <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
 
-                    <dt>Dataset</dt>
-                    <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+                            <dt>RA (°)</dt>
+                            <dd>{{ object.ra|stringformat:".3f" }}</dd>
 
-                    <dt>RA (°)</dt>
-                    <dd>{{ object.ra|stringformat:".3f" }}</dd>
+                            <dt>Dec (°)</dt>
+                            <dd>{{ object.decl|stringformat:".3f" }}</dd>
 
-                    <dt>Dec (°)</dt>
-                    <dd>{{ object.decl|stringformat:".3f" }}</dd>
+                            <dt>RA (hh:mm:ss.s)</dt>
+                            <dd>{{object.ra|format_angle:"time"}}</dd>
 
-                    <dt>RA (hh:mm:ss.s)</dt>
-                    <dd>{{object.ra|format_angle:"time"}}</dd>
-
-                    <dt>Dec(dd:mm:ss.s)</dt>
-                    <dd>{{object.decl|format_angle:"dms"}}</dd>
-
+<<<<<<< HEAD
                     <dt>Running catalog</dt>
                     <dd>{% if object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a>{%  endif %}</dd>
+=======
+                            <dt>Dec(dd:mm:ss.s)</dt>
+                            <dd>{{object.decl|format_angle:"dms"}}</dd>
+>>>>>>> master
 
-                    <dt>Name</dt>
-                    <dd>{{ object.name }}</dd>
+                            <dt>Running catalog</dt>
+                            <dd>{% if object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}{% else %}None{% endif %}</a></dd>
 
-                </dl>
+                            <dt>Name</dt>
+                            <dd>{{ object.name }}</dd>
+                        </dl>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

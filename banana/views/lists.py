@@ -9,7 +9,7 @@ from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
                            Runningcatalog, schema_version, Monitor, Skyregion,
-                           Varmetric)
+                           Varmetric, Config)
 from banana.views.mixins import (HybridTemplateMixin,
                                  SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
@@ -36,6 +36,12 @@ class DatasetList(SortListMixin, HybridTemplateMixin, ListView):
     def get_queryset(self):
         qs = super(DatasetList, self).get_queryset()
         return qs.annotate(num_images=Count('images'))
+
+
+class ConfigList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
+    model = Config
+    paginate_by = 100
+    ordering = ['section']
 
 
 class ImageList(SortListMixin, HybridTemplateMixin,

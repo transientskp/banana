@@ -5,66 +5,61 @@
 {% load paginator %}
 {% load tableheader %}
 
-{% block title %}New Sources · Banana{% endblock title %}
-
-
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}
-    {% if dataset %}
-        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-    {% endif %}
-{% endblock %}
-
-{% block navdeep %}
-    <li class="active"><a href="{% url 'newsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">New sources</a></li>
-{% endblock %}
+{% block title %}New Sources{% endblock title %}
+{% block header %}New sources{% endblock %}
 
 
 {% block content %}
     <div class="container-fluid">
         {% if object_list %}
             <div class="row">
-
-                <div class="col-md-8 col-md-offset-2 text-center">
-                    {% paginatorizer %}
-                </div>
-
-                <div class="col-md-2 text-center">
-                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default" type="button">CSV format</button></a>
-                </div>
                 <div class="col-md-12">
-                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
-                        <thead>
-                        <tr>
-                            {% tableheader 'id' 'ID' %}
-                            {% tableheader 'runcat__wm_ra' 'Pos (°)' %}
-                            {% tableheader 'runcat__wm_ra' 'Pos (hh:mm:ss.s, dd:mm:ss.s)' %}
-                            {% tableheader 'trigger_xtrsrc__image__taustart_ts' 'Start date' %}
-                            {% tableheader 'runcat__datapoints' '# of points' %}
-                            {% tableheader 'runcat' 'Run. cat. #' %}
-                            {% tableheader 'trigger_xtrsrc' 'Trigger source' %}
-                            {% tableheader 'newsource_type' 'Source type' %}
-                            {% tableheader 'previous_limits_image' 'Limits image' %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for object in object_list %}
-                            <tr>
-                                <td><a href="{% url 'newsource' db_name object.id %}">{{ object.id }}</a></td>
-                                <td>{{ object.runcat.wm_ra|stringformat:".3f" }}, {{ object.runcat.wm_decl|stringformat:".3f" }}</td>
-                                <td>{{ object.runcat.wm_ra|format_angle:"time"}}, {{ object.runcat.wm_decl|format_angle:"dms" }}</td>
-                                <td>{{ object.trigger_xtrsrc.image.taustart_ts }} </td>
-                                <td>{{ object.runcat.datapoints }}</td>
-                                <td><a href ="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></td>
-                                <td><a href ="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></td>
-                                <td>{{ object.newsource_type }}</td>
-                                <td><a href ="{% url 'image' db_name object.previous_limits_image.id %}">{{ object.previous_limits_image.id }}</a></td>
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2 text-center">
+                                    {% paginatorizer %}
+                                </div>
 
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                                <div class="col-md-2 text-center">
+                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default" type="button">CSV format</button></a>
+                                </div>
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                                        <thead>
+                                        <tr>
+                                            {% tableheader 'id' 'ID' %}
+                                            {% tableheader 'runcat__wm_ra' 'Pos (°)' %}
+                                            {% tableheader 'runcat__wm_ra' 'Pos (hh:mm:ss.s, dd:mm:ss.s)' %}
+                                            {% tableheader 'trigger_xtrsrc__image__taustart_ts' 'Start date' %}
+                                            {% tableheader 'runcat__datapoints' '# of points' %}
+                                            {% tableheader 'runcat' 'Run. cat. #' %}
+                                            {% tableheader 'trigger_xtrsrc' 'Trigger source' %}
+                                            {% tableheader 'newsource_type' 'Source type' %}
+                                            {% tableheader 'previous_limits_image' 'Limits image' %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in object_list %}
+                                            <tr>
+                                                <td><a href="{% url 'newsource' db_name object.id %}">{{ object.id }}</a></td>
+                                                <td>{{ object.runcat.wm_ra|stringformat:".3f" }}, {{ object.runcat.wm_decl|stringformat:".3f" }}</td>
+                                                <td>{{ object.runcat.wm_ra|format_angle:"time"}}, {{ object.runcat.wm_decl|format_angle:"dms" }}</td>
+                                                <td>{{ object.trigger_xtrsrc.image.taustart_ts }} </td>
+                                                <td>{{ object.runcat.datapoints }}</td>
+                                                <td><a href ="{% url 'runningcatalog' db_name object.runcat %}">{{ object.runcat }}</a></td>
+                                                <td><a href ="{% url 'extractedsource' db_name object.trigger_xtrsrc %}">{{ object.trigger_xtrsrc }}</a></td>
+                                                <td>{{ object.newsource_type }}</td>
+                                                <td><a href ="{% url 'image' db_name object.previous_limits_image.id %}">{{ object.previous_limits_image.id }}</a></td>
+
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% else %}

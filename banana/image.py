@@ -88,9 +88,9 @@ def extracted_sources_pixels(image, size):
 
     # first convert positions to matplotlib image coordinates
     x_plot, y_plot = plot.world2pixel(x_world, y_world)
-    arcperpix = aplpy.wcs_util.arcperpix(plot._wcs)
-    w_plot = 3600.0 * w_world / arcperpix
-    h_plot = 3600.0 * h_world / arcperpix
+    arcperpix = aplpy.wcs_util.celestial_pixel_scale(plot._wcs)
+    w_plot = w_world / arcperpix
+    h_plot = h_world / arcperpix
 
     # then transform them to true pixel coordinates
     ax = fig.axes[0]
