@@ -92,7 +92,7 @@
                             <li><a href="{% url 'dataset' db_name dataset.id %}"><i class="fa fa-area-chart"></i><span>Overview</span></a></li>
                             <li><a href="{% url 'configs' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-gears"></i><span>Config</span></a></li>
                             <li><a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-file-image-o"></i><span>Images</span></a></li>
-                            <li><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-random"></i><span>Running Catalogs</span></a></li>
+                            <li><a href="{% url 'varmetrics' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-random"></i><span>Running Catalogs</span></a></li>
                             <li><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-circle-o"></i><span>Extracted Sources</span></a></li>
                             <li><a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-star-half-empty"></i><span>New Sources</span></a></li>
                             <li><a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-clone"></i><span>Monitors</span></a></li>

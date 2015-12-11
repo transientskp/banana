@@ -6,17 +6,8 @@
 
 {% block title %}Monitoringlist #{{ object.id }}{% endblock title %}
 
-<<<<<<< HEAD
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-{% block navdataset %}<li>{% if object.runcat %}<a href="{% url 'dataset' db_name object.runcat.dataset_id %}">Dataset {{ object.runcat.dataset_id }}</a>{%  endif %}</li>{% endblock %}
-{% block navdeeper %}<li class="active"><a href="{% url 'monitor' db_name object.id %}">Monitor {{ object.id }}</a></li>{% endblock %}
-
-{% block title %}Monitor {{ object.id }} · Banana{% endblock title %}
-
-=======
 {% block header %}Monitoringlist #{{ object.id }}{% endblock %}
 {% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
->>>>>>> master
 
 {% block content %}
     <div class="container-fluid">
@@ -40,13 +31,8 @@
                             <dt>RA (hh:mm:ss.s)</dt>
                             <dd>{{object.ra|format_angle:"time"}}</dd>
 
-<<<<<<< HEAD
-                    <dt>Running catalog</dt>
-                    <dd>{% if object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}</a>{%  endif %}</dd>
-=======
                             <dt>Dec(dd:mm:ss.s)</dt>
                             <dd>{{object.decl|format_angle:"dms"}}</dd>
->>>>>>> master
 
                             <dt>Running catalog</dt>
                             <dd>{% if object.runcat %}<a href="{% url 'runningcatalog' db_name object.runcat.id %}">{{ object.runcat }}{% else %}None{% endif %}</a></dd>

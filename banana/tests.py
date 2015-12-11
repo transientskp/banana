@@ -15,7 +15,6 @@ class ViewTest(TestCase):
         'images',
         'newsources',
         'extractedsources',
-        'runningcatalogs',
         'varmetrics',
         'monitors',
         'skyregions',

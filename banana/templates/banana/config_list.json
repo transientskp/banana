@@ -1,5 +1,5 @@
 [
-{% for dataset in dataset_list %}
+{% for object in object_list %}
     {
       "section": "{{ object.section }}",
       "key": "{{ object.key }}",
@@ -8,8 +8,3 @@
     }{% if not forloop.last %},{% endif %}
  {% endfor %}
 ]
-
-
-
-{% for object in object_list %}"
-{% endfor %}

@@ -97,20 +97,6 @@ class ExtractedsourcesList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
         return qs
 
 
-class RunningcatalogList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
-                         DatasetMixin, FilterView):
-
-    model = Runningcatalog
-    template_name = "banana/runningcatalog_filter.html"
-    filterset_class = RunningcatalogFilter
-    paginate_by = 100
-
-    def get_queryset(self):
-        qs = super(RunningcatalogList, self).get_queryset()
-        qs = qs.prefetch_related('newsource')
-        return qs
-
-
 class VarmetricList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
                     DatasetMixin, FilterView):
 
