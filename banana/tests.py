@@ -15,8 +15,7 @@ class ViewTest(TestCase):
         'images',
         'newsources',
         'extractedsources',
-        'runningcatalogs',
-        'augmentedrunningcatalogs',
+        'varmetrics',
         'monitors',
         'skyregions',
         'configs',
@@ -27,7 +26,6 @@ class ViewTest(TestCase):
         'dataset',
         'extractedsource',
         'runningcatalog',
-        'augmentedrunningcatalog',
         'image',
         'bigimage',
         'monitor',
@@ -40,15 +38,21 @@ class ViewTest(TestCase):
 
     def test_list_views(self):
         for list_view in self.list_views:
-            response = self.client.get(reverse(list_view,
-                                               kwargs={'db': test_db}))
+            try:
+                response = self.client.get(reverse(list_view,
+                                                   kwargs={'db': test_db}))
+            except:
+                print("problem with view %s" % list_view)
+                raise
             self.assertEqual(response.status_code, 200)
 
     def test_list_csv_views(self):
         for list_view in self.list_views:
-            response = self.client.get(reverse(list_view,
-                                               kwargs={'db': test_db}) +
-                                       "?format=csv")
+            try:
+                response = self.client.get(reverse(list_view, kwargs={'db': test_db}) + "?format=csv")
+            except:
+                print("problem with csv view %s" % list_view)
+                raise
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response['content-type'], 'text/csv')
             for row in response.content.split():
@@ -84,8 +88,8 @@ class ViewTest(TestCase):
                 response = self.client.get(reverse(detail_view,
                                                    kwargs={'db': test_db,
                                                            'pk': 1}))
-            except:
-                print "%s view failed" % detail_view
+            except Exception as e:
+                print "%s detail view failed" % detail_view
                 raise
             self.assertEqual(response.status_code, 200, "%s view didn't give 200" %
                              detail_view)

@@ -46,7 +46,7 @@
                             <dd>{{ dataset.rejected_images.count }}</dd>
 
                             <dt>running catalogs</dt>
-                            <dd><a href="{% url 'runningcatalogs' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
+                            <dd><a href="{% url 'varmetrics' db_name %}?dataset={{ dataset.id }}">{{ dataset.runningcatalogs.all.count }}</a></dd>
 
                             <dt>extracted sources</dt>
                             <dd><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}">{{ num_extractedsources }}</a></dd>

@@ -91,6 +91,20 @@
                                 <dt>New source</dt>
                                 <dd>{% if object.newsource %}Yes{% else %}No{% endif %}</dd>
 
+
+                                <dt>ην</dt>
+                                <dd>{% if object.eta_int %}{{ object.eta_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                                <dt>Vν</dt>
+                                <dd>{% if object.v_int %}{{  object.v_int|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                                <dt>Σ<sub>RMS<sub>min</sub></sub></dt>
+                                <dd>{% if object.sigma_rms_min %}{{  object.sigma_rms_min|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+                                <dt>Σ<sub>RMS<sub>max</sub></sub></dt>
+                                <dd>{% if object.sigma_rms_max %}{{  object.sigma_rms_max|stringformat:".3f" }}{% else %}None{% endif %}</dd>
+
+
                                 <dt>Skyregions</dt>
                                 <dd>{% for skyregion in object.skyregions.all %}<a href="{% url 'skyregion' db_name skyregion.id %}">{{skyregion.id }}</a>{% if not forloop.last %},{% endif %}{% empty %}None{% endfor %}</dd>
 
@@ -110,6 +124,16 @@
 
                                 <dt>Dataset</dt>
                                 <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
+
+
+                                <dt>Max int. flux (Jy)</dt>
+                                <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
+
+                                <dt>Mean int. flux (Jy)</dt>
+                                <dd>{{ object.lightcurve_avg|stringformat:".3f" }}</dd>
+
+                                <dt>Median int. flux (Jy)</dt>
+                                <dd>{{ object.lightcurve_median|stringformat:".3f" }}</dd>
                             </dl>
                         </div>
                     </div>
@@ -133,12 +157,11 @@
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <div class="btn-group">
-                                        <a href="{%  url 'augmentedrunningcatalog' db_name object.id %}"><button class="btn btn-default">Augmented runningcatalog</button></a>
                                         <a href="http://simbad.u-strasbg.fr/simbad/sim-coo?CooEpoch=2000&Coord={{ object.wm_ra }}d{{ object.wm_decl }}d&Radius.unit=arcmin&CooEqui=2000&CooFrame=FK5&Radius=10"><button class="btn btn-default">Simbad</button></a>
                                         <a href="?format=csv"><button class="btn btn-default">CSV format</button></a>
                                         <a href="?{% query_invert_bool 'thumb' %}"><button class="btn btn-default">Thumbnails</button></a>
                                         {% flux_units_dropdown %}
-                                        <a href="{% url 'runningcatalogs' db_name %}?wm_ra_0={{ object.wm_ra|float_substract:"0.03"|scientific }}&wm_ra_1={{ object.wm_ra|float_add:"0.03"|scientific }}&wm_decl_0={{ object.wm_decl|float_substract:"0.03"|scientific }}&wm_decl_1={{ object.wm_decl|float_add:"0.03"|scientific }}&dataset={{ object.dataset_id }}">
+                                        <a href="{% url 'varmetrics' db_name %}?wm_ra_0={{ object.wm_ra|float_substract:"0.03"|scientific }}&wm_ra_1={{ object.wm_ra|float_add:"0.03"|scientific }}&wm_decl_0={{ object.wm_decl|float_substract:"0.03"|scientific }}&wm_decl_1={{ object.wm_decl|float_add:"0.03"|scientific }}&dataset={{ object.dataset_id }}">
                                             <button class="btn btn-default">Possible Associations</button>
                                         </a>
                                     </div>
@@ -242,4 +265,3 @@
     <script src="{{ STATIC_URL }}lightcurve.js"></script>
 
 {% endblock content %}
-
