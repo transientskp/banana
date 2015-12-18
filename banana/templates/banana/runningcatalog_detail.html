@@ -125,6 +125,8 @@
                                 <dt>Dataset</dt>
                                 <dd><a href="{% url 'dataset' db_name object.dataset.id %}">{{ object.dataset }}</a></dd>
 
+                                <dt>Number of forced fits</dt>
+                                <dd>{{ object.forcedfits_count }}</dd>
 
                                 <dt>Max int. flux (Jy)</dt>
                                 <dd>{{ object.lightcurve_max|stringformat:".3f" }}</dd>
