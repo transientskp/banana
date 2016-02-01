@@ -14,6 +14,19 @@ logger = logging.getLogger(__name__)
 source_colors = ['yellow', 'lightgreen', 'cyan']
 
 
+def get_figsize(hdu, long_edge_inches=5):
+    """
+    Returns tuple of (width,height) in inches.
+    """
+    primary_hdr=hdu[0]
+    y,x = primary_hdr.data.squeeze().shape
+
+    long_edge_pixels = float(max(x,y))
+    width = long_edge_inches* x / long_edge_pixels
+    height = long_edge_inches* y / long_edge_pixels
+    return (width,height)
+
+
 def image_plot(pyfits_hdu, size=5, sources=[]):
     """
     Plot image from fits HDU and draw circles around sources.
@@ -27,7 +40,7 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
         a matplotlib canvas which can be used to write the image to
         something (like a django HTTP resonse)
     """
-    fig = pyplot.figure(figsize=(size, size))
+    fig = pyplot.figure(figsize=get_figsize(pyfits_hdu,long_edge_inches=size))
     plot = aplpy.FITSFigure(pyfits_hdu, figure=fig, subplot=[0, 0, 1, 1],
                             auto_refresh=False)
     plot.show_grayscale()
@@ -67,7 +80,7 @@ def extracted_sources_pixels(image, size):
         return None
 
     # make an image
-    fig = pyplot.figure(figsize=(size, size))
+    fig = pyplot.figure(figsize=get_figsize(hdu,long_edge_inches=size))
     plot = aplpy.FITSFigure(hdu, figure=fig, subplot=[0, 0, 1, 1],
                             auto_refresh=False)
 
@@ -112,7 +125,7 @@ def extracted_sources_pixels(image, size):
 
 
 def extractedsource(hdu, source, size=1):
-    fig = pyplot.figure(figsize=(size, size))
+    fig = pyplot.figure(figsize=get_figsize(hdu, long_edge_inches=size))
     fits = aplpy.FITSFigure(hdu, figure=fig, subplot=[0, 0, 1, 1],
                             auto_refresh=False)
     fits.show_colorscale()
