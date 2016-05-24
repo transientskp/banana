@@ -6,87 +6,81 @@
 {% load flux_units_dropdown %}
 {% load extract_type %}
 
-{% block title %}Extracted Sources · Banana{% endblock title %}
+{% block title %}Extracted Sources{% endblock title %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}
-{% if dataset %}
-<li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-{% endif %}
-{% endblock %}
-
-{% block navdeep %}
-<li class="active"><a href="{% url 'extractedsources' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Extracted Sources</a></li>
-{% endblock %}
+{% block header %}List of extracted sources{% endblock %}
 
 {% block content %}
+    {% if extractedsource_list %}
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center col-md-offset-4">
+                                {% paginatorizer %}
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="btn-group">
+                                    {% flux_units_dropdown %}
+                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default">CSV format</button></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                                    <thead>
+                                    <tr>
+                                        {% tableheader 'id' %}
+                                        <th>runcat</th>
+                                        {% tableheader 'ra' 'Ra (°)' %}
+                                        {% tableheader 'ra_err' 'Ra Error (″)' %}
+                                        {% tableheader 'decl' 'Dec (°)'  %}
+                                        {% tableheader 'decl_err' 'Dec Error (″)' %}
+                                        {% tableheader 'ra' 'Sexagesimal' %}
+                                        {% tableheader 'det_sigma' %}
+                                        {% tableheader 'f_peak' 'Peak (Jy)' %}
+                                        {% tableheader 'f_peak_err' 'Peak ± (Jy)' %}
+                                        {% tableheader 'f_int' 'Int. (Jy)' %}
+                                        {% tableheader 'f_int_err' 'Int  ± (Jy)' %}
+                                        {% tableheader 'extract_type' %}
+                                    </tr>
+                                    </thead>
 
-{% if extractedsource_list %}
-<div class="row">
-    <div class="col-md-12 text-center">
-        <div class="btn-group">
-        {% flux_units_dropdown %}
-        <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default">CSV format</button></a>
+                                    <tbody>
+                                    {% for extractedsource in extractedsource_list %}
+                                        <tr>
+                                            <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
+                                            <td>{{ extractedsource.runningcatalog_set.all|join:", " }}</td>
+                                            <td>{{ extractedsource.ra|stringformat:".3f" }}</td>
+                                            <td>{{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}</td>
+                                            <td>{{ extractedsource.decl|stringformat:".3f" }}</td>
+                                            <td>{{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}</td>
+                                            <td>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</td>
+                                            <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
+                                            <td>{{ extractedsource.f_peak|flux_unit:flux_prefix|scientific }}</td>
+                                            <td>{{ extractedsource.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
+                                            <td>{{ extractedsource.f_int|flux_unit:flux_prefix|scientific }}</td>
+                                            <td>{{ extractedsource.f_int_err|flux_unit:flux_prefix|scientific }}</td>
+                                            <td>{{ extractedsource.extract_type|extract_type }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-12 text-center">
+                                {% paginatorizer %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <div class="col-md-12 text-center">
-
-        {% paginatorizer %}
-    </div>
-
-    <div class="col-md-12">
-        <table class="table table-bordered table-striped responsive-utilities table-condensed " >
-            <thead>
-            <tr>
-                {% tableheader 'id' %}
-                <th>runcat</th>
-                {% tableheader 'ra' 'Ra (°)' %}
-                {% tableheader 'ra_err' 'Ra Error (″)' %}
-                {% tableheader 'decl' 'Dec (°)'  %}
-                {% tableheader 'decl_err' 'Dec Error (″)' %}
-                {% tableheader 'ra' 'Sexagesimal' %}
-                {% tableheader 'det_sigma' %}
-                {% tableheader 'f_peak' 'Peak (Jy)' %}
-                {% tableheader 'f_peak_err' 'Peak ± (Jy)' %}
-                {% tableheader 'f_int' 'Int. (Jy)' %}
-                {% tableheader 'f_int_err' 'Int  ± (Jy)' %}
-                {% tableheader 'extract_type' %}
-            </tr>
-            </thead>
-
-            <tbody>
-            {% for extractedsource in extractedsource_list %}
-            <tr>
-                <td><a href="{% url 'extractedsource' db_name extractedsource.id %}">{{ extractedsource.id }}</a></td>
-                <td>{{ extractedsource.runningcatalog_set.all|join:", " }}</td>
-                <td>{{ extractedsource.ra|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.ra_err|deg2asec|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.decl|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.decl_err|deg2asec|stringformat:".3f" }}</td>
-                <td>{% sexagesimal extractedsource.ra extractedsource.decl extractedsource.ra_err extractedsource.decl_err %}</td>
-                <td>{{ extractedsource.det_sigma|stringformat:".3f" }}</td>
-                <td>{{ extractedsource.f_peak|flux_unit:flux_prefix|scientific }}</td>
-                <td>{{ extractedsource.f_peak_err|flux_unit:flux_prefix|scientific }}</td>
-                <td>{{ extractedsource.f_int|flux_unit:flux_prefix|scientific }}</td>
-                <td>{{ extractedsource.f_int_err|flux_unit:flux_prefix|scientific }}</td>
-                <td>{{ extractedsource.extract_type|extract_type }}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-md-12 text-center">
-        {% paginatorizer %}
-    </div>
-
-
-</div>
-{% else %}
-<h1 class="text-center">No Extracted Sources</h1>
-{% endif %}
-
-
+    {% else %}
+        <h1 class="text-center">No Extracted Sources</h1>
+    {% endif %}
 {% endblock content %}

@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}Banana{% endblock title %}</title>
+    <title>Banana · {% if dataset %}dataset {{ dataset.id }} in {% endif %}{% if db_name %}db {{ db_name }} · {% endif %}{% block title %}{% endblock title %}</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}adminlte/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+          page. However, you can choose any other skin. Make sure you
+          apply the skin class to the body tag so the changes take effect.
+    -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}adminlte/css/skins/skin-blue.min.css">
 
     <script src="{{ STATIC_URL }}jquery/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{ STATIC_URL }}adminlte/js/app.min.js"></script>
     <script src="{{ STATIC_URL }}highcharts/highcharts.js"></script>
     <script src="{{ STATIC_URL }}highcharts/exporting.js"></script>
+
 
     {% block morehead %}{% endblock %}
 
@@ -20,58 +32,112 @@
     <link rel="shortcut icon" href="{{ STATIC_URL }}favicon.ico"/>
 </head>
 
-<body>
-<nav class="navbar navbar-default" role="navigation">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#"><img src="{{ STATIC_URL }}logo.png" width=20 height=15></a>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                {% block navmain %}<li><a href="{% url 'databases' %}">Databases</a></li>{% endblock navmain %}
-                {% block navdatabase %}{% endblock navdatabase %}
-                {% block navdataset %}{% endblock navdataset %}
-                {% block navdeep %}{% endblock %}
-                {% block navdeeper %}{% endblock %}
-                {% block navdepest %}{% endblock %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                    <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
-                    {% if user.is_staff %}
-                        <li class="divider-vertical"></li>
-                        <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                        <li class="divider-vertical"></li>
-                    {% endif %}
-                    <li class="divider-vertical"></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
 
-                {% else %}
-                    <li><a href="{% url 'login' %}">Login</a></li>
+    <!-- Main Header -->
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="{% url 'databases' %}" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><img src="{{ STATIC_URL }}logo.png" width=20 height=15></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><img src="{{ STATIC_URL }}logo.png" width=20 height=15> <b>B</b>anana <B>3.0</B></span>
+        </a>
+
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li><p class="navbar-text">Logged in as {{ user.username }}</p></li>
+                        {% if user.is_staff %}
+                            <li class="divider-vertical"></li>
+                            <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                            <li class="divider-vertical"></li>
+                        {% endif %}
+                        <li class="divider-vertical"></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'databases' %}"><i class="fa fa-clone"></i><span>Databases</span></a></li>
+                {% if db_name %}
+                    <li><a href="{% url 'datasets' db_name %}"><i class="fa fa-align-justify"></i><span>database: {{ db_name }}</span></a></li>
                 {% endif %}
 
-            </ul>
+                {% if dataset %}
+                    <li class="treeview active">
+                        <a href="#">
+                            <i class="fa fa-table"></i><span>dataset: {{ dataset }}</span></a>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{% url 'dataset' db_name dataset.id %}"><i class="fa fa-area-chart"></i><span>Overview</span></a></li>
+                            <li><a href="{% url 'configs' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-gears"></i><span>Config</span></a></li>
+                            <li><a href="{% url 'images' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-file-image-o"></i><span>Images</span></a></li>
+                            <li><a href="{% url 'varmetrics' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-random"></i><span>Running Catalogs</span></a></li>
+                            <li><a href="{% url 'extractedsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-circle-o"></i><span>Extracted Sources</span></a></li>
+                            <li><a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-star-half-empty"></i><span>New Sources</span></a></li>
+                            <li><a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-clone"></i><span>Monitors</span></a></li>
+                            <li><a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-map-o"></i><span>Skyregions</span></a></li>
+                            <li><a href="{% url 'heatmap' db_name dataset.id %}"><i class="fa  fa-expand"></i><span>Heatmap</span></a></li>
+                        </ul>
+                    </li>
+                {% endif %}
 
-        </div>
+            </ul><!-- /.sidebar-menu -->
+
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                {% block header %}page header{% endblock %}
+                <small>{% block description %}{% if dataset %}dataset #{{ dataset.id }} in {%  endif %}database {{ db_name }}{% endblock %}</small>
+            </h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>{{ message.tags }}</strong> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="container-fluid">
+                {% block content %}
+                    Put something here
+                {% endblock content %}
+            </div>
+        </section>
     </div>
-</nav>
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>{{ message.tags }}</strong> {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-
-<div class="container-fluid">
-    {% block content %}
-        Put something here
-    {% endblock content %}
 </div>
-
 </body>
 </html>

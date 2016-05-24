@@ -1,0 +1,3 @@
+# section, key, value, type
+{% for object in object_list %}"{{ object.section }}", "{{ object.key }}", "{{ object.value }}", "{{ object.type }}"
+{% endfor %}

@@ -20,7 +20,7 @@ def monetdb_list(host, port, passphrase):
     returns a list of MonetDB databases
     """
     try:
-        monetdb_control = monetdb.control.Control(host, port, passphrase)
+        monetdb_control = pymonetdb.control.Control(host, port, passphrase)
         statuses = monetdb_control.status()
     except socket.error as e:
         logger.error(str(e))

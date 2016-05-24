@@ -4,80 +4,81 @@
 {% load tableheader %}
 {% load units %}
 
-{% block title %}Images · Banana{% endblock title %}
+{% block title %}Images{% endblock title %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
+{% block header %}List of images{% endblock %}
 
-{% block navdataset %}
-    {% if dataset %}
-        <li><a href="{% url 'dataset' db_name dataset %}">Dataset {{ dataset }}</a></li>
-    {% endif %}
-{% endblock %}
-
-{% block navdeep %}
-    <li class="active"><a href="{% url 'images' db_name %}{% if dataset %}?dataset={{ dataset }}{% endif %}">Images</a></li>
-{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
-        {% if image_list %}
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2 text-center">
-                    {% paginatorizer %}
-                </div>
-                <div class="col-md-2 text-center">
-                    <a href="?format=csv{% if dataset %}&dataset={{ dataset }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <table class="table table-striped table-condensed table-hover table-bordered">
-                        <thead>
-                        <tr>
-                            {% tableheader 'id' 'Id' %}
-                            {% tableheader 'skyrgn__centre_ra' 'Center' %}
-                            {% tableheader 'taustart_ts' 'Start time' %}
-                            {% tableheader 'tau_time' 'Integration time <small>s</small>' %}
-                            {% tableheader 'freq_eff' 'Frequency <small>Hz</small>' %}
-                            {% tableheader 'freq_bw' 'Bandwidth <small>Hz</small>' %}
-                            {% tableheader 'num_extractedsources' '# sources' %}
-                            <th>Rejection</th>
-                            {% tableheader 'url' 'Filename' %}
-                            {% tableheader 'rms_qc' 'RMS<sub>qc</sub>' %}
-                            {% tableheader 'rms_min' 'RMS<sub>min</sub>' %}
-                            {% tableheader 'rms_max' 'RMS<sub>max</sub>' %}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for image in image_list %}
-                            <tr{% if image.rejections.all %} class="error"{% endif %}>
-                                <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
-                                <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
-                                <td>{{ image.taustart_ts }}</td>
-                                <td>{{ image.tau_time|scientific }}</td>
-                                <td>{{ image.freq_eff|scientific  }}</td>
-                                <td>{{ image.freq_bw|scientific  }}</td>
-                                <td>{{ image.num_extractedsources }}</td>
-                                <td>{{ image.rejections.all|join:" and " }}</td>
-                                <td>{{ image.filename }}</td>
-                                <td>{{ image.rms_qc|floatformat:3 }}</td>
-                                <td>{{ image.rms_min|floatformat:3 }}</td>
-                                <td>{{ image.rms_max|floatformat:3 }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
 
-            <div class="col-md-12 text-center">
-                {% paginatorizer %}
-            </div>
+                    {% if image_list %}
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2 text-center">
+                                {% paginatorizer %}
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default btn-sm">CSV format</button></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <table class="table table-striped table-condensed table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        {% tableheader 'id' 'Id' %}
+                                        {% tableheader 'skyrgn__centre_ra' 'Center' %}
+                                        {% tableheader 'taustart_ts' 'Start time' %}
+                                        {% tableheader 'tau_time' 'Integration time <small>s</small>' %}
+                                        {% tableheader 'freq_eff' 'Frequency <small>Hz</small>' %}
+                                        {% tableheader 'freq_bw' 'Bandwidth <small>Hz</small>' %}
+                                        {% tableheader 'num_extractedsources' '# of sources' %}
+                                        {% tableheader 'num_blind_extractedsources' 'blind src #' %}
+                                        {% tableheader 'num_forced_extractedsources' 'forced src #' %}
+                                        <th>Rejection</th>
+                                        {% tableheader 'url' 'Filename' %}
+                                        {% tableheader 'rms_qc' 'RMS<sub>qc</sub>' %}
+                                        {% tableheader 'rms_min' 'RMS<sub>min</sub>' %}
+                                        {% tableheader 'rms_max' 'RMS<sub>max</sub>' %}
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for image in image_list %}
+                                        <tr{% if image.rejections.all %} class="error"{% endif %}>
+                                            <td><a href="{% url 'image' db_name image.id %}">{{ image.id }}</a></td>
+                                            <td>{{ image.skyrgn.centre_ra|floatformat:3 }}, {{ image.skyrgn.centre_decl|floatformat:3 }}</td>
+                                            <td>{{ image.taustart_ts }}</td>
+                                            <td>{{ image.tau_time|scientific }}</td>
+                                            <td>{{ image.freq_eff|scientific  }}</td>
+                                            <td>{{ image.freq_bw|scientific  }}</td>
+                                            <td>{{ image.num_extractedsources }}</td>
+                                            <td>{{ image.num_blind_extractedsources }}</td>
+                                            <td>{{ image.num_forced_extractedsources }}</td>
+                                            <td>{{ image.rejections.all|join:" and " }}</td>
+                                            <td>{{ image.filename }}</td>
+                                            <td>{{ image.rms_qc|floatformat:3 }}</td>
+                                            <td>{{ image.rms_min|floatformat:3 }}</td>
+                                            <td>{{ image.rms_max|floatformat:3 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-        {% else %}
-            <h1 class="text-center">No images</h1>
-        {% endif %}
+                        <div class="col-md-12 text-center">
+                            {% paginatorizer %}
+                        </div>
+
+                    {% else %}
+                        <h1 class="text-center">No images</h1>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
-
 {% endblock content %}
 

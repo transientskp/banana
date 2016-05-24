@@ -1,12 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Banana  · Dataset {{ dataset.id }} heatmap {% endblock title %}
+{% block title %}Heatmap {% endblock title %}
 
-{% block navdatabase %}<li><a href="{% url 'datasets' db_name %}">Database {{ db_name }}</a></li>{% endblock navdatabase %}
-
-{% block navdataset %}<li><a href="{% url 'dataset' db_name dataset.id %}">Dataset {{ dataset }}</a></li>{% endblock navdataset %}
-
-{% block navdeep %}<li class="active"><a href="#">Heatmap</a></li>{% endblock navdeep %}
+{% block header %}Heatmap {{ dataset.description }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
 
 <!-- required for error bars -->
 {% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
@@ -16,13 +13,15 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 text-center">
-                <div id='heatmap'></div>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div id='heatmap'></div>
+                    </div>
+                </div>
             </div>
         </div>
 
     </div>
-
-
 
     <script>
         $(function () {

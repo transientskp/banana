@@ -1,15 +1,15 @@
 django>=1.8,<1.9
 djonet>=0.3,<1.1
 pymonetdb
-astropy==0.4
-aplpy==0.9.12
+astropy==1.0.6
+APLpy==1.0
 numpy>=1.8
 pymongo>=3.0
 matplotlib>=1.3,<2.0
 pywcs>=1.11,<2.0
 python-dateutil>=1.5,<3.0
 psycopg2>=2.5
-GitPython==0.3.2.RC1
+GitPython==0.3.6
 pytz>=2012c
 django-filter>=0.7
 

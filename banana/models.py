@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 
-schema_version = 34
+schema_version = 38
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -260,6 +260,22 @@ class Image(models.Model):
     def filename(self):
         if self.url:
             return self.url.split('/')[-1]
+            
+    def blind_extractedsources(self):
+        """
+        returns only the blindly extracted sources for the image (extract_type 0)
+        """
+        return Extractedsource.objects.using(self._state.db). \
+            filter(image=self). \
+            filter(extract_type=0)
+            
+    def forced_extractedsources(self):
+        """
+        returns only the forcefully extracted sources for the image (extract_type 1)
+        """
+        return Extractedsource.objects.using(self._state.db). \
+            filter(image=self). \
+            filter(extract_type=1)
 
     def get_next_by_taustart_ts_only(self):
         """
@@ -289,7 +305,7 @@ class Monitor(models.Model):
     decl = models.FloatField()
     runcat = models.ForeignKey('Runningcatalog', db_column='runcat',
                                blank=True, null=True, related_name='monitors')
-    name = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -298,7 +314,8 @@ class Monitor(models.Model):
 
 class Newsource(models.Model):
     id = models.IntegerField(primary_key=True)
-    runcat = models.OneToOneField('Runningcatalog', db_column='runcat')
+    runcat = models.OneToOneField('Runningcatalog', db_column='runcat',
+                                  related_name='newsource')
     trigger_xtrsrc = models.ForeignKey(Extractedsource,
                                        db_column='trigger_xtrsrc')
     newsource_type = models.SmallIntegerField()
@@ -388,6 +405,7 @@ class Runningcatalog(models.Model):
                                               through=Assocxtrsource)
 
     skyregions = models.ManyToManyField('Skyregion', through=Assocskyrgn)
+    forcedfits_count = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "%s" % self.id
@@ -404,50 +422,6 @@ class Runningcatalog(models.Model):
     class Meta:
         managed = False
         db_table = 'runningcatalog'
-
-
-class AugmentedRunningcatalog(models.Model):
-    id = models.IntegerField(primary_key=True)
-
-    # we don't create a reverse mapping here, since this is only the first
-    # extracted source
-    xtrsrc = models.ForeignKey(Extractedsource, db_column='xtrsrc',
-                               related_name='+', blank=True, null=True)
-    dataset = models.ForeignKey(Dataset, db_column='dataset',
-                                related_name='augmented_runningcatalogs',
-                                blank=True, null=True)
-    datapoints = models.IntegerField(blank=True, null=True)
-    wm_ra = models.FloatField(blank=True, null=True)
-    wm_decl = models.FloatField(blank=True, null=True)
-    wm_uncertainty_ew = models.FloatField(blank=True, null=True)
-    wm_uncertainty_ns = models.FloatField(blank=True, null=True)
-    newsource = models.ForeignKey(Newsource, db_column='newsource',
-                                  related_name='augmented_runningcatalogs')
-
-    v_int = models.FloatField(blank=True, null=True)
-    eta_int = models.FloatField(blank=True, null=True)
-    sigma_rms_min = models.FloatField(blank=True, null=True)
-    sigma_rms_max = models.FloatField(blank=True, null=True)
-    lightcurve_avg = models.FloatField(blank=True, null=True)
-    lightcurve_max = models.FloatField(blank=True, null=True)
-    lightcurve_median = models.FloatField(blank=True, null=True)
-
-
-
-    def __unicode__(self):
-        return "%s" % self.id
-
-    @property
-    def ra_err(self):
-        return alpha(self.wm_uncertainty_ew, self.wm_decl)
-
-    @property
-    def decl_err(self):
-        return self.wm_uncertainty_ns
-
-    class Meta:
-        managed = False
-        db_table = 'augmented_runningcatalog'
 
 
 class RunningcatalogFlux(models.Model):
@@ -539,6 +513,24 @@ class Temprunningcatalog(models.Model):
     class Meta:
         managed = False
         db_table = 'temprunningcatalog'
+
+
+class Varmetric(models.Model):
+    id = models.IntegerField(primary_key=True)
+    runcat = models.ForeignKey(Runningcatalog, db_column='runcat')
+    v_int = models.FloatField(blank=True, null=True)
+    eta_int = models.FloatField(blank=True, null=True)
+    band = models.ForeignKey(Frequencyband, db_column='band')
+    newsource = models.IntegerField(blank=True, null=True)
+    sigma_rms_max = models.FloatField(blank=True, null=True)
+    sigma_rms_min = models.FloatField(blank=True, null=True)
+    lightcurve_max = models.FloatField(blank=True, null=True)
+    lightcurve_avg = models.FloatField(blank=True, null=True)
+    lightcurve_median = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'varmetric'
 
 
 class Version(models.Model):

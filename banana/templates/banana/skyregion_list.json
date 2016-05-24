@@ -9,9 +9,8 @@
     "x": {{ object.x }},
     "y": {{ object.y }},
     "z": {{ object.z }}
-  {% if not forloop.last %},{% endif %}
   }
-
+  {% if not forloop.last %},{% endif %}
   {% endfor %}
 
   ]

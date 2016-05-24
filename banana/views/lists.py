@@ -1,15 +1,15 @@
 """
 All views that generate lists of model objects
 """
-from django.db.models import Count
+from django.db.models import Count, Case, When
 from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
-from banana.filters import RunningcatalogFilter
+from banana.filters import RunningcatalogFilter, VarmetricFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
-                           AugmentedRunningcatalog, Runningcatalog,
-                           schema_version, Monitor, Skyregion)
+                           Runningcatalog, schema_version, Monitor, Skyregion,
+                           Varmetric, Config)
 from banana.views.mixins import (HybridTemplateMixin,
                                  SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
@@ -38,6 +38,12 @@ class DatasetList(SortListMixin, HybridTemplateMixin, ListView):
         return qs.annotate(num_images=Count('images'))
 
 
+class ConfigList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
+    model = Config
+    paginate_by = 100
+    ordering = ['section']
+
+
 class ImageList(SortListMixin, HybridTemplateMixin,
                 DatasetMixin, ListView):
     model = Image
@@ -48,7 +54,17 @@ class ImageList(SortListMixin, HybridTemplateMixin,
         related = ['skyrgn', 'dataset', 'band', 'rejections',
                    'rejections__rejectreason']
         return qs.prefetch_related(*related).\
-            annotate(num_extractedsources=Count('extractedsources'))
+            annotate(num_extractedsources=Count('extractedsources')).\
+            annotate(num_blind_extractedsources=Count(
+                    Case(
+                        When(extractedsources__extract_type=0,then=1)
+                        )
+                    )).\
+            annotate(num_forced_extractedsources=Count(
+                    Case(
+                        When(extractedsources__extract_type=1,then=1)
+                        )
+                    ))
 
 
 class NewsourceList(SortListMixin, HybridTemplateMixin,
@@ -81,29 +97,16 @@ class ExtractedsourcesList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
         return qs
 
 
-class RunningcatalogList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
-                         DatasetMixin, FilterView):
+class VarmetricList(FluxViewMixin, SortListMixin, HybridTemplateMixin,
+                    DatasetMixin, FilterView):
 
-    model = Runningcatalog
-    template_name = "banana/runningcatalog_filter.html"
-    filterset_class = RunningcatalogFilter
+    model = Varmetric
+    template_name = "banana/varmetric_filter.html"
+    filterset_class = VarmetricFilter
+    dataset_field = 'runcat__dataset'
     paginate_by = 100
 
     def get_queryset(self):
-        qs = super(RunningcatalogList, self).get_queryset()
-        qs = qs.prefetch_related('newsource')
-        return qs
-
-
-class AugmentedRunningcatalogList(FluxViewMixin, SortListMixin,
-                                  HybridTemplateMixin, DatasetMixin, FilterView):
-
-    model = AugmentedRunningcatalog
-    template_name = "banana/augmentedrunningcatalog_filter.html"
-    filterset_class = RunningcatalogFilter
-    paginate_by = 100
-
-    def get_queryset(self):
-        qs = super(AugmentedRunningcatalogList, self).get_queryset()
-        qs = qs.prefetch_related('newsource')
+        qs = super(VarmetricList, self).get_queryset()
+        qs = qs.prefetch_related('runcat__newsource')
         return qs
