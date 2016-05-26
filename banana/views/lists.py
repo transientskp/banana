@@ -4,11 +4,11 @@ All views that generate lists of model objects
 from django.db.models import Count, Case, When
 from django.views.generic import ListView, TemplateView
 from django_filters.views import FilterView
-from banana.filters import RunningcatalogFilter, VarmetricFilter
+from banana.filters import VarmetricFilter
 from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
-                           Runningcatalog, schema_version, Monitor, Skyregion,
+                           schema_version, Monitor, Skyregion,
                            Varmetric, Config)
 from banana.views.mixins import (HybridTemplateMixin,
                                  SortListMixin, DatasetMixin, FluxViewMixin)
