@@ -163,10 +163,17 @@ $(function () {
             areaspline: {
                 fillOpacity: 0.5
             },
-	        series: {
-	            animation: false,
-	            turboThreshold: 0
-	        },
+            series: {
+                animation: false,
+                turboThreshold: 0,
+                point: {
+                    events: {
+                        click: function (e) {
+                            location.href = e.point.url;
+                        }
+                    }
+                }
+            },
         }
     });
 });

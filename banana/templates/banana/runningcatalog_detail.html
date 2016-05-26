@@ -256,6 +256,7 @@
                     "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err|scientific }},
                     "tau_time": {{ assocxtrsource.xtrsrc.image.tau_time }},
                     "extract_type": {{ assocxtrsource.xtrsrc.extract_type }},
+                    "url": '{% url "extractedsource" db_name assocxtrsource.xtrsrc.id %}',
                     }{% if not forloop.last %}, {% endif %}
                 {% endfor %}
         ];
