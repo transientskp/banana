@@ -85,11 +85,6 @@ def format_angle(value, format_type="time"):
     return mark_safe(result)
 
 
-@register.filter
-def format_ra_error(value):
-    return float(value) / 15
-
-
 @register.inclusion_tag('tags/sexagesimal.html', takes_context=True)
 def sexagesimal(context, ra, decl, ra_err, decl_err):
     """

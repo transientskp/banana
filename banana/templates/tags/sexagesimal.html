@@ -6,4 +6,4 @@ See units.py for context.
 
 {% endcomment %}
 {% load units %}
-({{ ra|format_angle }}, {{ decl|format_angle:"dms" }}) &pm; ({{ ra_err|deg2asec|format_ra_error|stringformat:".3f" }}<sup>s</sup>, {{ decl_err|deg2asec|stringformat:"06.3f" }}&Prime;)
+({{ ra|format_angle }}, {{ decl|format_angle:"dms" }}) &pm; ({{ ra_err|deg2asec|stringformat:".3f" }}<sup>s</sup>, {{ decl_err|deg2asec|stringformat:"06.3f" }}&Prime;)
