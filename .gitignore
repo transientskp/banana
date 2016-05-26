@@ -1,4 +1,5 @@
 *.pyc
+/.virtualenv/
 /.idea
 /static/
 /bananaproject/settings/local.py
