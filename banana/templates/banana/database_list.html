@@ -23,8 +23,7 @@
                                 <th>status</th>
                                 <th>type</th>
                                 <th>path</th>
-                                <th>last_crash</th>
-                                <th>last_start</th>
+                                <th>owner</th>
                                 <th>version</th>
                             </tr>
                             </thead>
@@ -35,8 +34,7 @@
                                     <td>{{ database.status }}{% if database.locked %}, locked{% endif %}</td>
                                     <td>{{ database.type }}</td>
                                     <td>{{ database.path }}</td>
-                                    <td>{{ database.last_crash }}</td>
-                                    <td>{{ database.last_start }}</td>
+                                    <td>{{ database.owner }}</td>
                                     <td>{{ database.version }} </td>
 
                                 </tr>

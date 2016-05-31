@@ -29,6 +29,7 @@ def monetdb_list(host, port, passphrase):
     for status in statuses:
         status['status'] = status_map[status['state']]
         status['type'] = 'monetdb'
+        status['owner'] = 'unknown'  # we can't figure out who is the owner for MonetDB
 
         # convert to datetime objects
         for field in ['last_crash', 'last_start']:
@@ -40,15 +41,30 @@ def monetdb_list(host, port, passphrase):
 
 
 def postgres_list(host, user, password, port=5432):
+    """
+    List all non system databases
+
+    returns: a list of tuples (name, owner) for each database
+    """
     import psycopg2
     con = psycopg2.connect(host=host, port=port, user=user, password=password,
                            dbname='postgres')
     cur = con.cursor()
-    cur.execute("select datname from pg_database")
-    names = [n[0] for n in cur.fetchall()]
+    q = """
+SELECT pg_database.datname as "name",
+       pg_user.usename as "owner"
+FROM pg_database, pg_user
+WHERE pg_database.datdba = pg_user.usesysid
+AND datistemplate = false;
+    """
+    cur.execute(q)
     system = ["template1", "template0", "postgres"]
-    names = [n for n in names if n not in system]
-    return names
+
+    result = []
+    for name, owner in cur.fetchall():
+        if name not in system:
+            result.append((name, owner))
+    return result
 
 
 def list():
@@ -56,7 +72,7 @@ def list():
     :return: a list of all configured databases
     """
     if not hasattr(settings, 'MONETDB_HOST') or not settings.MONETDB_HOST:
-        # no monetdb database configureds
+        # no monetdb database configured
         databases = []
     else:
         databases = monetdb_list(settings.MONETDB_HOST, settings.MONETDB_PORT,
@@ -64,7 +80,7 @@ def list():
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
             path = 'postgresql://%(USER)s@%(HOST)s:%(PORT)s/%(NAME)s' % dbparams
-            databases.append({'name': dbname, 'type': 'postgresql', 'path': path})
+            databases.append({'name': dbname, 'type': 'postgresql', 'path': path, 'owner': dbparams['OWNER']})
     databases.sort(key=lambda x: x['name'])
     return databases
 
