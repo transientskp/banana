@@ -1,3 +1,8 @@
+3.1 (tba)
+=========
+
+You need to add a owner field to the DB config now,  check `local_example.py`
+
 3.0 (2016-01-15)
 ================
 
