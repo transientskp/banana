@@ -48,6 +48,7 @@ class BigImageDetail(DatasetMixin, DetailView):
         context['image_size'] = self.image_size
         context['sources'] = banana.image.extracted_sources_pixels(self.object,
                                                                    self.image_size)
+        context['dataset'] = self.object.dataset
         return context
 
 
@@ -59,6 +60,7 @@ class ImageJs9Detail(DatasetMixin, DetailView):
         context = super(ImageJs9Detail, self).get_context_data(**kwargs)
         context['lightcurve'] = self.object.extractedsources.all()
         context['object'] = self.object
+        context['dataset'] = self.object.dataset
         return context
 
 
