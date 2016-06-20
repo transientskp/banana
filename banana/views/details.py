@@ -45,6 +45,18 @@ class BigImageDetail(DatasetMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(BigImageDetail, self).get_context_data(**kwargs)
+        context['image_size'] = self.image_size
+        context['sources'] = banana.image.extracted_sources_pixels(self.object,
+                                                                   self.image_size)
+        return context
+
+
+class ImageJs9Detail(DatasetMixin, DetailView):
+    template_name = "banana/image_js9.html"
+    model = Image
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageJs9Detail, self).get_context_data(**kwargs)
         context['lightcurve'] = self.object.extractedsources.all()
         context['object'] = self.object
         return context
