@@ -126,10 +126,11 @@
                             <div  data-spy="affix">
                                 <div class="btn-group">
                                     <a href="{% url 'bigimage' db_name object.id %}"><button class="btn btn-default">detailed view</button></a>
-                                    <a href="{% url 'js9image' db_name object.id %}"><button class="btn btn-default">js9 view</button></a>
+                                    <a href="{%  url 'rawimage' db_name object.id %}"><button class="btn btn-default"><i class="glyphicon glyphicon-fa-download"></i>Download FITS</button></a>
+                                    <a href="{% url 'js9image' db_name object.id %}"><button class="btn btn-default">js9</button></a>
                                     {% with object.get_next_by_taustart_ts_only as next %}
                                         {% if next %}
-                                            <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image (by time)</button></a>
+                                            <a href="{% url 'image' db_name next.id %}"><button class="btn btn-default">Next image by time</button></a>
                                         {% endif %}
                                     {% endwith %}
                                 </div>
