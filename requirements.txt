@@ -1,4 +1,4 @@
-django>=1.8,<1.9
+django>=1.9,<1.10
 djonet>=0.3,<1.1
 pymonetdb
 astropy==1.0.6
@@ -19,5 +19,5 @@ django-filter>=0.7
 #pylibmc
 
 # for development
-django-debug-toolbar>=1.3,<1.4
+django-debug-toolbar>=1.4,<1.5
 

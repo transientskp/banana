@@ -7,7 +7,7 @@ from banana.views.etc import extracted_sources_pixel
 
 cache_time = 60*60*24*30
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$',
         lists.DatabaseList.as_view(),
         name='databases'),
@@ -82,7 +82,4 @@ urlpatterns = patterns('',
      url(r'^(?P<db>\w+)/rawimage/(?P<pk>\d+)/$',
         (images.RawImage.as_view()),
         name='rawimage'),
-
-
-
-)
+]
