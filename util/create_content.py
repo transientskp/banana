@@ -50,9 +50,7 @@ def main():
                                                    [transient_src],
                                                    new_source_sigma_margin)
 
-    tkp.db.execute("insert into monitor values(1, 1, 1, 1, 1, 'bla')")
-    tkp.db.commit()
-
+    tkp.db.execute("insert into monitor values(1, 1, 1, 1, 1, 'bla')", commit=True)
 
 
 if __name__ == '__main__':
