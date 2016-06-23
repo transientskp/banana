@@ -74,14 +74,14 @@ class DatasetDetail(DetailView):
         images = Image.objects.using(self.request.SELECTED_DATABASE). \
             filter(dataset=self.object). \
             annotate(num_extractedsources=Count('extractedsources')). \
-            values('id', 'band', 'num_extractedsources', 'taustart_ts'). \
+            values('id', 'band__freq_central', 'num_extractedsources', 'taustart_ts'). \
             order_by('taustart_ts')
 
         # gather data for lightcurve plot
         images_per_band = {}
         image_list = images.all()
         for image in image_list:
-            label = str(image['band'])
+            label = str(image['band__freq_central'])
             images_per_band.setdefault(label, [])
             images_per_band[label].append({'num_extractedsources': image['num_extractedsources'],
                                            'image_id': image['id']})

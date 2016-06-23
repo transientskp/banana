@@ -250,7 +250,7 @@
                 {% for assocxtrsource in paginator.object_list %}{
                     "url": '{%  url 'extractedsource' db_name assocxtrsource.xtrsrc.id %}',
                     "id": '{{ assocxtrsource.xtrsrc.id }}',
-                    "band": '{{ assocxtrsource.xtrsrc.image.band }}',
+                    "band": '{{ assocxtrsource.xtrsrc.image.band.freq_central }}',
                     "taustart_ts": {{ assocxtrsource.xtrsrc.image.taustart_ts|datetime2miliseconds }},
                     "f_int": {{ assocxtrsource.xtrsrc.f_int|scientific }},
                     "f_int_err": {{ assocxtrsource.xtrsrc.f_int_err|scientific }},
