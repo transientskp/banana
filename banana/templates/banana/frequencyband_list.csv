@@ -1,0 +1,3 @@
+#id, dataset, centre_ra, centre_decl, xtr_radius, y, y, z
+{% for object in object_list%}{{ object.id }}, {{ object.dataset }}, {{ object.centre_ra }}, {{ object.centre_decl|stringformat:".3f" }}, {{ object.xtr_radius }}, {{ object.x }}, {{ object.y }}, {{ object.z }}
+{% endfor %}

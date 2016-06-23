@@ -19,6 +19,7 @@ class ViewTest(TestCase):
         'monitors',
         'skyregions',
         'configs',
+        'frequencybands',
     ]
 
     detail_views = [

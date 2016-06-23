@@ -1,0 +1,14 @@
+[
+  {% for object in object_list%}
+  {
+    "id": {{ object.id }},
+    "freq_central": {{ object.freq_central }},
+    "freq_low": {{ object.freq_low }},
+    "freq_high": {{ object.freq_high }},
+    "formatted": "{{ object }}",
+    "image_count": {{ object.images.count }}
+  }
+  {% if not forloop.last %},{% endif %}
+  {% endfor %}
+
+  ]
