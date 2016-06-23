@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 
-schema_version = 38
+schema_version = 39
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
