@@ -208,6 +208,7 @@ class Extractedsource(models.Model):
 
 class Frequencyband(models.Model):
     id = models.IntegerField(primary_key=True)
+    dataset = models.ForeignKey(Dataset, db_column='dataset')
     freq_central = models.FloatField(blank=True, null=True)
     freq_low = models.FloatField(blank=True, null=True)
     freq_high = models.FloatField(blank=True, null=True)

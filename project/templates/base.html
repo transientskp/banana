@@ -7,7 +7,7 @@
 
     <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
@@ -98,6 +98,7 @@
                             <li><a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-star-half-empty"></i><span>New Sources</span></a></li>
                             <li><a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-clone"></i><span>Monitors</span></a></li>
                             <li><a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-map-o"></i><span>Skyregions</span></a></li>
+                            <li><a href="{% url 'frequencybands' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-barcode"></i><span>Frequency bands</span></a></li>
                             <li><a href="{% url 'heatmap' db_name dataset.id %}"><i class="fa  fa-expand"></i><span>Heatmap</span></a></li>
                         </ul>
                     </li>

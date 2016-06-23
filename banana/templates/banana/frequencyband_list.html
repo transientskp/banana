@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+
+{% load paginator %}
+{% load units %}
+{% load tableheader %}
+
+{% block title %}Frequency bands{% endblock title %}
+{% block header %}Frequency bands{% endblock %}
+
+
+
+{% block content %}
+    <div class="container-fluid">
+        {% if object_list %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-2 text-center">
+                                    {% paginatorizer %}
+                                </div>
+
+
+                                <div class="col-md-2 text-center">
+                                    <a href="?format=csv{% if dataset %}&dataset={{ dataset.id }}{% endif %}"><button class="btn btn-default" type="button">CSV format</button></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered table-striped responsive-utilities table-condensed " >
+                                        <thead>
+                                        <tr>
+
+                                            {% tableheader 'id' %}
+                                            {% tableheader 'freq_central' %}
+                                            {% tableheader 'freq_low'  %}
+                                            {% tableheader 'freq_high'  %}
+                                            <th>formatted</th>
+                                            <th># images</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for object in object_list %}
+                                            <tr>
+                                                <td>{{ object.id }}</td>
+                                                <td>{{ object.freq_central }}</td>
+                                                <td>{{ object.freq_low }}</td>
+                                                <td>{{ object.freq_high }}</td>
+                                                <td>{{  object }}</td>
+                                                <td>{{ object.images.count }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h1 class="text-center">No Skyregions</h1>
+        {% endif %}
+    </div>
+{% endblock content %}

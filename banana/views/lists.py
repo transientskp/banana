@@ -9,7 +9,7 @@ from banana.db import db_schema_version
 from banana.db import list as db_list
 from banana.models import (Dataset, Image, Newsource, Extractedsource,
                            schema_version, Monitor, Skyregion,
-                           Varmetric, Config)
+                           Varmetric, Config, Frequencyband)
 from banana.views.mixins import (HybridTemplateMixin,
                                  SortListMixin, DatasetMixin, FluxViewMixin)
 from banana.vcs import repo_info
@@ -81,6 +81,12 @@ class MonitorList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
 
 class SkyregionList(SortListMixin, HybridTemplateMixin, DatasetMixin, ListView):
     model = Skyregion
+    paginate_by = 100
+
+
+class FrequencybandList(SortListMixin, HybridTemplateMixin, DatasetMixin,
+                        ListView):
+    model = Frequencyband
     paginate_by = 100
 
 
