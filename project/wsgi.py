@@ -14,6 +14,8 @@ framework.
 
 """
 import os
+import matplotlib
+matplotlib.use('agg')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 

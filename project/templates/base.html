@@ -100,6 +100,7 @@
                             <li><a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-map-o"></i><span>Skyregions</span></a></li>
                             <li><a href="{% url 'frequencybands' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-barcode"></i><span>Frequency bands</span></a></li>
                             <li><a href="{% url 'heatmap' db_name dataset.id %}"><i class="fa  fa-expand"></i><span>Heatmap</span></a></li>
+                            <li><a href="{% url 'quality' db_name dataset.id %}"><i class="fa  fa-bar-chart"></i><span>Quality Control</span></a></li>
                         </ul>
                     </li>
                 {% endif %}

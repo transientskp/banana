@@ -107,6 +107,19 @@ class HeatmapView(DetailView):
     template_name = 'banana/heatmap.html'
 
 
+class QualityControlView(DetailView):
+    """
+    Show all quality control related information for a dataset
+    """
+    model = Dataset
+    template_name = 'banana/dataset_qualitycontrol.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(QualityControlView, self).get_context_data(**kwargs)
+        context['frequencies'] = set([i.band.freq_central for i in self.object.images.all()])
+        return context
+
+
 class ExtractedSourceDetail(DetailView):
     model = Extractedsource
 
@@ -187,3 +200,6 @@ class RunningcatalogDetail(FluxViewMixin, SortListMixin, DatasetMixin,
         context['object'] = self.object
         context['dataset'] = self.object.dataset
         return context
+
+
+

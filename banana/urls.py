@@ -48,6 +48,9 @@ urlpatterns = patterns('',
     url(r'^(?P<db>\w+)/heatmap/(?P<pk>\d+)/$',
         details.HeatmapView.as_view(),
         name='heatmap'),
+    url(r'^(?P<db>\w+)/quality/(?P<pk>\d+)/$',
+       details.QualityControlView.as_view(),
+       name='quality'),
     url(r'^(?P<db>\w+)/extractedsource/(?P<pk>\d+)/$',
         details.ExtractedSourceDetail.as_view(),
         name='extractedsource'),
@@ -82,9 +85,15 @@ urlpatterns = patterns('',
     url(r'^(?P<db>\w+)/imageplot/(?P<pk>\d+)/$',
         cache_page(cache_time)(images.ImagePlot.as_view()),
         name='image_plot'),
+    url(r'^(?P<db>\w+)/rmsplot/(?P<pk>\d+)/$',
+        cache_page(cache_time)(images.DatasetRmsImage.as_view()),
+        name='rms_plot'),
      url(r'^(?P<db>\w+)/rawimage/(?P<pk>\d+)/$',
         (images.RawImage.as_view()),
         name='rawimage'),
+
+
+
 
 
 

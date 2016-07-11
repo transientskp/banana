@@ -1,11 +1,9 @@
-
-import matplotlib
-matplotlib.use('agg')
+import logging
 import aplpy
 import numpy
-from matplotlib import pyplot
 from banana.mongo import get_hdu
-import logging
+from matplotlib import pyplot
+
 
 logger = logging.getLogger(__name__)
 
@@ -138,3 +136,5 @@ def extractedsource(hdu, source, size=1):
     except Exception as e:
         logger.error("can't recenter: " + str(e))
     return fig.canvas
+
+

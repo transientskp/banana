@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Heatmap {% endblock title %}
+
+{% block header %}Quality Control for '{{ dataset.description }}'{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
+
+<!-- required for error bars -->
+{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <img src="{% url 'rms_plot' db_name dataset.id %}">
+
+                        {% for frequency in frequencies %}
+                            <img src="{% url 'rms_plot' db_name dataset.id %}?frequency={{ frequency }}">
+                        {%  endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}
+

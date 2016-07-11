@@ -89,7 +89,7 @@ class Assocxtrsource(models.Model):
 
 class Config(models.Model):
     id = models.IntegerField(primary_key=True)
-    dataset = models.ForeignKey('Dataset', db_column='dataset')
+    dataset = models.ForeignKey('Dataset', db_column='dataset', related_name='configs')
     section = models.CharField(max_length=100, blank=True)
     key = models.CharField(max_length=100, blank=True)
     value = models.CharField(max_length=500, blank=True)
