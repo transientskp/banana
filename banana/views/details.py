@@ -119,6 +119,11 @@ class QualityControlView(DetailView):
         context['frequencies'] = set([i.band.freq_central for i in self.object.images.all()])
         return context
 
+    def get_queryset(self):
+        qs = super(QualityControlView, self).get_queryset()
+        related = ['images', 'images__band']
+        return qs.prefetch_related(*related)
+
 
 class ExtractedSourceDetail(DetailView):
     model = Extractedsource
