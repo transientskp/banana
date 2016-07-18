@@ -70,17 +70,18 @@ class DatasetRmsImage(DetailView):
         return context
 
     def render_to_response(self, context, **kwargs):
+        query = self.object.images.values_list('rms_qc', flat=True)
         if context['frequency']:
-            images = self.object.images.filter(band__freq_central=context['frequency'])
+            display_freq = '{:.3f} MHz'.format(float(context['frequency']) / 10**6)
+            rms_values = query.filter(band__freq_central=context['frequency'])
         else:
-            images = self.object.images.all()
-        rms_values = [i.rms_qc for i in images]
-        name = 'RMS values freq %s dataset #%s' % (context['frequency'] or 'all', self.object.id)
+            display_freq = 'all'
+            rms_values = query.all()
 
-        sigma = float(self.object.configs.get(section='persistence', key='rms_est_sigma').value)
+        est_sigma = float(self.object.configs.get(section='persistence',
+                                                  key='rms_est_sigma').value)
 
-        canvas = rms_histogram(rms_values, sigma=sigma, name=name)
+        canvas = rms_histogram(rms_values, est_sigma, display_freq)
         response = HttpResponse(content_type="image/png")
-        canvas.print_figure(response, format='png', bbox_inches='tight',
-                            pad_inches=0, dpi=100)
+        canvas.print_figure(response, format='png')
         return response
