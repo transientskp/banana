@@ -98,9 +98,10 @@
                             <li><a href="{% url 'newsources' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-star-half-empty"></i><span>New Sources</span></a></li>
                             <li><a href="{% url 'monitors' db_name %}?dataset={{ dataset.id }}"><i class="fa fa-clone"></i><span>Monitors</span></a></li>
                             <li><a href="{% url 'skyregions' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-map-o"></i><span>Skyregions</span></a></li>
-                            <li><a href="{% url 'frequencybands' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-barcode"></i><span>Frequency bands</span></a></li>
+                            <li><a href="{% url 'frequencybands' db_name %}?dataset={{ dataset.id }}"><i class="fa  fa-barcode"></i><span>Frequency Bands</span></a></li>
                             <li><a href="{% url 'heatmap' db_name dataset.id %}"><i class="fa  fa-expand"></i><span>Heatmap</span></a></li>
                             <li><a href="{% url 'quality' db_name dataset.id %}"><i class="fa  fa-bar-chart"></i><span>Quality Control</span></a></li>
+                            <li><a href="{% url 'numsource' db_name dataset.id %}"><i class="fa  fa-sitemap"></i><span>Number of Sources</span></a></li>
                         </ul>
                     </li>
                 {% endif %}

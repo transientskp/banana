@@ -67,33 +67,6 @@ class ImageJs9Detail(DatasetMixin, DetailView):
 class DatasetDetail(DetailView):
     model = Dataset
 
-    def get_context_data(self, **kwargs):
-        context = super(DatasetDetail, self).get_context_data(**kwargs)
-
-        # annotated images
-        images = Image.objects.using(self.request.SELECTED_DATABASE). \
-            filter(dataset=self.object). \
-            annotate(num_extractedsources=Count('extractedsources')). \
-            values('id', 'band__freq_central', 'num_extractedsources', 'taustart_ts'). \
-            order_by('taustart_ts')
-
-        # gather data for lightcurve plot
-        images_per_band = {}
-        image_list = images.all()
-        for image in image_list:
-            label = str(image['band__freq_central'])
-            images_per_band.setdefault(label, [])
-            images_per_band[label].append({'num_extractedsources': image['num_extractedsources'],
-                                           'image_id': image['id']})
-        images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
-                                             key=lambda x: x[0]))
-
-        context['dataset'] = self.object
-        context['num_extractedsources'] = sum([i['num_extractedsources'] for i in image_list])
-        context['images'] = images
-        context['images_per_band'] = images_per_band
-        return context
-
 
 class HeatmapView(DetailView):
     """
@@ -123,6 +96,39 @@ class QualityControlView(DetailView):
         qs = super(QualityControlView, self).get_queryset()
         related = ['images', 'images__band']
         return qs.prefetch_related(*related)
+
+
+class NumSourceView(DetailView):
+    model = Dataset
+    template_name = 'banana/dataset_sourcenum.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(NumSourceView, self).get_context_data(**kwargs)
+
+        # annotated images
+        images = Image.objects.using(self.request.SELECTED_DATABASE). \
+            filter(dataset=self.object). \
+            annotate(num_extractedsources=Count('extractedsources')). \
+            values('id', 'band__freq_central', 'num_extractedsources', 'taustart_ts'). \
+            order_by('taustart_ts')
+
+        # gather data for lightcurve plot
+        images_per_band = {}
+        image_list = images.all()
+        for image in image_list:
+            label = str(image['band__freq_central'])
+            images_per_band.setdefault(label, [])
+            images_per_band[label].append({'num_extractedsources': image['num_extractedsources'],
+                                           'image_id': image['id']})
+        images_per_band = OrderedDict(sorted(images_per_band.iteritems(),
+                                             key=lambda x: x[0]))
+
+        context['dataset'] = self.object
+        context['num_extractedsources'] = sum([i['num_extractedsources'] for i in image_list])
+        context['images'] = images
+        context['images_per_band'] = images_per_band
+        return context
+
 
 
 class ExtractedSourceDetail(DetailView):

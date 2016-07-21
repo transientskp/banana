@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Overview{% endblock title %}
+
+<!-- required for error bars -->
+{% block morehead %}<script src="{{ STATIC_URL }}highcharts/highcharts-more.js"></script>{% endblock %}
+
+{% block header %}Dataset: {{ dataset.description }}{% endblock %}
+{% block description %}dataset #{{ dataset.id }} in database {{ db_name }}{% endblock %}
+
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div id='sources_chart'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#sources_chart').highcharts({
+                chart: {
+
+                    zoomType: 'x'
+                },
+                title: {
+                    text: 'number of sources'
+                },
+                xAxis: {
+                    title: {
+                        text: 'Image'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'number of sources'
+                    },
+                    min: 0
+                },
+                plotOptions: {
+                    series: {
+                        animation: false,
+                        turboThreshold: 0,
+                        point: {
+                            events: {
+                                click: function (e) {
+                                    location.href = e.point.url;
+                                }
+                            }
+                        },
+                    },
+                    area: {
+
+                        fillColor: {
+                            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        lineWidth: 1,
+                        marker: {
+                            enabled: false
+                        },
+                        shadow: false,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+                series: [
+                    {% for freq, images in images_per_band.items %}
+
+                        {
+                            type: 'area',
+                            name: (({{ freq }}/1000000.0).toFixed(3)).toString() + "MHz",
+                            data: [
+                                {% for image in images %}
+                                    {
+                                        image_id: '{{ image.image_id }}',
+                                        y: {{ image.num_extractedsources }},
+                                        url: '{% url 'image' db_name image.image_id %}'
+                                    }{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            ]
+                        }{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                ],
+
+                tooltip: {
+                    formatter: function () {
+                        return '<b>image id:</b> ' + this.point.image_id +
+                                '<br><b>frequency:</b> ' + this.series.name +
+                                '<br><b>source num:</b> ' + this.point.y;
+                    }
+                }
+            });
+        });
+    </script>
+
+{% endblock content %}
+
