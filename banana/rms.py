@@ -16,14 +16,14 @@ def rms_histogram(all_rms, est_sigma, frequency_name, bin_num=50):
         x: an array of RMS values
     """
     # best fit of data
-    (mu, sigma) = norm.fit(all_rms)
+    mu, sigma = norm.fit(all_rms)
 
     lock.acquire()
     fig = plt.figure(figsize=(5, 5))
 
     # the histogram of the data
-    n, bins, patches = plt.hist(all_rms, bin_num, facecolor='green',
-                                normed=1, alpha=0.6)
+    _, bins, _ = plt.hist(all_rms, bin_num, normed=True, facecolor='green',
+                          alpha=0.6)
 
     thres_low = mu - sigma * est_sigma
     thres_high = mu + sigma * est_sigma
@@ -33,7 +33,7 @@ def rms_histogram(all_rms, est_sigma, frequency_name, bin_num=50):
     l = plt.plot(bins, y, 'r--', linewidth=2)
 
     plt.xlabel('RMS')
-    plt.ylabel('Normalised number if images in bin')
+    plt.ylabel('Normalised number of images in bin')
     plt.suptitle(r'$f={}\ \mu={:.3f},\ \sigma={:.3f}$'.format(frequency_name, mu, sigma))
     plt.title(r'$t={},\ t_{{\uparrow}}={:.3f},\ t_{{\downarrow}}={:.3f}$'.format(est_sigma, thres_low, thres_high))
 
