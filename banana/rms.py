@@ -33,7 +33,7 @@ def rms_histogram(all_rms, est_sigma, frequency_name, bin_num=50):
     l = plt.plot(bins, y, 'r--', linewidth=2)
 
     plt.xlabel('RMS')
-    plt.ylabel('Normalised number if images in bin')
+    plt.ylabel('Number of Images in Bin')
     plt.suptitle(r'$f={}\ \mu={:.3f},\ \sigma={:.3f}$'.format(frequency_name, mu, sigma))
     plt.title(r'$t={},\ t_{{\uparrow}}={:.3f},\ t_{{\downarrow}}={:.3f}$'.format(est_sigma, thres_low, thres_high))
 
