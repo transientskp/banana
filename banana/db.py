@@ -51,8 +51,10 @@ def postgres_list(host, user, password, port=5432):
                            dbname='postgres')
     cur = con.cursor()
     q = """
-SELECT pg_database.datname as "name",
-       pg_user.usename as "owner"
+SELECT
+       pg_database.datname as "name",
+       pg_user.usename as "owner",
+       pg_size_pretty(pg_database_size(pg_database.datname)) as "size"
 FROM pg_database, pg_user
 WHERE pg_database.datdba = pg_user.usesysid
 AND datistemplate = false;
@@ -61,9 +63,9 @@ AND datistemplate = false;
     system = ["template1", "template0", "postgres"]
 
     result = []
-    for name, owner in cur.fetchall():
+    for name, owner, size in cur.fetchall():
         if name not in system:
-            result.append((name, owner))
+            result.append((name, owner, size))
     return result
 
 
@@ -80,7 +82,12 @@ def list():
     for dbname, dbparams in settings.DATABASES.items():
         if dbparams['ENGINE'] != 'djonet' and dbname != 'default':
             path = 'postgresql://%(USER)s@%(HOST)s:%(PORT)s/%(NAME)s' % dbparams
-            databases.append({'name': dbname, 'type': 'postgresql', 'path': path, 'owner': dbparams['OWNER']})
+            databases.append({'name': dbname,
+                              'type': 'postgresql',
+                              'path': path,
+                              'owner': dbparams['OWNER'],
+                              'size': dbparams['SIZE'],
+                              })
     databases.sort(key=lambda x: x['name'])
     return databases
 

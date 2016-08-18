@@ -42,7 +42,7 @@ POSTGRES_HOST = 'localhost'
 POSTGRES_USERNAME = 'gijs'
 POSTGRES_PASSWORD = POSTGRES_USERNAME
 
-for name, owner in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
+for name, owner, size in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASSWORD):
     # django reverse url mapping can't handle non aplhanum chars
     config_name = ("postgres_" + re.sub(r'\W+', '', name))
     DATABASES["postgres_" + name] = {
@@ -52,6 +52,7 @@ for name, owner in postgres_list(POSTGRES_HOST, POSTGRES_USERNAME, POSTGRES_PASS
         'USER': name,
         'PASSWORD': name,
         'OWNER': owner,
+        'SIZE': size,
     }
 
 for monetdb in monetdb_list(MONETDB_HOST, MONETDB_PORT, MONETDB_PASSPHRASE):
