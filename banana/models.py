@@ -253,6 +253,8 @@ class Image(models.Model):
     url = models.CharField(max_length=1024, blank=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
+    fits_header = models.TextField(blank=True, null=True)
+    fits_data = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False

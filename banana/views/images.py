@@ -3,9 +3,9 @@ All views that generate images
 """
 from django.http import HttpResponse
 import banana.image
+from StringIO import StringIO
 from banana.rms import rms_histogram
 from banana.models import Extractedsource, Image, Dataset
-from banana.mongo import get_hdu, fetch
 from django.views.generic import DetailView
 
 
@@ -19,7 +19,7 @@ class ImagePlot(DetailView):
             context['size'] = int(self.request.GET.get('size', 5))
         except ValueError:
              context['size'] = 5
-        context['hdu'] = get_hdu(self.object.url)
+        context['hdu'] = banana.image.reconstruct_fits(self.object)
         return context
 
     def render_to_response(self, context, **kwargs):
@@ -38,7 +38,7 @@ class ExtractedSourcePlot(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ExtractedSourcePlot, self).get_context_data(**kwargs)
         context['size'] = int(self.request.GET.get('size', 1))
-        context['hdu'] = get_hdu(self.object.image.url)
+        context['hdu'] = banana.image.reconstruct_fits(self.object.image)
         return context
 
     def render_to_response(self, context, **kwargs):
@@ -55,8 +55,10 @@ class RawImage(DetailView):
     model = Image
 
     def render_to_response(self, context, **kwargs):
-        handler = fetch(self.object.url)
-        response = HttpResponse(handler, content_type="application/octet-stream")
+        s = StringIO()
+        handler = banana.image.reconstruct_fits(self.object)
+        handler.writeto(s)
+        response = HttpResponse(s.getvalue(), content_type="application/octet-stream")
         response['Content-Disposition'] = 'attachment; filename="banana.fits"'
         return response
 

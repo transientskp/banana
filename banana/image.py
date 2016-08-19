@@ -1,22 +1,35 @@
 import logging
 import aplpy
 import numpy
-from banana.mongo import get_hdu
 from matplotlib import pyplot
-
+from astropy.io import fits
+from astropy.io.fits.header import Header
+import cPickle
 
 logger = logging.getLogger(__name__)
+
 
 # colors for the extracted types
 #  0: blind fit, 1: forced fit, 2: manual monitoring
 source_colors = ['yellow', 'lightgreen', 'cyan']
 
 
+def reconstruct_fits(db_image):
+    if not db_image.fits_header or db_image.fits_data:
+        return None
+    hdu_header = Header.fromstring(db_image.fits_header)
+    data = cPickle.loads(str(db_image.fits_data))
+    hdu = fits.PrimaryHDU(data)
+    hdu.header = hdu_header
+    hdulist = fits.HDUList([hdu])
+    return hdulist
+
+
 def get_figsize(hdu, long_edge_inches=5):
     """
     Returns tuple of (width,height) in inches.
     """
-    primary_hdr=hdu[0]
+    primary_hdr = hdu[0]
     y,x = primary_hdr.data.squeeze().shape
 
     long_edge_pixels = float(max(x,y))
@@ -73,7 +86,7 @@ def extracted_sources_pixels(image, size):
     :param image: a banana.models.Image object
     :returns: a list of sources of an image
     """
-    hdu = get_hdu(image.url)
+    hdu = reconstruct_fits(image)
     if not hdu:
         return None
 
