@@ -3,6 +3,7 @@ All views that generate images
 """
 from django.http import HttpResponse
 import banana.image
+from StringIO import StringIO
 from banana.rms import rms_histogram
 from banana.models import Extractedsource, Image, Dataset
 from django.views.generic import DetailView
@@ -54,8 +55,10 @@ class RawImage(DetailView):
     model = Image
 
     def render_to_response(self, context, **kwargs):
+        s = StringIO()
         handler = banana.image.reconstruct_fits(self.object)
-        response = HttpResponse(handler, content_type="application/octet-stream")
+        handler.writeto(s)
+        response = HttpResponse(s.getvalue(), content_type="application/octet-stream")
         response['Content-Disposition'] = 'attachment; filename="banana.fits"'
         return response
 

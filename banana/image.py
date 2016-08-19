@@ -4,6 +4,7 @@ import numpy
 from matplotlib import pyplot
 from astropy.io import fits
 from astropy.io.fits.header import Header
+import cPickle
 
 logger = logging.getLogger(__name__)
 
@@ -15,12 +16,8 @@ source_colors = ['yellow', 'lightgreen', 'cyan']
 
 def reconstruct_fits(db_image):
     hdu_header = Header.fromstring(db_image.fits_header)
-    width = hdu_header["NAXIS1"]
-    length = hdu_header["NAXIS2"]
-    data = numpy.fromstring(db_image.fits_data)
-    print(len(data), (width/2)*(length/2))
-    image_matrix = numpy.reshape(data, (width/2, length/2))
-    hdu = fits.PrimaryHDU(image_matrix)
+    data = cPickle.loads(str(db_image.fits_data))
+    hdu = fits.PrimaryHDU(data)
     hdu.header = hdu_header
     hdulist = fits.HDUList([hdu])
     return hdulist
