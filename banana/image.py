@@ -15,7 +15,7 @@ source_colors = ['yellow', 'lightgreen', 'cyan']
 
 
 def reconstruct_fits(db_image):
-    if not db_image.fits_header or db_image.fits_data:
+    if not db_image.fits_header or not db_image.fits_data:
         return None
     hdu_header = Header.fromstring(db_image.fits_header)
     data = cPickle.loads(str(db_image.fits_data))
