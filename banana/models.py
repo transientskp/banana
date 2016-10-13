@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 
-schema_version = 39
+schema_version = 40
 
 
 # the 2 queries below are used to generate the 2D Histogram of position offset
@@ -253,8 +253,6 @@ class Image(models.Model):
     url = models.CharField(max_length=1024, blank=True)
     node = models.SmallIntegerField()
     nodes = models.SmallIntegerField()
-    fits_header = models.TextField(blank=True, null=True)
-    fits_data = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -298,6 +296,16 @@ class Image(models.Model):
 
     def __str__(self):
         return "image #%s" % self.id
+
+
+class Imagedata(models.Model):
+    image = models.OneToOneField(Image, db_column='image', related_name='data')
+    fits_header = models.TextField(blank=True, null=True)
+    fits_data = models.BinaryField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'imagedata'
 
 
 class Monitor(models.Model):

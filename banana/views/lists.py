@@ -50,7 +50,7 @@ class ImageList(SortListMixin, HybridTemplateMixin,
     paginate_by = 100
 
     def get_queryset(self):
-        qs = super(ImageList, self).get_queryset().defer('fits_data', 'fits_header')
+        qs = super(ImageList, self).get_queryset()
         related = ['skyrgn', 'dataset', 'band', 'rejections',
                    'rejections__rejectreason']
         return qs.prefetch_related(*related).\

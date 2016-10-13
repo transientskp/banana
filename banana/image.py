@@ -5,6 +5,7 @@ from matplotlib import pyplot
 from astropy.io import fits
 from astropy.io.fits.header import Header
 import cPickle
+from banana.models import Imagedata
 
 logger = logging.getLogger(__name__)
 
@@ -15,10 +16,13 @@ source_colors = ['yellow', 'lightgreen', 'cyan']
 
 
 def reconstruct_fits(db_image):
-    if not db_image.fits_header or not db_image.fits_data:
+    try:
+        if not db_image.data.fits_header or not db_image.data.fits_data:
+            return None
+    except Imagedata.DoesNotExist as e:
         return None
-    hdu_header = Header.fromstring(db_image.fits_header)
-    data = cPickle.loads(str(db_image.fits_data))
+    hdu_header = Header.fromstring(db_image.data.fits_header)
+    data = cPickle.loads(str(db_image.data.fits_data))
     hdu = fits.PrimaryHDU(data)
     hdu.header = hdu_header
     hdulist = fits.HDUList([hdu])
@@ -30,15 +34,15 @@ def get_figsize(hdu, long_edge_inches=5):
     Returns tuple of (width,height) in inches.
     """
     primary_hdr = hdu[0]
-    y,x = primary_hdr.data.squeeze().shape
+    y, x = primary_hdr.data.squeeze().shape
 
-    long_edge_pixels = float(max(x,y))
-    width = long_edge_inches* x / long_edge_pixels
-    height = long_edge_inches* y / long_edge_pixels
-    return (width,height)
+    long_edge_pixels = float(max(x, y))
+    width = long_edge_inches * x / long_edge_pixels
+    height = long_edge_inches * y / long_edge_pixels
+    return (width, height)
 
 
-def image_plot(pyfits_hdu, size=5, sources=[]):
+def image_plot(pyfits_hdu, size=5, sources=None):
     """
     Plot image from fits HDU and draw circles around sources.
 
@@ -51,7 +55,9 @@ def image_plot(pyfits_hdu, size=5, sources=[]):
         a matplotlib canvas which can be used to write the image to
         something (like a django HTTP resonse)
     """
-    fig = pyplot.figure(figsize=get_figsize(pyfits_hdu,long_edge_inches=size))
+    if not sources:
+        sources = []
+    fig = pyplot.figure(figsize=get_figsize(pyfits_hdu, long_edge_inches=size))
     plot = aplpy.FITSFigure(pyfits_hdu, figure=fig, subplot=[0, 0, 1, 1],
                             auto_refresh=False)
     plot.show_grayscale()
@@ -145,7 +151,7 @@ def extractedsource(hdu, source, size=1):
     fits.ticks.hide()
     try:
         fits.recenter(source.ra, source.decl, width=source.semimajor / 90,
-                  height=source.semiminor / 90)
+                      height=source.semiminor / 90)
     except Exception as e:
         logger.error("can't recenter: " + str(e))
     return fig.canvas

@@ -46,7 +46,7 @@
   "description": "Banana test data",
   "detection_threshold": null,
   "backsize_y": null,
-  "process_start_ts": "2016-06-23T14:38:27.400",
+  "process_start_ts": "2016-10-13T12:22:13.809",
   "backsize_x": null,
   "rerun": 0,
   "nodes": 1,
@@ -389,7 +389,7 @@
 },
 {
  "fields": {
-  "value": 38
+  "value": 40
  },
  "model": "banana.version",
  "pk": "revision"
