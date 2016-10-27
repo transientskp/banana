@@ -122,7 +122,7 @@ $(function () {
 
         tooltip: {
           formatter: function () {
-            return '<b></B>Time: </b>' + Highcharts.dateFormat('%Y %b %e %H:%M', this.point.x) +
+            return '<b></B>Time: </b>' + Highcharts.dateFormat('%Y %b %e %H:%M:%S', this.point.x) +
                    '<br><b>flux (Jy): </b>' + this.point.f_int +
                    '<br><b>Integrated Flux Error (Jy): </b>' + this.point.f_int_err +
                    '<br><b>extract_type: </b>' + this.point.extract_type +
