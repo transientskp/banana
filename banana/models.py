@@ -278,9 +278,9 @@ class Image(models.Model):
             filter(image=self). \
             filter(extract_type=1)
 
-    def get_next_by_taustart_ts_only(self):
+    def get_next_previous(self):
         """
-        returns next image, limited by dataset, stokes and frequency,
+        returns previous image, limited by dataset, stokes and frequency,
         sorted by time.
         """
         qs = Image.objects.using(self._state.db)\
@@ -288,11 +288,20 @@ class Image(models.Model):
             .order_by("taustart_ts")
         l = list(qs.values_list('id', flat=True))
         index = l.index(self.id)
-        try:
-            id_ = l[index + 1]
-        except IndexError:
-            raise ObjectDoesNotExist
-        return Image.objects.using(self._state.db).get(id=id_)
+
+        previous_index = index - 1
+        if 0 <= previous_index < len(l):
+            previous = Image.objects.using(self._state.db).get(id=l[previous_index])
+        else:
+            previous = None
+
+        next_index = index + 1
+        if 0 <= next_index < len(l):
+            next = Image.objects.using(self._state.db).get(id=l[next_index])
+        else:
+            next = None
+
+        return previous, next
 
     def __str__(self):
         return "image #%s" % self.id

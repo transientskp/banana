@@ -29,12 +29,18 @@ class ImageDetail(FluxViewMixin, SortListMixin, HybridTemplateMixin, ListView):
         return self.object.extractedsources.all().order_by(self.get_order())
 
     def get_context_data(self, **kwargs):
+        previous, next = self.object.get_next_previous()
         context = super(ImageDetail, self).get_context_data(**kwargs)
         context['image_size'] = self.get_size()
         context['pixels'] = banana.image.extracted_sources_pixels(self.object,
                                                                   self.get_size())
         context['dataset'] = self.object.dataset
         context['object'] = self.object
+
+        context['previous'] = previous
+
+        context['next'] = next
+
         return context
 
 
