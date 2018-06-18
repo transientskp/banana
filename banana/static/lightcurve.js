@@ -77,7 +77,8 @@ for(key in lightcurve_per_band) {
                 data: lightcurve_per_band[key],
                 marker: {
                     symbol: 'square'
-                }
+                },
+                stickyTracking: false
             }
     );
 
