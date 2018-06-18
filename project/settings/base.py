@@ -21,7 +21,7 @@ DATABASES = {
 DATABASE_ROUTERS = ('project.multidb.MultiDbRouter',)
 
 
-TIME_ZONE = 'Europe/Amsterdam'
+TIME_ZONE = 'UTC'
 
 LANGUAGE_CODE = 'en-us'
 
